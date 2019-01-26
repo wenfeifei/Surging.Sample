@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28516.95
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D6B27ECF-3BCD-41A2-ACB1-E49D6930B289}"
 EndProject
@@ -96,14 +96,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hl.Schedule.Application", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hl.Schedule.Domain", "src\Servers\Schedule\Hl.Schedule.Domain\Hl.Schedule.Domain.csproj", "{E38B822E-B5A8-4651-A6FA-92A261454678}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shares", "Shares", "{A78BF379-20F5-45D3-A6ED-FF0226AEA935}"
-	ProjectSection(SolutionItems) = preProject
-		src\Shares\CSharpScripts\Program.cs = src\Shares\CSharpScripts\Program.cs
-		src\Shares\CSharpScripts\ScheduleProgram.cs = src\Shares\CSharpScripts\ScheduleProgram.cs
-		src\Shares\CSharpScripts\Startup.cs = src\Shares\CSharpScripts\Startup.cs
-		src\Shares\CSharpScripts\SurgingServiceEngine.cs = src\Shares\CSharpScripts\SurgingServiceEngine.cs
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configs", "Configs", "{912DDE6A-7149-4619-AFFB-36DA7273F994}"
 	ProjectSection(SolutionItems) = preProject
 		src\Shares\Configs\cacheSettings.json = src\Shares\Configs\cacheSettings.json
@@ -119,6 +111,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{7600A862
 		src\Shares\Props\common.props = src\Shares\Props\common.props
 		src\Shares\Props\domainpackage.props = src\Shares\Props\domainpackage.props
 		src\Shares\Props\hostpackage.props = src\Shares\Props\hostpackage.props
+		src\Shares\Props\ws.applicationpackage.props = src\Shares\Props\ws.applicationpackage.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hl.Customer.Domain", "src\Servers\Customer\Hl.Customer.Domain\Hl.Customer.Domain.csproj", "{975E20D5-52D2-4480-A8E1-53B6DBA3E376}"
@@ -319,7 +312,6 @@ Global
 		{F2F903EB-B3E8-411C-A3B1-90560585B923} = {DC7959F9-6F18-4220-B69A-760EBC44CC20}
 		{840A4430-B4BA-414A-A986-3C3446D50D38} = {DC7959F9-6F18-4220-B69A-760EBC44CC20}
 		{E38B822E-B5A8-4651-A6FA-92A261454678} = {DC7959F9-6F18-4220-B69A-760EBC44CC20}
-		{A78BF379-20F5-45D3-A6ED-FF0226AEA935} = {D0658F8C-8245-4B4E-B34D-45B692E6C2D4}
 		{912DDE6A-7149-4619-AFFB-36DA7273F994} = {D0658F8C-8245-4B4E-B34D-45B692E6C2D4}
 		{7600A862-6A17-4E16-8E98-588F38BF2EDD} = {D0658F8C-8245-4B4E-B34D-45B692E6C2D4}
 		{975E20D5-52D2-4480-A8E1-53B6DBA3E376} = {5DA2851C-F88A-4E5B-84B1-B2ABF7B63969}
