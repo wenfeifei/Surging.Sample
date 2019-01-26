@@ -234,7 +234,7 @@ namespace Surging.Core.Consul
 
         private async Task EnterServiceCommands()
         {
-            if (_serviceCommands != null)
+            if (_serviceCommands != null && _configInfo.EnableChildrenMonitor)
                 return;
             Action<string[]> action = null;
             if (_configInfo.EnableChildrenMonitor)

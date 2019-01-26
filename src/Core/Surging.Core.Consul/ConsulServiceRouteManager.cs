@@ -226,8 +226,8 @@ namespace Surging.Core.Consul
 
         private async Task EnterRoutes()
         {
-            //if (_routes != null && _routes.Length > 0)
-            //    return;
+            if (_routes != null && _routes.Length > 0 && _configInfo.EnableChildrenMonitor)
+                return;
             Action<string[]> action = null;
             if (_configInfo.EnableChildrenMonitor)
             {

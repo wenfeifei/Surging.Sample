@@ -175,7 +175,7 @@ namespace Surging.Core.Consul
 
         private async Task EnterCaches()
         {
-            if (_serviceCaches != null && _serviceCaches.Length > 0)
+            if (_serviceCaches != null && _serviceCaches.Length > 0 && _configInfo.EnableChildrenMonitor)
                 return;
             var watcher = new ChildrenMonitorWatcher(_consul, _manager, _configInfo.CachePath,
                async (oldChildrens, newChildrens) => await ChildrenChange(oldChildrens, newChildrens),

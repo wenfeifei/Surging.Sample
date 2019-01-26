@@ -123,7 +123,7 @@ namespace Surging.Core.Consul
 
         private async Task EnterSubscribers()
         {
-            if (_subscribers != null)
+            if (_subscribers != null && _configInfo.EnableChildrenMonitor)
                 return;
             if (_consul.KV.Keys(_configInfo.SubscriberPath).Result.Response?.Count() > 0)
             {
