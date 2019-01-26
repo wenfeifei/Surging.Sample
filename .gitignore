@@ -275,6 +275,7 @@ __pycache__/
 
 api/
 
+!**/SwaggerUI/node_modules/
 cacheSettings.json
 !**/Shares/**/cacheSettings.json
 mysql/
