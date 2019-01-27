@@ -21,7 +21,7 @@
     "Packages": [
       {
         "TypeName": "EnginePartModule",
-        "Using": "${UseEngineParts}|DotNettyModule;NLogModule;ConsulModule;EventBusRabbitMQModule;CachingModule"
+        "Using": "${UseEngineParts}|DotNettyModule;Log4netModule;ConsulModule;EventBusRabbitMQModule;CachingModule"
       }
     ]
   },

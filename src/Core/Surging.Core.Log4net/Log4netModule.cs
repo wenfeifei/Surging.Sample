@@ -7,7 +7,7 @@ namespace Surging.Core.Log4net
 {
     public class Log4netModule : EnginePartModule
     {
-        private string log4NetConfigFile = "${LogPath}|log4net.config";
+        private string log4NetConfigFile = "${LogConfigPath}|log4net.config";
 
         public override void Initialize(CPlatformContainer serviceProvider)
         {

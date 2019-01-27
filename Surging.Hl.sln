@@ -101,6 +101,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configs", "Configs", "{912D
 		src\Shares\Configs\cacheSettings.json = src\Shares\Configs\cacheSettings.json
 		src\Shares\Configs\consul.json = src\Shares\Configs\consul.json
 		src\Shares\Configs\eventBusSettings.json = src\Shares\Configs\eventBusSettings.json
+		src\Shares\Configs\log4net.config = src\Shares\Configs\log4net.config
 		src\Shares\Configs\NLog.config = src\Shares\Configs\NLog.config
 		src\Shares\Configs\surgingSettings.json = src\Shares\Configs\surgingSettings.json
 	EndProjectSection

@@ -8,7 +8,7 @@
     <PackageReference Include="Surging.Core.DotNetty" Version="0.5.0-bate.3" />
     <PackageReference Include="Surging.Core.EventBusRabbitMQ" Version="0.5.0-bate.3" />
     <PackageReference Include="Surging.Core.KestrelHttpServer" Version="0.5.0-bate.3" />
-    <PackageReference Include="Surging.Core.Nlog" Version="0.5.0-bate.3" />
+    <PackageReference Include="Surging.Core.Log4net" Version="0.5.0-bate.3" />
     <PackageReference Include="Surging.Core.ProxyGenerator" Version="0.5.0-bate.3" />
     <PackageReference Include="Surging.Core.Swagger" Version="0.5.0-bate.3" />
   </ItemGroup>
@@ -30,7 +30,7 @@
     <None Include="..\..\..\Shares\Configs\surgingSettings.json" Link="configs\surgingSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\Shares\Configs\NLog.config" Link="configs\NLog.config">
+    <None Include="..\..\..\Shares\Configs\log4net.config" Link="configs\log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

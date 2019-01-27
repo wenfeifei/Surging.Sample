@@ -10,6 +10,8 @@ services:
         host_workdir: src/Servers/Customer/Hl.Customer.ServerHost
         host_name: Hl.Customer.ServerHost.dll
         sln_name: Surging.Hl.sln
+    volumes:
+      - ${LOG_DIR:-/var/logs}/customer:/app/logs
     networks:
       - src_srcp_demo_service_net
 
@@ -22,6 +24,8 @@ services:
         host_workdir: src/Servers/Identity/Hl.Identity.ServerHost
         host_name: Hl.Identity.ServerHost.dll
         sln_name: Surging.Hl.sln
+    volumes:
+      - ${LOG_DIR:-/var/logs}/identity:/app/logs
     networks:
       - src_srcp_demo_service_net
 
@@ -34,6 +38,8 @@ services:
         host_workdir: src/Servers/Order/Hl.Order.ServerHost
         host_name: Hl.Order.ServerHost.dll
         sln_name: Surging.Hl.sln
+    volumes:
+      - ${LOG_DIR:-/var/logs}/order:/app/logs
     networks:
       - src_srcp_demo_service_net
 
@@ -46,6 +52,8 @@ services:
         host_workdir: src/Servers/Product/Hl.Product.ServerHost
         host_name: Hl.Product.ServerHost.dll
         sln_name: Surging.Hl.sln
+    volumes:
+      - ${LOG_DIR:-/var/logs}/product:/app/logs
     networks:
       - src_srcp_demo_service_net
 
@@ -58,6 +66,8 @@ services:
         host_workdir: src/Servers/Schedule/Hl.Schedule.ServerHost
         host_name: Hl.Schedule.ServerHost.dll
         sln_name: Surging.Hl.sln
+    volumes:
+      - ${LOG_DIR:-/var/logs}/schedule:/app/logs
     networks:
       - src_srcp_demo_service_net
 
@@ -70,6 +80,8 @@ services:
         host_workdir: src/Servers/Stock/Hl.Stock.ServerHost
         host_name: Hl.Stock.ServerHost.dll
         sln_name: Surging.Hl.sln
+    volumes:
+      - ${LOG_DIR:-/var/logs}/stock:/app/logs
     networks:
       - src_srcp_demo_service_net
 
@@ -82,6 +94,8 @@ services:
         host_workdir: src/Servers/SystemManager/Hl.SystemManager.ServerHost
         host_name: Hl.SystemManager.ServerHost.dll
         sln_name: Surging.Hl.sln
+    volumes:
+      - ${LOG_DIR:-/var/logs}/systemmanager:/app/logs
     networks:
       - src_srcp_demo_service_net
 
@@ -94,6 +108,8 @@ services:
         host_workdir: src/Servers/WsServer/Hl.Ws.ServerHost
         host_name: Hl.Ws.ServerHost.dll
         sln_name: Surging.Hl.sln
+    volumes:
+      - ${LOG_DIR:-/var/logs}/wsserver:/app/logs
     networks:
       - src_srcp_demo_service_net
 

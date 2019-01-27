@@ -279,3 +279,4 @@ api/
 cacheSettings.json
 !**/Shares/**/cacheSettings.json
 mysql/
+**/logs
