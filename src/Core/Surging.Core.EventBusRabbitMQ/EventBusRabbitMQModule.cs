@@ -72,13 +72,13 @@ namespace Surging.Core.EventBusRabbitMQ
                 AppConfig.PrefetchCount = option.PrefetchCount;
                 AppConfig.FailCount = option.FailCount;
                 return new DefaultRabbitMQPersistentConnection(factory, logger);
-            }).As<IRabbitMQPersistentConnection>();
+            }).As<IRabbitMQPersistentConnection>().SingleInstance();
             return this;
         }
 
         private ContainerBuilderWrapper UseRabbitMQEventAdapt(ContainerBuilderWrapper builder, Func<IServiceProvider, ISubscriptionAdapt> adapt)
         {
-            builder.RegisterAdapter(adapt);
+            builder.RegisterAdapter(adapt).SingleInstance();
             return builder;
         }
 

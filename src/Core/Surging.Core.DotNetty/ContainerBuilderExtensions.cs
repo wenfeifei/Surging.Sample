@@ -55,7 +55,7 @@ namespace Surging.Core.DotNetty
                     await messageListener.StartAsync(endPoint);
                     return messageListener;
                 }, serviceExecutor);
-            }).As<IServiceHost>();
+            }).As<IServiceHost>().SingleInstance();
         }
     }
 }

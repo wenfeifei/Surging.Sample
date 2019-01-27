@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using Surging.Core.CPlatform.Runtime.Server;
+using Surging.Core.CPlatform.Transport.Implementation;
+using Surging.Core.CPlatform.Utilities;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,21 +10,23 @@ namespace Surging.Core.CPlatform.Routing.Implementation
 {
     public class DefaultServiceRouteProvider : IServiceRouteProvider
     {
-        private readonly ConcurrentDictionary<string, ServiceRoute> _concurrent =
-       new ConcurrentDictionary<string, ServiceRoute>();
+        private readonly ConcurrentDictionary<string, ServiceRoute> _concurrent = new ConcurrentDictionary<string, ServiceRoute>();
 
-        private readonly ConcurrentDictionary<string, ServiceRoute> _serviceRoute =
-       new ConcurrentDictionary<string, ServiceRoute>();
+        private readonly ConcurrentDictionary<string, ServiceRoute> _serviceRoute = new ConcurrentDictionary<string, ServiceRoute>();
 
+        private readonly IServiceEntryManager _serviceEntryManager;
         private readonly ILogger<DefaultServiceRouteProvider> _logger;
         private readonly IServiceRouteManager _serviceRouteManager;
-
-        public DefaultServiceRouteProvider(IServiceRouteManager serviceRouteManager, ILogger<DefaultServiceRouteProvider> logger)
+        private readonly IServiceTokenGenerator _serviceTokenGenerator;
+        public DefaultServiceRouteProvider(IServiceRouteManager serviceRouteManager, ILogger<DefaultServiceRouteProvider> logger,
+            IServiceEntryManager serviceEntryManager, IServiceTokenGenerator serviceTokenGenerator)
         {
             _serviceRouteManager = serviceRouteManager;
             serviceRouteManager.Changed += ServiceRouteManager_Removed;
             serviceRouteManager.Removed += ServiceRouteManager_Removed;
             serviceRouteManager.Created += ServiceRouteManager_Add;
+            _serviceEntryManager = serviceEntryManager;
+            _serviceTokenGenerator = serviceTokenGenerator;
             _logger = logger;
         }
 
@@ -43,6 +48,7 @@ namespace Surging.Core.CPlatform.Routing.Implementation
             return route;
         }
 
+
         public ValueTask<ServiceRoute> GetRouteByPath(string path)
         {
             _serviceRoute.TryGetValue(path.ToLower(), out ServiceRoute route);
@@ -61,8 +67,25 @@ namespace Surging.Core.CPlatform.Routing.Implementation
             return await SearchRouteAsync(path);
         }
 
-        #region 私有方法
+        public async Task RegisterRoutes(decimal processorTime)
+        {
+            var ports = AppConfig.ServerOptions.Ports;
+            var addess = NetUtils.GetHostAddress();
+            addess.ProcessorTime = processorTime;
+            RpcContext.GetContext().SetAttachment("Host", addess);
+            var addressDescriptors = _serviceEntryManager.GetEntries().Select(i =>
+            {
+                i.Descriptor.Token = _serviceTokenGenerator.GetToken();
+                return new ServiceRoute
+                {
+                    Address = new[] { addess },
+                    ServiceDescriptor = i.Descriptor
+                };
+            }).ToList();
+            await _serviceRouteManager.SetRoutesAsync(addressDescriptors);
+        }
 
+        #region 私有方法
         private static string GetCacheKey(ServiceDescriptor descriptor)
         {
             return descriptor.Id;
@@ -86,7 +109,7 @@ namespace Surging.Core.CPlatform.Routing.Implementation
         private async Task<ServiceRoute> SearchRouteAsync(string path)
         {
             var routes = await _serviceRouteManager.GetRoutesAsync();
-            var route = routes.FirstOrDefault(i => i.ServiceDescriptor.RoutePath.Contains(path));
+            var route = routes.FirstOrDefault(i => i.ServiceDescriptor.RoutePath.ToLower() == path.ToLower());
             if (route == null)
             {
                 if (_logger.IsEnabled(LogLevel.Warning))
@@ -111,6 +134,7 @@ namespace Surging.Core.CPlatform.Routing.Implementation
             return route;
         }
 
-        #endregion 私有方法
+
+        #endregion
     }
 }

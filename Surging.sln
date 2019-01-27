@@ -63,6 +63,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSocketCore", "src\Core\W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Surging.Core.Schedule", "src\Core\Surging.Core.Schedule\Surging.Core.Schedule.csproj", "{718EC8A6-DBA1-4362-A017-D4C881C0394C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test1", "Test1", "{549CB2FB-BEA6-4A78-AE0F-3AC4BDA7156E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Surging.Debug.Test1Host", "src\Servers\Test1\Surging.Debug.Test1Host\Surging.Debug.Test1Host.csproj", "{AD363D25-652F-4104-AAE1-B3A0466FF898}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Surging.Debug.Test1.IApplication", "src\Servers\Test1\Surging.Debug.Test1.IApplication\Surging.Debug.Test1.IApplication.csproj", "{0E22FED1-B995-4DB4-82F3-6BC94481379E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Surging.Debug.Test1.Application", "src\Servers\Test1\Surging.Debug.Test1.Application\Surging.Debug.Test1.Application.csproj", "{5BDB7B9C-DBA7-4182-8625-3882F1AA0FC7}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose\debug.test\docker-compose.dcproj", "{FEA0C318-FFED-4D39-8781-265718CA43FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -181,6 +191,22 @@ Global
 		{718EC8A6-DBA1-4362-A017-D4C881C0394C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{718EC8A6-DBA1-4362-A017-D4C881C0394C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{718EC8A6-DBA1-4362-A017-D4C881C0394C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD363D25-652F-4104-AAE1-B3A0466FF898}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD363D25-652F-4104-AAE1-B3A0466FF898}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD363D25-652F-4104-AAE1-B3A0466FF898}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD363D25-652F-4104-AAE1-B3A0466FF898}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E22FED1-B995-4DB4-82F3-6BC94481379E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E22FED1-B995-4DB4-82F3-6BC94481379E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E22FED1-B995-4DB4-82F3-6BC94481379E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E22FED1-B995-4DB4-82F3-6BC94481379E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BDB7B9C-DBA7-4182-8625-3882F1AA0FC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BDB7B9C-DBA7-4182-8625-3882F1AA0FC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BDB7B9C-DBA7-4182-8625-3882F1AA0FC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BDB7B9C-DBA7-4182-8625-3882F1AA0FC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEA0C318-FFED-4D39-8781-265718CA43FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEA0C318-FFED-4D39-8781-265718CA43FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEA0C318-FFED-4D39-8781-265718CA43FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEA0C318-FFED-4D39-8781-265718CA43FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -214,6 +240,10 @@ Global
 		{268A12C0-92E4-4DCA-BE70-041DBAD72F6E} = {81FC8438-A7F9-4237-9ADF-A3F9E812D976}
 		{07175BF5-A56E-4C92-9F6B-592A1E41CFE0} = {81FC8438-A7F9-4237-9ADF-A3F9E812D976}
 		{718EC8A6-DBA1-4362-A017-D4C881C0394C} = {81FC8438-A7F9-4237-9ADF-A3F9E812D976}
+		{549CB2FB-BEA6-4A78-AE0F-3AC4BDA7156E} = {260A6D41-B229-4FB8-BC5D-49D80854877C}
+		{AD363D25-652F-4104-AAE1-B3A0466FF898} = {549CB2FB-BEA6-4A78-AE0F-3AC4BDA7156E}
+		{0E22FED1-B995-4DB4-82F3-6BC94481379E} = {549CB2FB-BEA6-4A78-AE0F-3AC4BDA7156E}
+		{5BDB7B9C-DBA7-4182-8625-3882F1AA0FC7} = {549CB2FB-BEA6-4A78-AE0F-3AC4BDA7156E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3BFE8D1B-1885-491A-82E4-94EAE192D764}
