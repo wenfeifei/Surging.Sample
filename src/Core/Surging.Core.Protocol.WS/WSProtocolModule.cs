@@ -68,7 +68,7 @@ namespace Surging.Core.Protocol.WS
                     await messageListener.StartAsync(endPoint);
                     return messageListener;
                 }, null);
-            }).As<IServiceHost>();
+            }).As<IServiceHost>().SingleInstance();
         }
 
         private static void RegisterWSProtocol(ContainerBuilderWrapper builder, WebSocketOptions options)
@@ -88,7 +88,7 @@ namespace Surging.Core.Protocol.WS
                     await messageListener.StartAsync(endPoint);
                     return messageListener;
                 });
-            }).As<IServiceHost>();
+            }).As<IServiceHost>().SingleInstance();
         }
     }
 }

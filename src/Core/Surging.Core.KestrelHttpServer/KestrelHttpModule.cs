@@ -73,7 +73,7 @@ namespace Surging.Core.KestrelHttpServer
                     await messageListener.StartAsync(endPoint);
                     return messageListener;
                 }, executor, messageListener);
-            }).As<IServiceHost>();
+            }).As<IServiceHost>().SingleInstance();
         }
 
         private static void RegisterHttpProtocol(ContainerBuilderWrapper builder)
@@ -95,7 +95,7 @@ namespace Surging.Core.KestrelHttpServer
                     await messageListener.StartAsync(endPoint);
                     return messageListener;
                 }, executor, messageListener);
-            }).As<IServiceHost>();
+            }).As<IServiceHost>().SingleInstance();
         }
     }
 }
