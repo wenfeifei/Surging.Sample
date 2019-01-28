@@ -2,5 +2,7 @@ version: '3.4'
 
 services:
   hlservice.gateway:
+    environment:
+      Register_Conn: ${REGISTER_CONN:-consul:8500}
     ports:
       - "18060:80"

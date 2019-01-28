@@ -1,0 +1,28 @@
+<Project>
+  <Import Project=".\common.props" />
+  <ItemGroup>
+    <PackageReference Include="Surging.Core.CPlatform" Version="0.5.0-bate.3" />
+    <PackageReference Include="Surging.Core.System" Version="0.5.0-bate.3" />
+	  <PackageReference Include="Surging.Core.ApiGateWay" Version="0.5.0-bate.3" />
+	  <PackageReference Include="Surging.Core.Consul" Version="0.5.0-bate.3" />
+    <PackageReference Include="Surging.Core.Zookeeper" Version="0.5.0-bate.3" />
+	  <PackageReference Include="Surging.Core.ProxyGenerator" Version="0.5.0-bate.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Shares\Configs\cacheSettings.json" Link="configs\cacheSettings.json" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\Shares\Configs\appsettings.json" Link="configs\appsettings.json" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\Shares\Configs\appsettings.Development.json" Link="configs\appsettings.Development.json" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\Shares\Configs\gatewaySettings.json" Link="configs\gatewaySettings.json" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\Shares\Configs\log4net.config" Link="configs\log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
