@@ -1,0 +1,8 @@
+version: '3.4'
+
+services: 
+  hlservice.gateway:
+    environment:
+      LogConfigPath: /app/configs/log4net.config
+    volumes:
+      - ../../src/Shares/Configs:/app/configs
