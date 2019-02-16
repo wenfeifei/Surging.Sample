@@ -13,12 +13,12 @@ namespace Surging.Core.Domain.Entities.Auditing
     {
         public virtual DateTime? LastModificationTime { get; set; }
 
-        public virtual long? LastModifierUserId { get; set; }
+        public virtual string LastModifierUserId { get; set; }
     }
 
     [Serializable]
     public abstract class AuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPrimaryKey>, IAudited<TUser>
-        where TUser : IEntity<long>
+        where TUser : IEntity<string>
     {
         [ForeignKey("CreatorUserId")]
         public virtual TUser CreatorUser { get; set; }
