@@ -26,7 +26,7 @@
     ]
   },
   "Automapper": {
-    "Assemblies": "SunWin.IfocService.*.IApplication;SunWin.IfocService.*.Domain"
+    "Assemblies": "Surging.*.IApplication;Surging.*.Domain"
   },
   "dbSetting": {
     "dbType": "${DbType}|MySql", //MySql SqlServer, Oracle, Postgres

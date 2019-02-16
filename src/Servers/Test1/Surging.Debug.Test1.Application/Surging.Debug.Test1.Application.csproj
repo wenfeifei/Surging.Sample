@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Surging.Debug.Test1.Domain\Surging.Debug.Test1.Domain.csproj" />
     <ProjectReference Include="..\Surging.Debug.Test1.IApplication\Surging.Debug.Test1.IApplication.csproj" />
   </ItemGroup>
 

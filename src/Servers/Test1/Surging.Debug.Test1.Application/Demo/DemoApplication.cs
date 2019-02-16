@@ -1,4 +1,5 @@
-﻿using Surging.Core.Dapper.Repositories;
+﻿using Surging.Core.AutoMapper;
+using Surging.Core.Dapper.Repositories;
 using Surging.Core.ProxyGenerator;
 using Surging.Debug.Test1.Domain.Demo.Entities;
 using Surging.Debug.Test1.IApplication.Demo;
@@ -28,11 +29,9 @@ namespace Surging.Debug.Test1.Application.Demo
 
         public async Task CreatDemo(DemoInput input)
         {
-            var demoRepository = GetService<IDapperRepository<DemoEntity, string>>(); 
-            await demoRepository.InsertAsync(new DemoEntity() {
-                Id = Guid.NewGuid().ToString(),
-                Filed1 = input.Filed1
-            });
+            var demoRepository = GetService<IDapperRepository<DemoEntity, string>>();
+            var entity = input.MapTo<DemoEntity>();
+            await demoRepository.InsertAsync(entity);
         }
     }
 }
