@@ -2,11 +2,11 @@
 {
     public interface IModificationAudited : IHasModificationTime
     {
-        long? LastModifierUserId { get; set; }
+        string LastModifierUserId { get; set; }
     }
 
     public interface IModificationAudited<TUser> : IModificationAudited
-        where TUser : IEntity<long>
+        where TUser : IEntity<string>
     {
         TUser LastModifierUser { get; set; }
     }

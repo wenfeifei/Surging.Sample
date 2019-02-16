@@ -1,4 +1,5 @@
-﻿using Surging.Core.Domain.Entities;
+﻿using Surging.Core.CPlatform.Runtime.Session;
+using Surging.Core.Domain.Entities;
 using Surging.Core.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
@@ -10,18 +11,18 @@ namespace Surging.Core.Dapper.Filters.Action
     {
         public void ExecuteFilter(TEntity entity)
         {
-            //var loginUser = NullSrcpSession.Instance;
-            //if (typeof(IModificationAudited).IsAssignableFrom(typeof(TEntity)) && loginUser != null)
-            //{
+            var loginUser = NullSurgingSession.Instance;
+            if (typeof(IModificationAudited).IsAssignableFrom(typeof(TEntity)) && loginUser != null)
+            {
 
-            //    var record = entity as IModificationAudited;
-            //    if (record.LastModifierUserId == null)
-            //    {
-            //        record.LastModifierUserId = loginUser.UserId;
-            //    }
-            //    record.LastModificationTime = DateTime.Now;
+                var record = entity as IModificationAudited;
+                if (record.LastModifierUserId == null)
+                {
+                    record.LastModifierUserId = loginUser.UserId;
+                }
+                record.LastModificationTime = DateTime.Now;
 
-            //}
+            }
         }
     }
 }

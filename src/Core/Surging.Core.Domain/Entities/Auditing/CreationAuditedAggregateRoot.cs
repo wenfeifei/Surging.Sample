@@ -13,7 +13,7 @@ namespace Surging.Core.Domain.Entities.Auditing
     {
         public virtual DateTime CreationTime { get; set; }
 
-        public virtual long? CreatorUserId { get; set; }
+        public virtual string CreatorUserId { get; set; }
 
         protected CreationAuditedAggregateRoot()
         {
@@ -23,7 +23,7 @@ namespace Surging.Core.Domain.Entities.Auditing
 
     [Serializable]
     public abstract class CreationAuditedAggregateRoot<TPrimaryKey, TUser> : CreationAuditedAggregateRoot<TPrimaryKey>, ICreationAudited<TUser>
-        where TUser : IEntity<long>
+        where TUser : IEntity<string>
     {
         [ForeignKey("CreatorUserId")]
         public virtual TUser CreatorUser { get; set; }

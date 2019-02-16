@@ -2,11 +2,11 @@
 {
     public interface IDeletionAudited : IHasDeletionTime
     {
-        long? DeleterUserId { get; set; }
+        string DeleterUserId { get; set; }
     }
 
     public interface IDeletionAudited<TUser> : IDeletionAudited
-        where TUser : IEntity<long>
+        where TUser : IEntity<string>
     {
         TUser DeleterUser { get; set; }
     }
