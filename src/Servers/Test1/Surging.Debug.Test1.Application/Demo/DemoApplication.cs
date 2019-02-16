@@ -1,15 +1,17 @@
-﻿using Surging.Core.ProxyGenerator;
+﻿using Surging.Core.Dapper.Repositories;
+using Surging.Core.ProxyGenerator;
+using Surging.Debug.Test1.Domain.Demo.Entities;
 using Surging.Debug.Test1.IApplication.Demo;
 using Surging.Debug.Test1.IApplication.Demo.Dtos;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Surging.Debug.Test1.Application.Demo
 {
     public class DemoApplication : ProxyServiceBase, IDemoApplication
     {
+
         public async Task<string> GetUserName(QueryUserInput input)
         {
             var id = await GetService<IServiceProxyProvider>().Invoke<string>(new Dictionary<string, object>() {
@@ -22,6 +24,15 @@ namespace Surging.Debug.Test1.Application.Demo
         public async Task<string> GetUserId(string id)
         {
             return id;
+        }
+
+        public async Task CreatDemo(DemoInput input)
+        {
+            var demoRepository = GetService<IDapperRepository<DemoEntity, string>>(); 
+            await demoRepository.InsertAsync(new DemoEntity() {
+                Id = Guid.NewGuid().ToString(),
+                Filed1 = input.Filed1
+            });
         }
     }
 }

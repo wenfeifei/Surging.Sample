@@ -9,6 +9,7 @@
     <ProjectReference Include="..\..\..\Core\Surging.Core.AutoMapper\Surging.Core.AutoMapper.csproj" />
     <ProjectReference Include="..\..\..\Core\Surging.Core.Caching\Surging.Core.Caching.csproj" />
     <ProjectReference Include="..\..\..\Core\Surging.Core.Consul\Surging.Core.Consul.csproj" />
+    <ProjectReference Include="..\..\..\Core\Surging.Core.Dapper\Surging.Core.Dapper.csproj" />
     <ProjectReference Include="..\..\..\Core\Surging.Core.DotNetty\Surging.Core.DotNetty.csproj" />
     <ProjectReference Include="..\..\..\Core\Surging.Core.EventBusRabbitMQ\Surging.Core.EventBusRabbitMQ.csproj" />
     <ProjectReference Include="..\..\..\Core\Surging.Core.KestrelHttpServer\Surging.Core.KestrelHttpServer.csproj" />

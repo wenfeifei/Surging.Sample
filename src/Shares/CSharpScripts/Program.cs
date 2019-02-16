@@ -5,6 +5,7 @@ using Surging.Core.Consul.Configurations;
 using Surging.Core.CPlatform;
 using Surging.Core.CPlatform.Configurations;
 using Surging.Core.CPlatform.Utilities;
+using Surging.Core.Dapper;
 using Surging.Core.EventBusRabbitMQ.Configurations;
 using Surging.Core.ProxyGenerator;
 using Surging.Core.ServiceHosting;
@@ -27,7 +28,9 @@ namespace Hl.ServiceHost
                            .AddRelateService()
                            .AddConfigurationWatch()
                            .AddClientIntercepted(typeof(CacheProviderInterceptor))
-                           .AddServiceEngine(typeof(SurgingServiceEngine));
+                           .AddServiceEngine(typeof(SurgingServiceEngine))
+                           .AddDapperRepository()
+                           ;
 
                           builder.Register(p => new CPlatformContainer(ServiceLocator.Current));
                       });

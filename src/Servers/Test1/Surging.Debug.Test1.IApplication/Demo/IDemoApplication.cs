@@ -14,5 +14,7 @@ namespace Surging.Debug.Test1.IApplication.Demo
         Task<string> GetUserName(QueryUserInput input);
 
         Task<string> GetUserId(string id);
+
+        Task CreatDemo(DemoInput input);
     }
 }

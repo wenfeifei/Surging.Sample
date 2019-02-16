@@ -28,6 +28,10 @@
   "Automapper": {
     "Assemblies": "SunWin.IfocService.*.IApplication;SunWin.IfocService.*.Domain"
   },
+  "dbSetting": {
+    "dbType": "${DbType}|MySql", //MySql SqlServer, Oracle, Postgres
+    "connectionString": "${ConnectionString}|Server=mysql;Database=surging_demo;Uid=root;Port=3306;Pwd=Surging!P4ss"
+  },
   "Swagger": {
     "Version": "${SwaggerVersion}|v1",
     "Title": "${SwaggerTitle}|微服务组件",
@@ -38,7 +42,7 @@
       "Email": "1029765111@qq.com"
     },
     "Authorization": {
-      "EnableAuthorization": true,
+      "EnableAuthorization": false,
       "CacheMode": "ddlCache.Redis",
       "AccessTokenExpire": 100,
       "AuthorizationRoutePath": "",
