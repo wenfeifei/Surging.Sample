@@ -1,9 +1,9 @@
 <Project>
   <Import Project=".\common.props" />
   <ItemGroup>
-    <PackageReference Include="Surging.Core.Caching" Version="0.5.0-bate.4" />
-    <PackageReference Include="Surging.Core.CPlatform" Version="0.5.0-bate.4" />
-    <PackageReference Include="Surging.Core.Domain" Version="0.5.0-bate.4" />
-    <PackageReference Include="Surging.Core.Dapper" Version="0.5.0-bate.4" />
+    <PackageReference Include="Surging.Core.Caching" Version="0.5.0-bate.5" />
+    <PackageReference Include="Surging.Core.CPlatform" Version="0.5.0-bate.5" />
+    <PackageReference Include="Surging.Core.Domain" Version="0.5.0-bate.5" />
+    <PackageReference Include="Surging.Core.Dapper" Version="0.5.0-bate.5" />
   </ItemGroup>
 </Project>
