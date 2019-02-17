@@ -1,4 +1,5 @@
-﻿using Surging.Core.Domain.Entities;
+﻿using Surging.Core.CPlatform.Utilities;
+using Surging.Core.Domain.Entities;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
@@ -20,7 +21,7 @@ namespace Surging.Core.Dapper.Filters.Action
                 var dbGeneratedAttr = SurgingReflection.ReflectionHelper.GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(idProperty);
                 if (dbGeneratedAttr == null || dbGeneratedAttr.DatabaseGeneratedOption == DatabaseGeneratedOption.None)
                 {
-                    entity1.Id = Guid.NewGuid();
+                    entity1.Id = GuidGenerator.Create();
                 }
             }
             var entity2 = entityAsObj as IEntity<string>;
@@ -31,7 +32,7 @@ namespace Surging.Core.Dapper.Filters.Action
                 var dbGeneratedAttr = SurgingReflection.ReflectionHelper.GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(idProperty);
                 if (dbGeneratedAttr == null || dbGeneratedAttr.DatabaseGeneratedOption == DatabaseGeneratedOption.None)
                 {
-                    entity2.Id = Guid.NewGuid().ToString("N");
+                    entity2.Id = GuidGenerator.CreateGuidStrWithNoUnderline();
                 }
             }
 
