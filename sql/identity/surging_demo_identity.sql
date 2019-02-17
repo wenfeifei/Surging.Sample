@@ -12,6 +12,7 @@
  File Encoding         : 65001
 
  Date: 17/02/2019 20:04:05
+ Update_Date: 18/02/2019 01:10:05
 */
 
 SET NAMES utf8mb4;
@@ -32,6 +33,7 @@ CREATE TABLE `Organization`  (
   `Notes` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `IsDeleted` int(255) NOT NULL DEFAULT 0,
   `DeleterUserId` varchar(0) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `DeletionTime` datetime(0) NULL DEFAULT NULL,
   `CreationTime` datetime(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0),
   `CreatorUserId` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `LastModificationTime` datetime(0) NULL DEFAULT NULL,
@@ -84,6 +86,7 @@ CREATE TABLE `Permission`  (
   `Method` int(255) NOT NULL,
   `Notes` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `IsDeleted` int(255) NOT NULL DEFAULT 0,
+  `DeletionTime` datetime(0) NULL DEFAULT NULL,
   `DeleterUserId` varchar(0) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `CreationTime` datetime(0) NULL DEFAULT NULL,
   `CreatorUserId` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
@@ -103,6 +106,7 @@ CREATE TABLE `Role`  (
   `IsDeleted` int(255) NOT NULL DEFAULT 0,
   `DeleterUserId` varchar(0) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `CreationTime` datetime(0) NULL DEFAULT NULL,
+  `DeletionTime` datetime(0) NULL DEFAULT NULL,
   `CreatorUserId` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `LastModificationTime` datetime(0) NULL DEFAULT NULL,
   `LastModifierUserId` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
@@ -140,6 +144,7 @@ CREATE TABLE `UserInfo`  (
   `Wechat` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `IsDeleted` int(255) NOT NULL DEFAULT 0,
   `DeleterUserId` varchar(0) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `DeletionTime` datetime(0) NULL DEFAULT NULL,
   `CreationTime` datetime(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0),
   `CreatorUserId` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `LastModificationTime` datetime(0) NULL DEFAULT NULL,
