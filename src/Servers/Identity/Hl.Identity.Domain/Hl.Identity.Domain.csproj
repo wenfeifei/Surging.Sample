@@ -9,4 +9,8 @@
     <ProjectReference Include="..\..\..\CommonComponents\Hl.Core\Hl.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Authorization\Roles\" />
+  </ItemGroup>
+
 </Project>

@@ -27,6 +27,7 @@ $projects = (
   "Surging.Core.Domain",
   "Surging.Core.Schedule",
   "Surging.Core.AutoMapper",
+  "Surging.Core.Dapper",
   "WebSocketCore"
 )
 
