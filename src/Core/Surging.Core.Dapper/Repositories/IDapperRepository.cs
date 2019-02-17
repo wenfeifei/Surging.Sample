@@ -2,6 +2,7 @@
 using Surging.Core.Domain.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,21 @@ namespace Surging.Core.Dapper.Repositories
         Task DeleteAsync(TEntity entity);
 
         Task DeleteAsync(Expression<Func<TEntity, bool>> predicate);
+
+        Task InsertAsync(TEntity entity, DbConnection conn, DbTransaction trans);
+
+        Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity, DbConnection conn, DbTransaction trans);
+
+        Task InsertOrUpdateAsync(TEntity entity, DbConnection conn, DbTransaction trans);
+
+        Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity, DbConnection conn, DbTransaction trans);
+
+        Task UpdateAsync(TEntity entity, DbConnection conn, DbTransaction trans);
+
+        Task DeleteAsync(TEntity entity, DbConnection conn, DbTransaction trans);
+
+        Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, DbConnection conn, DbTransaction trans);
+
 
         Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate);
 

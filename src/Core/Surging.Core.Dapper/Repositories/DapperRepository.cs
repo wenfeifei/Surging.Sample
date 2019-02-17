@@ -10,6 +10,7 @@ using Surging.Core.Domain.Entities;
 using Surging.Core.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -411,6 +412,184 @@ namespace Surging.Core.Dapper.Repositories
             }
         }
 
+
+        public Task InsertAsync(TEntity entity, DbConnection conn, DbTransaction trans)
+        {
+            try
+            {
+                _creationActionFilter.ExecuteFilter(entity);
+                conn.Insert<TEntity>(entity, trans);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message, ex);
+                }
+
+                throw new DataAccessException(ex.Message, ex);
+            }
+
+        }
+
+        public Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity, DbConnection conn, DbTransaction trans)
+        {
+            try
+            {
+                _creationActionFilter.ExecuteFilter(entity);
+                conn.Insert<TEntity>(entity, trans);
+                return Task.FromResult(entity.Id);
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message, ex);
+                }
+
+                throw new DataAccessException(ex.Message, ex);
+            }
+          
+        }
+
+        public async Task InsertOrUpdateAsync(TEntity entity, DbConnection conn, DbTransaction trans)
+        {
+            try
+            {
+                if (entity.Id == null)
+                {
+                    _creationActionFilter.ExecuteFilter(entity);
+                    await InsertAsync(entity, conn, trans);
+                }
+                else
+                {
+                    var existEntity = await SingleOrDefaultAsync(p => p.Id.Equals(entity.Id));
+                    if (existEntity == null)
+                    {
+                        _creationActionFilter.ExecuteFilter(entity);
+                        await InsertAsync(entity, conn, trans);
+                    }
+                    else
+                    {
+                        _modificationActionFilter.ExecuteFilter(entity);
+                        await UpdateAsync(entity, conn, trans);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message, ex);
+                }
+
+                throw new DataAccessException(ex.Message, ex);
+            }
+
+   
+        }
+
+        public async Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity, DbConnection conn, DbTransaction trans)
+        {
+        
+            try
+            {
+                if (entity.Id == null)
+                {
+                    _creationActionFilter.ExecuteFilter(entity);
+                    return await InsertAndGetIdAsync(entity, conn, trans);
+                }
+                else
+                {
+                    var existEntity = SingleAsync(CreateEqualityExpressionForId(entity.Id));
+                    if (existEntity == null)
+                    {
+                        _creationActionFilter.ExecuteFilter(entity);
+                        return await InsertAndGetIdAsync(entity, conn, trans);
+                    }
+                    else
+                    {
+                        _modificationActionFilter.ExecuteFilter(entity);
+                        await UpdateAsync(entity, conn, trans);
+                        return entity.Id;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message, ex);
+                }
+
+                throw new DataAccessException(ex.Message, ex);
+            }
+        }
+
+        public Task UpdateAsync(TEntity entity, DbConnection conn, DbTransaction trans)
+        {
+            try
+            {
+                _modificationActionFilter.ExecuteFilter(entity);
+                conn.Update(entity, trans);
+                return Task.CompletedTask;
+
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message, ex);
+                }
+
+                throw new DataAccessException(ex.Message, ex);
+            }
+
+
+        }
+
+        public Task DeleteAsync(TEntity entity, DbConnection conn, DbTransaction trans)
+        {
+            try
+            {
+
+                if (entity is ISoftDelete)
+                {
+                    _deletionAuditDapperActionFilter.ExecuteFilter(entity);
+                    UpdateAsync(entity, conn, trans);
+                }
+                else
+                {
+                    conn.Delete(entity, trans);
+
+                }
+                return Task.CompletedTask;
+
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message, ex);
+                }
+
+                throw new DataAccessException(ex.Message, ex);
+            }
+
+        }
+
+        public async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, DbConnection conn, DbTransaction trans)
+        {
+            IEnumerable<TEntity> items = await GetAllAsync(predicate);
+            foreach (TEntity entity in items)
+            {
+                await DeleteAsync(entity,conn,trans);
+            }
+
+        }
+
         protected static Expression<Func<TEntity, bool>> CreateEqualityExpressionForId(TPrimaryKey id)
         {
             ParameterExpression lambdaParam = Expression.Parameter(typeof(TEntity));
@@ -422,7 +601,5 @@ namespace Surging.Core.Dapper.Repositories
 
             return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
         }
-
-
     }
 }
