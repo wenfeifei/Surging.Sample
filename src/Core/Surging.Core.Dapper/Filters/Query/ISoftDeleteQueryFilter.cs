@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Surging.Core.Dapper.Filters.Query
 {
-    public interface ISoftDeleteQueryFilter : ITransientDependency
+    public interface ISoftDeleteQueryFilter 
     {
         Expression<Func<TEntity, bool>> ExecuteFilter<TEntity, TPrimaryKey>(Expression<Func<TEntity, bool>> predicate = null) where TEntity : class, IEntity<TPrimaryKey>;
     }

@@ -6,6 +6,7 @@ using Surging.Core.CPlatform;
 using Surging.Core.CPlatform.Exceptions;
 using Surging.Core.CPlatform.Utilities;
 using Surging.Core.Dapper.Filters.Action;
+using Surging.Core.Dapper.Filters.Query;
 using Surging.Core.Dapper.Repositories;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace Surging.Core.Dapper
             builder.Services.RegisterGeneric(typeof(CreationAuditDapperActionFilter<,>)).Named(typeof(CreationAuditDapperActionFilter<,>).Name,typeof(IAuditActionFilter<,>)).InstancePerDependency();
             builder.Services.RegisterGeneric(typeof(ModificationAuditDapperActionFilter<,>)).Named(typeof(ModificationAuditDapperActionFilter<,>).Name, typeof(IAuditActionFilter<,>)).InstancePerDependency();
             builder.Services.RegisterGeneric(typeof(DeletionAuditDapperActionFilter<,>)).Named(typeof(DeletionAuditDapperActionFilter<,>).Name, typeof(IAuditActionFilter<,>)).InstancePerDependency();
+            builder.Services.RegisterType<SoftDeleteQueryFilter>().As<ISoftDeleteQueryFilter>().AsSelf().InstancePerDependency();
             DapperExtensions.DapperExtensions.DefaultMapper = typeof(ClassMapper<>);
 
             var dbSettingSection = AppConfig.GetSection("dbSetting");
