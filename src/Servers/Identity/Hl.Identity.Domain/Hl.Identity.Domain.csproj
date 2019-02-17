@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Authorization\Roles\" />
+    <Folder Include="Organizations\" />
   </ItemGroup>
 
 </Project>

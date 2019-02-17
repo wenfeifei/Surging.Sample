@@ -13,5 +13,7 @@ namespace Hl.Identity.IApplication.Authorization
     {
         [Service(Name = "用户登录接口", EnableAuthorization = false, Date = "2018-12-18")]
         Task<PayloadOutput> Login(LoginInput input);
+
+        Task<string> Register(RegisterInput input);
     }
 }

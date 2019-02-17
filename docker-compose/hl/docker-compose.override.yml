@@ -22,6 +22,7 @@ services:
       Register_Conn: ${REGISTER_CONN:-consul:8500}
       Register_SessionTimeout: ${REGISTER_SESSION_TIMEOUT:-50}
       UseEngineParts: ${NORMAL_SERVER_ENGINE}
+      ConnectionString: "Server=mysql;Database=surging_demo_identity;Uid=root;Port=3306;Pwd=Surging!P4ss"
       EventBusConnection: ${RABBITMQ_CONNECTION:-rabbitmq}
       EventBusUserName:  ${RABBITMQ_USERNAME:-rabbitmq}
       EventBusPassword:  ${RABBITMQ_PASSWORD:-rabbitmq}
