@@ -4,6 +4,8 @@ using Surging.Core.Dapper.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
+using DapperExtensions;
 
 namespace Hl.Identity.Domain.Authorization.Users
 {
@@ -25,12 +27,13 @@ namespace Hl.Identity.Domain.Authorization.Users
                 throw new ArgumentNullException(nameof(UserInfo));
             }
             UnitOfWork((conn,trans)=>{
-                var userId = _userRepository.InsertAndGetIdAsync(user).Result;
+                var userId = _userRepository.InsertAndGetIdAsync(user, conn, trans).Result;
                 if (user.Roles.Any())
                 {
                     foreach (var role in user.Roles)
                     {
-                        _userRoleRepository.InsertAsync(role).Wait();
+                        role.UserId = userId;
+                        _userRoleRepository.InsertAsync(role,conn, trans).Wait();
                     }
                 }
             }, Connection);
