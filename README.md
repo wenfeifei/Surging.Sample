@@ -2,8 +2,8 @@
 
 ## 开发与运行环境
 ### IDE
-- Visual Stadio 2017/Visual Stadio 2019
-- Visual Stadio Core
+- Visual Studio 2017/Visual Studio 2019
+- Visual Studio Core
 
 ### Docker 和 Docker-Compose
 1. 通过[docker官网](https://hub.docker.com/editions/community/docker-ce-desktop-windows)下载并安装docker for windows,安装完
@@ -37,7 +37,7 @@ password: Surging!P4ss
 
 ```
 ### 4. 运行项目
-通过visual Stadio打开`Surging.Hl.sln`解决方案,将`docker-compose`项目设置为启动项目，按`F5`启动项目。
+通过visual Studio打开`Surging.Hl.sln`解决方案,将`docker-compose`项目设置为启动项目，按`F5`启动项目。
 
 ## 微服务组件
 
