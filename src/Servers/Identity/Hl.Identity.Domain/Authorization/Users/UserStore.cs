@@ -11,14 +11,15 @@ namespace Hl.Identity.Domain.Authorization.Users
 {
     public class UserStore : ManagerBase, ITransientDependency
     {
-        private readonly IDapperRepository<UserInfo, string> _userRepository;
         private readonly IDapperRepository<UserRole, string> _userRoleRepository;
         public UserStore(IDapperRepository<UserInfo, string> userRepository,
             IDapperRepository<UserRole, string> userRoleRepository)
         {
-            _userRepository = userRepository;
+            UserRepository = userRepository;
             _userRoleRepository = userRoleRepository;
         }
+
+        public IDapperRepository<UserInfo, string> UserRepository { get; }
 
         public async Task<bool> CreateAsync(UserInfo user)
         {
@@ -27,7 +28,7 @@ namespace Hl.Identity.Domain.Authorization.Users
                 throw new ArgumentNullException(nameof(UserInfo));
             }
             UnitOfWork((conn,trans)=>{
-                var userId = _userRepository.InsertAndGetIdAsync(user, conn, trans).Result;
+                var userId = UserRepository.InsertAndGetIdAsync(user, conn, trans).Result;
                 if (user.Roles.Any())
                 {
                     foreach (var role in user.Roles)
