@@ -11,6 +11,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,7 +46,8 @@ namespace Surging.Core.CPlatform.Support.Implementation
                     FirstInvokeTime = DateTime.Now,
                     FinalRemoteInvokeTime = DateTime.Now
                 });
-            var command = await _commandProvider.GetCommand(serviceId);
+            var vt = _commandProvider.GetCommand(serviceId);
+            var command = vt.IsCompletedSuccessfully ? vt.Result : await vt;
             var intervalSeconds = (DateTime.Now - serviceInvokeInfos.FinalRemoteInvokeTime).TotalSeconds;
             bool reachConcurrentRequest() => serviceInvokeInfos.ConcurrentRequests > command.MaxConcurrentRequests;
             bool reachRequestVolumeThreshold() => intervalSeconds <= 10
@@ -138,6 +140,7 @@ namespace Surging.Core.CPlatform.Support.Implementation
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private string GetHashItem(ServiceCommand command, IDictionary<string, object> parameters)
         {
             string result = "";

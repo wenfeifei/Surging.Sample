@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Surging.Core.CPlatform.Messages
 {
@@ -11,6 +12,7 @@ namespace Surging.Core.CPlatform.Messages
         {
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public TransportMessage(object content)
         {
             if (content == null)
@@ -20,6 +22,7 @@ namespace Surging.Core.CPlatform.Messages
             ContentType = content.GetType().FullName;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public TransportMessage(object content, string fullName)
         {
             if (content == null)
@@ -48,6 +51,7 @@ namespace Surging.Core.CPlatform.Messages
         /// 是否调用消息。
         /// </summary>
         /// <returns>如果是则返回true，否则返回false。</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsInvokeMessage()
         {
             return ContentType == MessagePackTransportMessageType.remoteInvokeMessageTypeName;
@@ -57,16 +61,19 @@ namespace Surging.Core.CPlatform.Messages
         /// 是否是调用结果消息。
         /// </summary>
         /// <returns>如果是则返回true，否则返回false。</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsInvokeResultMessage()
         {
             return ContentType == MessagePackTransportMessageType.remoteInvokeResultMessageTypeName;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsHttpMessage()
         {
             return ContentType == MessagePackTransportMessageType.httpMessageTypeName;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsHttpResultMessage()
         {
             return ContentType == MessagePackTransportMessageType.httpResultMessageTypeName;
@@ -77,6 +84,7 @@ namespace Surging.Core.CPlatform.Messages
         /// </summary>
         /// <typeparam name="T">内容类型。</typeparam>
         /// <returns>内容实例。</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T GetContent<T>()
         {
             return (T)Content;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Surging.Core.Swagger
 {
-
     public class SwaggerDocument
     {
         public SwaggerDocument()
@@ -67,14 +66,14 @@ namespace Surging.Core.Swagger
 
         public License License { get; set; }
 
-        public string AnnotationXmlDir { get; set; }
-
-        public Authorization Authorization { get; set; }
-
         [JsonExtensionData]
         public Dictionary<string, object> Extensions { get; private set; }
 
+        public string AnnotationXmlDir { get; set; }
 
+        public IEnumerable<string> DtoXmls { get; set; }
+
+        public Authorization Authorization { get; set; }
     }
 
     public class Authorization

@@ -289,11 +289,11 @@ namespace Surging.Core.EventBusRabbitMQ.Implementation
                                       autoAck: false,
                                      consumer: consumer);
                 channel.CallbackException += (sender, ea) =>
-                {
-                    var key = new Tuple<string, QueueConsumerMode>(queueName, mode);
-                    _consumerChannels[key].Dispose();
-                    _consumerChannels[key] = CreateRetryConsumerChannel(queueName, routeKey, bindConsumer);
-                };
+              {
+                  var key = new Tuple<string, QueueConsumerMode>(queueName, mode);
+                  _consumerChannels[key].Dispose();
+                  _consumerChannels[key] = CreateRetryConsumerChannel(queueName, routeKey, bindConsumer);
+              };
             }
             else
                 channel.Close();

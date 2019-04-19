@@ -7,6 +7,7 @@ using Surging.Core.Consul.WatcherProvider;
 using Surging.Core.Consul.WatcherProvider.Implementation;
 using Surging.Core.CPlatform;
 using Surging.Core.CPlatform.Cache;
+using Surging.Core.CPlatform.Mqtt;
 using Surging.Core.CPlatform.Routing;
 using Surging.Core.CPlatform.Runtime.Client;
 using Surging.Core.CPlatform.Runtime.Server;
@@ -26,14 +27,14 @@ namespace Surging.Core.Consul
         public static IServiceBuilder UseConsulRouteManager(this IServiceBuilder builder, ConfigInfo configInfo)
         {
             return builder.UseRouteManager(provider =>
-                new ConsulServiceRouteManager(
-                    GetConfigInfo(configInfo),
-                    provider.GetRequiredService<ISerializer<byte[]>>(),
-                    provider.GetRequiredService<ISerializer<string>>(),
-                    provider.GetRequiredService<IClientWatchManager>(),
-                    provider.GetRequiredService<IServiceRouteFactory>(),
-                    provider.GetRequiredService<ILogger<ConsulServiceRouteManager>>(),
-                    provider.GetRequiredService<IServiceHeartbeatManager>()));
+             new ConsulServiceRouteManager(
+                 GetConfigInfo(configInfo),
+              provider.GetRequiredService<ISerializer<byte[]>>(),
+                provider.GetRequiredService<ISerializer<string>>(),
+                provider.GetRequiredService<IClientWatchManager>(),
+                provider.GetRequiredService<IServiceRouteFactory>(),
+                provider.GetRequiredService<ILogger<ConsulServiceRouteManager>>(),
+                 provider.GetRequiredService<IServiceHeartbeatManager>()));
         }
 
         public static IServiceBuilder UseConsulCacheManager(this IServiceBuilder builder, ConfigInfo configInfo)
@@ -59,16 +60,29 @@ namespace Surging.Core.Consul
             return builder.UseCommandManager(provider =>
             {
                 var result = new ConsulServiceCommandManager(
-                    GetConfigInfo(configInfo),
-                    provider.GetRequiredService<ISerializer<byte[]>>(),
+                     GetConfigInfo(configInfo),
+                  provider.GetRequiredService<ISerializer<byte[]>>(),
                     provider.GetRequiredService<ISerializer<string>>(),
                     provider.GetRequiredService<IServiceRouteManager>(),
                     provider.GetRequiredService<IClientWatchManager>(),
                     provider.GetRequiredService<IServiceEntryManager>(),
                     provider.GetRequiredService<ILogger<ConsulServiceCommandManager>>(),
-                    provider.GetRequiredService<IServiceHeartbeatManager>());
+                      provider.GetRequiredService<IServiceHeartbeatManager>());
                 return result;
             });
+        }
+
+        public static IServiceBuilder UseConsulMqttRouteManager(this IServiceBuilder builder, ConfigInfo configInfo)
+        {
+            return builder.UseMqttRouteManager(provider =>
+             new ConsulMqttServiceRouteManager(
+                 GetConfigInfo(configInfo),
+              provider.GetRequiredService<ISerializer<byte[]>>(),
+                provider.GetRequiredService<ISerializer<string>>(),
+                provider.GetRequiredService<IClientWatchManager>(),
+                provider.GetRequiredService<IMqttServiceFactory>(),
+                provider.GetRequiredService<ILogger<ConsulMqttServiceRouteManager>>(),
+                 provider.GetRequiredService<IServiceHeartbeatManager>()));
         }
 
         public static IServiceBuilder UseConsulServiceSubscribeManager(this IServiceBuilder builder, ConfigInfo configInfo)
@@ -100,26 +114,17 @@ namespace Surging.Core.Consul
             return builder;
         }
 
-        /// <summary>
-        /// 使用Consul管理
-        /// </summary>
-        /// <param name="builder">服务构建者</param>
-        /// <param name="configInfo">Consul设置信息</param>
-        /// <returns>服务构建者</returns>
         [Obsolete]
         public static IServiceBuilder UseConsulManager(this IServiceBuilder builder, ConfigInfo configInfo)
         {
             return builder.UseConsulRouteManager(configInfo)
                 .UseConsulServiceSubscribeManager(configInfo)
                .UseConsulCommandManager(configInfo)
-               .UseConsulCacheManager(configInfo).UseConsulWatch(configInfo);
+               .UseConsulCacheManager(configInfo)
+               .UseConsulWatch(configInfo)
+               .UseConsulMqttRouteManager(configInfo);
         }
 
-        /// <summary>
-        /// 使用Consul管理
-        /// </summary>
-        /// <param name="builder">服务构建者</param>
-        /// <returns></returns>
         [Obsolete]
         public static IServiceBuilder UseConsulManager(this IServiceBuilder builder)
         {
@@ -127,14 +132,10 @@ namespace Surging.Core.Consul
             return builder.UseConsulRouteManager(configInfo)
                 .UseConsulServiceSubscribeManager(configInfo)
                .UseConsulCommandManager(configInfo)
-               .UseConsulCacheManager(configInfo).UseConsulWatch(configInfo);
+               .UseConsulCacheManager(configInfo).UseConsulWatch(configInfo)
+               .UseConsulMqttRouteManager(configInfo);
         }
 
-        /// <summary>
-        /// 获取设置信息
-        /// </summary>
-        /// <param name="config"></param>
-        /// <returns></returns>
         private static ConfigInfo GetConfigInfo(ConfigInfo config)
         {
             ConsulOption option = null;
@@ -154,7 +155,8 @@ namespace Surging.Core.Consul
                     option.SubscriberPath ?? config.SubscriberPath,
                     option.CommandPath ?? config.CommandPath,
                     option.CachePath ?? config.CachePath,
-                    option.ReloadOnChange != null ? bool.Parse(option.ReloadOnChange) :
+                    option.MqttRoutePath ?? config.MqttRoutePath,
+                   option.ReloadOnChange != null ? bool.Parse(option.ReloadOnChange) :
                     config.ReloadOnChange,
                     option.EnableChildrenMonitor != null ? bool.Parse(option.EnableChildrenMonitor) :
                     config.EnableChildrenMonitor

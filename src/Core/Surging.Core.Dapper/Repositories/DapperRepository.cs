@@ -7,14 +7,12 @@ using Surging.Core.Dapper.Expressions;
 using Surging.Core.Dapper.Filters.Action;
 using Surging.Core.Dapper.Filters.Query;
 using Surging.Core.Domain.Entities;
-using Surging.Core.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-
 
 namespace Surging.Core.Dapper.Repositories
 {
@@ -31,7 +29,7 @@ namespace Surging.Core.Dapper.Repositories
             _softDeleteQueryFilter = softDeleteQueryFilter;
             _logger = logger;
             _creationActionFilter = ServiceLocator.GetService<IAuditActionFilter<TEntity, TPrimaryKey>>(typeof(CreationAuditDapperActionFilter<TEntity, TPrimaryKey>).Name);
-            _modificationActionFilter =  ServiceLocator.GetService<IAuditActionFilter<TEntity, TPrimaryKey>>(typeof(ModificationAuditDapperActionFilter<TEntity, TPrimaryKey>).Name);
+            _modificationActionFilter = ServiceLocator.GetService<IAuditActionFilter<TEntity, TPrimaryKey>>(typeof(ModificationAuditDapperActionFilter<TEntity, TPrimaryKey>).Name);
             _deletionAuditDapperActionFilter = ServiceLocator.GetService<IAuditActionFilter<TEntity, TPrimaryKey>>(typeof(DeletionAuditDapperActionFilter<TEntity, TPrimaryKey>).Name);
         }
 
@@ -450,7 +448,7 @@ namespace Surging.Core.Dapper.Repositories
 
                 throw new DataAccessException(ex.Message, ex);
             }
-          
+
         }
 
         public async Task InsertOrUpdateAsync(TEntity entity, DbConnection conn, DbTransaction trans)
@@ -487,12 +485,12 @@ namespace Surging.Core.Dapper.Repositories
                 throw new DataAccessException(ex.Message, ex);
             }
 
-   
+
         }
 
         public async Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity, DbConnection conn, DbTransaction trans)
         {
-        
+
             try
             {
                 if (entity.Id == null)
@@ -585,7 +583,7 @@ namespace Surging.Core.Dapper.Repositories
             IEnumerable<TEntity> items = await GetAllAsync(predicate);
             foreach (TEntity entity in items)
             {
-                await DeleteAsync(entity,conn,trans);
+                await DeleteAsync(entity, conn, trans);
             }
 
         }

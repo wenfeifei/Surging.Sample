@@ -1,4 +1,4 @@
-﻿namespace Surging.Core.AutoMapper
+﻿namespace Surging.Core.AutoMapper.AutoMapper
 {
     public interface IAutoMapperBootstrap
     {

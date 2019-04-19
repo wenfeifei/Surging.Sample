@@ -31,9 +31,6 @@ namespace Surging.Core.CPlatform.Support.Attributes
         /// </summary>
         public int FailoverCluster { get; set; } = 3;
 
-        /// <summary>
-        /// 是否强制打开熔断
-        /// </summary>
         public bool CircuitBreakerForceOpen { get; set; }
 
         /// <summary>
@@ -52,7 +49,7 @@ namespace Surging.Core.CPlatform.Support.Attributes
         public bool RequestCacheEnabled { get; set; }
 
         /// <summary>
-        /// 注入服务端默认返回的值
+        /// 注入
         /// </summary>
         public string Injection { get; set; } = "return null";
 

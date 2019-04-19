@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\..\common.props" />
+
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Description>对领域层进行封装</Description>
+    <Description>封装领域设计组件</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Uow\" />
-    <Folder Include="Values\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

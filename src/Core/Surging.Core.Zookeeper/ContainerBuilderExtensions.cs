@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Surging.Core.CPlatform;
 using Surging.Core.CPlatform.Cache;
+using Surging.Core.CPlatform.Mqtt;
 using Surging.Core.CPlatform.Routing;
 using Surging.Core.CPlatform.Runtime.Client;
 using Surging.Core.CPlatform.Runtime.Server;
@@ -29,6 +30,20 @@ namespace Surging.Core.Zookeeper
                 provider.GetRequiredService<ISerializer<string>>(),
                 provider.GetRequiredService<IServiceRouteFactory>(),
                 provider.GetRequiredService<ILogger<ZooKeeperServiceRouteManager>>()));
+        }
+
+        public static IServiceBuilder UseZooKeeperMqttRouteManager(this IServiceBuilder builder, ConfigInfo configInfo)
+        {
+            return builder.UseMqttRouteManager(provider =>
+            {
+                var result = new ZooKeeperMqttServiceRouteManager(
+                     GetConfigInfo(configInfo),
+                   provider.GetRequiredService<ISerializer<byte[]>>(),
+                     provider.GetRequiredService<ISerializer<string>>(),
+                     provider.GetRequiredService<IMqttServiceFactory>(),
+                     provider.GetRequiredService<ILogger<ZooKeeperMqttServiceRouteManager>>());
+                return result;
+            });
         }
 
         /// <summary>
@@ -77,18 +92,13 @@ namespace Surging.Core.Zookeeper
                 provider.GetRequiredService<ILogger<ZookeeperServiceCacheManager>>()));
         }
 
-        /// <summary>
-        /// 使用Zookeeper管理
-        /// </summary>
-        /// <param name="builder">服务构建者</param>
-        /// <param name="configInfo">Zookeeper设置信息</param>
-        /// <returns>服务构建者</returns>
         public static IServiceBuilder UseZooKeeperManager(this IServiceBuilder builder, ConfigInfo configInfo)
         {
             return builder.UseZooKeeperRouteManager(configInfo)
                 .UseZooKeeperCacheManager(configInfo)
                 .UseZooKeeperServiceSubscribeManager(configInfo)
-                .UseZooKeeperCommandManager(configInfo);
+                .UseZooKeeperCommandManager(configInfo)
+                .UseZooKeeperMqttRouteManager(configInfo);
         }
 
         public static IServiceBuilder UseZooKeeperManager(this IServiceBuilder builder)
@@ -97,7 +107,8 @@ namespace Surging.Core.Zookeeper
             return builder.UseZooKeeperRouteManager(configInfo)
                 .UseZooKeeperCacheManager(configInfo)
                 .UseZooKeeperServiceSubscribeManager(configInfo)
-                .UseZooKeeperCommandManager(configInfo);
+                .UseZooKeeperCommandManager(configInfo)
+                .UseZooKeeperMqttRouteManager(configInfo);
         }
 
         private static ConfigInfo GetConfigInfo(ConfigInfo config)
@@ -119,6 +130,7 @@ namespace Surging.Core.Zookeeper
                     option.SubscriberPath ?? config.SubscriberPath,
                     option.CommandPath ?? config.CommandPath,
                     option.CachePath ?? config.CachePath,
+                    option.MqttRoutePath ?? config.MqttRoutePath,
                     option.ChRoot ?? config.ChRoot,
                     option.ReloadOnChange != null ? bool.Parse(option.ReloadOnChange) :
                     config.ReloadOnChange,

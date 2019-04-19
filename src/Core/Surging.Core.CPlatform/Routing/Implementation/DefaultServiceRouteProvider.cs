@@ -10,14 +10,17 @@ namespace Surging.Core.CPlatform.Routing.Implementation
 {
     public class DefaultServiceRouteProvider : IServiceRouteProvider
     {
-        private readonly ConcurrentDictionary<string, ServiceRoute> _concurrent = new ConcurrentDictionary<string, ServiceRoute>();
+        private readonly ConcurrentDictionary<string, ServiceRoute> _concurrent =
+       new ConcurrentDictionary<string, ServiceRoute>();
 
-        private readonly ConcurrentDictionary<string, ServiceRoute> _serviceRoute = new ConcurrentDictionary<string, ServiceRoute>();
+        private readonly ConcurrentDictionary<string, ServiceRoute> _serviceRoute =
+       new ConcurrentDictionary<string, ServiceRoute>();
 
         private readonly IServiceEntryManager _serviceEntryManager;
         private readonly ILogger<DefaultServiceRouteProvider> _logger;
         private readonly IServiceRouteManager _serviceRouteManager;
         private readonly IServiceTokenGenerator _serviceTokenGenerator;
+
         public DefaultServiceRouteProvider(IServiceRouteManager serviceRouteManager, ILogger<DefaultServiceRouteProvider> logger,
             IServiceEntryManager serviceEntryManager, IServiceTokenGenerator serviceTokenGenerator)
         {
@@ -47,7 +50,6 @@ namespace Surging.Core.CPlatform.Routing.Implementation
             }
             return route;
         }
-
 
         public ValueTask<ServiceRoute> GetRouteByPath(string path)
         {
@@ -86,6 +88,7 @@ namespace Surging.Core.CPlatform.Routing.Implementation
         }
 
         #region 私有方法
+
         private static string GetCacheKey(ServiceDescriptor descriptor)
         {
             return descriptor.Id;
@@ -134,7 +137,6 @@ namespace Surging.Core.CPlatform.Routing.Implementation
             return route;
         }
 
-
-        #endregion
+        #endregion 私有方法
     }
 }

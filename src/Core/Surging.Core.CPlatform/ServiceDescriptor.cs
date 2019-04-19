@@ -1,5 +1,4 @@
-﻿using Surging.Core.CPlatform.Extensions;
-using Surging.Core.CPlatform.Filters.Implementation;
+﻿using Surging.Core.CPlatform.Filters.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +49,7 @@ namespace Surging.Core.CPlatform
         /// 获取负责人
         /// </summary>
         /// <param name="descriptor">服务描述符。</param>
-        /// <param name="director"></param>
+        /// <param name="waitExecution">负责人名字</param>
         /// <returns>服务描述符。</returns>
         public static ServiceDescriptor Director(this ServiceDescriptor descriptor, string director)
         {
@@ -78,11 +77,6 @@ namespace Surging.Core.CPlatform
         public static bool EnableAuthorization(this ServiceDescriptor descriptor)
         {
             return descriptor.GetMetadata("EnableAuthorization", false);
-        }
-
-        public static bool AllowPermission(this ServiceDescriptor descriptor)
-        {
-            return descriptor.GetMetadata("AllowPermission", false);
         }
 
         /// <summary>
@@ -117,39 +111,6 @@ namespace Surging.Core.CPlatform
             return descriptor.GetMetadata("AuthType", AuthorizationType.AppSecret.ToString());
         }
 
-        public static int MqttPort(this ServiceDescriptor descriptor)
-        {
-            return descriptor.GetMetadata<int>("MqttPort", 97);
-        }
-
-        public static ServiceDescriptor MqttPort(this ServiceDescriptor descriptor, int MqttPort)
-        {
-            descriptor.Metadatas["MqttPort"] = MqttPort;
-            return descriptor;
-        }
-
-        public static int HttpPort(this ServiceDescriptor descriptor)
-        {
-            return descriptor.GetMetadata<int>("HttpPort", 280);
-        }
-
-        public static ServiceDescriptor HttpPort(this ServiceDescriptor descriptor, int HttpPort)
-        {
-            descriptor.Metadatas["HttpPort"] = HttpPort;
-            return descriptor;
-        }
-
-        public static int WsPort(this ServiceDescriptor descriptor)
-        {
-            return descriptor.GetMetadata<int>("WsPort", 96);
-        }
-
-        public static ServiceDescriptor WsPort(this ServiceDescriptor descriptor, int WsPort)
-        {
-            descriptor.Metadatas["WsPort"] = WsPort;
-            return descriptor;
-        }
-
         /// <summary>
         /// 设置授权类型
         /// </summary>
@@ -172,6 +133,14 @@ namespace Surging.Core.CPlatform
             return descriptor.GetMetadata<string>("Director");
         }
 
+
+
+        public static bool AllowPermission(this ServiceDescriptor descriptor)
+        {
+            return descriptor.GetMetadata("AllowPermission", false);
+        }
+
+
         /// <summary>
         /// 获取日期
         /// </summary>
@@ -181,18 +150,6 @@ namespace Surging.Core.CPlatform
         public static ServiceDescriptor Date(this ServiceDescriptor descriptor, string date)
         {
             descriptor.Metadatas["Date"] = date;
-            return descriptor;
-        }
-
-        /// <summary>
-        /// 是否允许用户匿名访问
-        /// </summary>
-        /// <param name="descriptor"></param>
-        /// <param name="allowPermission"></param>
-        /// <returns></returns>
-        public static ServiceDescriptor EnableAllowPermission(this ServiceDescriptor descriptor, bool allowPermission)
-        {
-            descriptor.Metadatas["AllowPermission"] = allowPermission;
             return descriptor;
         }
 
@@ -263,7 +220,7 @@ namespace Surging.Core.CPlatform
             if (!Metadatas.ContainsKey(name))
                 return def;
 
-            return Metadatas[name].ConventTo<T>();
+            return (T)Metadatas[name];
         }
 
         #region Equality members

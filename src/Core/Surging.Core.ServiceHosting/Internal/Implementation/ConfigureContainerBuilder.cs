@@ -3,9 +3,6 @@ using System.Reflection;
 
 namespace Surging.Core.ServiceHosting.Internal.Implementation
 {
-    /// <summary>
-    /// Startup Configure方法构造器
-    /// </summary>
     public class ConfigureContainerBuilder
     {
         public ConfigureContainerBuilder(MethodInfo configureContainerMethod)

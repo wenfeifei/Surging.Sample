@@ -50,11 +50,6 @@ namespace Surging.Core.ProxyGenerator
                 .AddClientProxy();
         }
 
-        /// <summary>
-        /// 添加支持服务代理远程调用
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
         public static IServiceBuilder AddRelateService(this IServiceBuilder builder)
         {
             return builder.AddRelateServiceRuntime().AddClientProxy();

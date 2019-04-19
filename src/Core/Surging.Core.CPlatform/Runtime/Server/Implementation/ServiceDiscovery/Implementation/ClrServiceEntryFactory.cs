@@ -16,6 +16,9 @@ using static Surging.Core.CPlatform.Utilities.FastInvoke;
 
 namespace Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Implementation
 {
+    /// <summary>
+    /// Clr服务条目工厂。
+    /// </summary>
     public class ClrServiceEntryFactory : IClrServiceEntryFactory
     {
         #region Field
@@ -39,6 +42,12 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.
 
         #region Implementation of IClrServiceEntryFactory
 
+        /// <summary>
+        /// 创建服务条目。
+        /// </summary>
+        /// <param name="service">服务类型。</param>
+        /// <param name="serviceImplementation">服务实现类型。</param>
+        /// <returns>服务条目集合。</returns>
         public IEnumerable<ServiceEntry> CreateServiceEntry(Type service)
         {
             var routeTemplate = service.GetCustomAttribute<ServiceBundleAttribute>();
@@ -61,20 +70,19 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.
                 Id = serviceId,
                 RoutePath = RoutePatternParser.Parse(routeTemplate, serviceName, method.Name)
             };
-
-            serviceDescriptor = SetPorts(serviceDescriptor);
-            serviceDescriptor.EnableAuthorization(true);
-            serviceDescriptor.AuthType(AuthorizationType.JWT);
-
             var descriptorAttributes = method.GetCustomAttributes<ServiceDescriptorAttribute>();
             foreach (var descriptorAttribute in descriptorAttributes)
             {
                 descriptorAttribute.Apply(serviceDescriptor);
             }
+            serviceDescriptor.EnableAuthorization(true);
+            serviceDescriptor.AuthType(AuthorizationType.JWT);
+
             //var authorization = attributes.Where(p => p is AuthorizationFilterAttribute).FirstOrDefault();
             //if (authorization != null)
-            //{
             //    serviceDescriptor.EnableAuthorization(true);
+            //if (authorization != null)
+            //{
             //    serviceDescriptor.AuthType(((authorization as AuthorizationAttribute)?.AuthType)
             //        ?? AuthorizationType.AppSecret);
             //}
@@ -93,6 +101,7 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.
 
                  foreach (var parameterInfo in method.GetParameters())
                  {
+                     //加入是否有默认值的判断，有默认值，并且用户没传，取默认值
                      if (parameterInfo.HasDefaultValue && !parameters.ContainsKey(parameterInfo.Name))
                      {
                          list.Add(parameterInfo.DefaultValue);
@@ -100,36 +109,30 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.
                      }
                      var value = parameters[parameterInfo.Name];
                      var parameterType = parameterInfo.ParameterType;
-                     var parameter = _typeConvertibleService.Convert(value, parameterType);
-                     list.Add(parameter);
-                 }
-
-                 if (parameters.ContainsKey("payload"))
-                 {
-                     if (RpcContext.GetContext().GetAttachment("payload") == null)
+                     if (value != null)
                      {
-                         var serializer = ServiceLocator.GetService<ISerializer<string>>();
-                         var payloadString = serializer.Serialize(parameters["payload"], true);
-                         RpcContext.GetContext().SetAttachment("payload", payloadString);
+                         var parameter = _typeConvertibleService.Convert(value, parameterType);
+                         list.Add(parameter);
                      }
-                 }
+                     else
+                     {
+                         list.Add(value);
+                     }
+                     if (parameters.ContainsKey("payload"))
+                     {
+                         if (RpcContext.GetContext().GetAttachment("payload") == null)
+                         {
+                             var serializer = ServiceLocator.GetService<ISerializer<string>>();
+                             var payloadString = serializer.Serialize(parameters["payload"], true);
+                             RpcContext.GetContext().SetAttachment("payload", payloadString);
+                         }
+                     }
 
+                 }
                  var result = fastInvoker(instance, list.ToArray());
                  return Task.FromResult(result);
              }
             };
-        }
-
-        private ServiceDescriptor SetPorts(ServiceDescriptor serviceDescriptor)
-        {
-            var ports = AppConfig.ServerOptions.Ports;
-            if (serviceDescriptor.WsPort() != ports.WSPort)
-                serviceDescriptor.WsPort(ports.WSPort);
-            if (serviceDescriptor.HttpPort() != ports.HttpPort)
-                serviceDescriptor.HttpPort(ports.HttpPort);
-            if (serviceDescriptor.MqttPort() != ports.MQTTPort)
-                serviceDescriptor.HttpPort(ports.MQTTPort);
-            return serviceDescriptor;
         }
 
         private FastInvokeHandler GetHandler(string key, MethodInfo method)

@@ -25,9 +25,9 @@ namespace Surging.Core.EventBusRabbitMQ
             {
                 var subscriptionAdapt = serviceProvider.GetInstances<ISubscriptionAdapt>();
                 serviceProvider.GetInstances<IEventBus>().OnShutdown += (sender, args) =>
-                {
-                    subscriptionAdapt.Unsubscribe();
-                };
+                 {
+                     subscriptionAdapt.Unsubscribe();
+                 };
                 serviceProvider.GetInstances<ISubscriptionAdapt>().SubscribeAt();
             });
         }
@@ -72,13 +72,13 @@ namespace Surging.Core.EventBusRabbitMQ
                 AppConfig.PrefetchCount = option.PrefetchCount;
                 AppConfig.FailCount = option.FailCount;
                 return new DefaultRabbitMQPersistentConnection(factory, logger);
-            }).As<IRabbitMQPersistentConnection>().SingleInstance();
+            }).As<IRabbitMQPersistentConnection>();
             return this;
         }
 
         private ContainerBuilderWrapper UseRabbitMQEventAdapt(ContainerBuilderWrapper builder, Func<IServiceProvider, ISubscriptionAdapt> adapt)
         {
-            builder.RegisterAdapter(adapt).SingleInstance();
+            builder.RegisterAdapter(adapt);
             return builder;
         }
 

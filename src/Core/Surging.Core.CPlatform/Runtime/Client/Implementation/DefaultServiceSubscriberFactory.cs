@@ -8,10 +8,13 @@ using System.Threading.Tasks;
 
 namespace Surging.Core.CPlatform.Runtime.Client.Implementation
 {
-    internal class DefaultServiceSubscriberFactory : AbstractServiceSubscriberFactory
+    internal class DefaultServiceSubscriberFactory : IServiceSubscriberFactory
     {
-        public DefaultServiceSubscriberFactory(ISerializer<string> serializer) : base(serializer)
+        private readonly ISerializer<string> _serializer;
+
+        public DefaultServiceSubscriberFactory(ISerializer<string> serializer)
         {
+            _serializer = serializer;
         }
 
         public Task<IEnumerable<ServiceSubscriber>> CreateServiceSubscribersAsync(IEnumerable<ServiceSubscriberDescriptor> descriptors)
@@ -29,7 +32,7 @@ namespace Surging.Core.CPlatform.Runtime.Client.Implementation
             return Task.FromResult(subscribers.AsEnumerable());
         }
 
-        protected override IEnumerable<AddressModel> CreateAddress(IEnumerable<ServiceAddressDescriptor> descriptors)
+        private IEnumerable<AddressModel> CreateAddress(IEnumerable<ServiceAddressDescriptor> descriptors)
         {
             if (descriptors == null)
                 yield break;

@@ -3,6 +3,7 @@ using log4net.Repository;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Xml;
 
 namespace Surging.Core.Log4net
@@ -29,6 +30,7 @@ namespace Surging.Core.Log4net
             return NoopDisposable.Instance;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsEnabled(LogLevel logLevel)
         {
             switch (logLevel)

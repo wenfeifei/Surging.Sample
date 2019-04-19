@@ -1,7 +1,7 @@
 ﻿namespace Surging.Core.System.Intercept
 {
     /// <summary>
-    /// 缓存操作类型枚举，如Get/Put/Remove。
+    /// 表示用于Caching特性的缓存方式。
     /// </summary>
     public enum CachingMethod
     {

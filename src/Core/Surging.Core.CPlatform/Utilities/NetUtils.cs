@@ -1,8 +1,6 @@
 ﻿using Surging.Core.CPlatform.Address;
 using System;
-using System.Collections.Generic;
 using System.Net.NetworkInformation;
-using System.Text;
 
 namespace Surging.Core.CPlatform.Utilities
 {
@@ -37,7 +35,6 @@ namespace Surging.Core.CPlatform.Utilities
         {
             return (address != null
                     && !ANYHOST.Equals(address)
-                    && !LOCALHOST.Equals(address)
                     && address.IsMatch(IP_PATTERN));
         }
 
@@ -75,7 +72,7 @@ namespace Surging.Core.CPlatform.Utilities
         public static string GetHostAddress(string hostAddress)
         {
             var result = hostAddress;
-            if (!IsValidAddress(hostAddress) || IsAnyHost(hostAddress))
+            if ((!IsValidAddress(hostAddress) && !IsLocalHost(hostAddress)) || IsAnyHost(hostAddress))
             {
                 result = GetAnyHostAddress();
             }

@@ -1,5 +1,4 @@
-﻿using Surging.Core.CPlatform.Filters.Implementation;
-using System;
+﻿using System;
 
 namespace Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attributes
 {
@@ -15,8 +14,6 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.
         public ServiceAttribute()
         {
             IsWaitExecution = true;
-            EnableAuthorization = true;
-            AuthType = AuthorizationType.JWT;
         }
 
         /// <summary>
@@ -25,7 +22,7 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.
         public bool IsWaitExecution { get; set; }
 
         /// <summary>
-        /// 负责人(开发者)
+        /// 负责人
         /// </summary>
         public string Director { get; set; }
 
@@ -35,14 +32,9 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.
         public bool DisableNetwork { get; set; }
 
         /// <summary>
-        /// 是否鉴权
+        /// 是否授权
         /// </summary>
         public bool EnableAuthorization { get; set; }
-
-        /// <summary>
-        /// 票据类型
-        /// </summary>
-        public AuthorizationType AuthType { get; set; }
 
         /// <summary>
         /// 名称
@@ -53,8 +45,6 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.
         /// 日期
         /// </summary>
         public string Date { get; set; }
-
-        public bool AllowPermission { get; set; }
 
         #region Overrides of DescriptorAttribute
 
@@ -67,8 +57,6 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.
             descriptor
                 .WaitExecution(IsWaitExecution)
                 .EnableAuthorization(EnableAuthorization)
-                .AuthType(AuthType)
-                .EnableAllowPermission(AllowPermission)
                 .DisableNetwork(DisableNetwork)
                 .Director(Director)
                 .GroupName(Name)

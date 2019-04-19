@@ -133,25 +133,13 @@ namespace Surging.Core.KestrelHttpServer
                         resultMessage.Data = taskType.GetProperty("Result").GetValue(task);
                 }
                 resultMessage.IsSucceed = resultMessage.Data != null;
-                // resultMessage.StatusCode = resultMessage.IsSucceed ? (int)StatusCode.Success : (int)StatusCode.RequestError;
-                resultMessage.StatusCode = resultMessage.IsSucceed ? StatusCode.OK : StatusCode.RequestError; //StatusCode.Success : (int)StatusCode.RequestError;
+                resultMessage.StatusCode = resultMessage.IsSucceed ? StatusCode.Ok : StatusCode.RequestError;
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
                 if (_logger.IsEnabled(LogLevel.Error))
-                    _logger.LogError(exception, "执行远程调用逻辑时候发生了错误。");
-                // resultMessage = new HttpResultMessage<object> { Data = null, Message = "执行发生了错误。", StatusCode = (int)StatusCode.RequestError };
-                //if (exception is CPlatformException)
-                //{
-                //    resultMessage.StatusCode = ((CPlatformException)exception).ExceptionCode;
-                //}
-                //else
-                //{
-                //    resultMessage.StatusCode = StatusCode.UnKnownError;
-                //}
-                resultMessage.StatusCode = GetGetExceptionStatusCode(exception);
-                resultMessage.Message = GetExceptionMessage(exception);
-                resultMessage.IsSucceed = false;
+                    _logger.LogError(ex, "执行远程调用逻辑时候发生了错误。");
+                resultMessage = new HttpResultMessage<object> { Data = null, Message = ex.GetExceptionMessage(), StatusCode = ex.GetGetExceptionStatusCode() };
             }
             return resultMessage;
         }
@@ -176,25 +164,14 @@ namespace Surging.Core.KestrelHttpServer
                         resultMessage.Data = taskType.GetProperty("Result").GetValue(task);
                 }
                 resultMessage.IsSucceed = resultMessage.Data != null;
-                resultMessage.StatusCode = resultMessage.IsSucceed ? StatusCode.OK : StatusCode.RequestError; //StatusCode.Success : (int)StatusCode.RequestError;
+                resultMessage.StatusCode = resultMessage.IsSucceed ? StatusCode.Ok : StatusCode.RequestError;
             }
             catch (Exception exception)
             {
                 if (_logger.IsEnabled(LogLevel.Error))
                     _logger.LogError(exception, "执行本地逻辑时候发生了错误。");
-                //resultMessage.Message = "执行发生了错误。";
-                //resultMessage.StatusCode = exception.HResult;
-                //if (exception is CPlatformException)
-                //{
-                //    resultMessage.StatusCode = ((CPlatformException)exception).ExceptionCode;
-                //}
-                //else
-                //{
-                //    resultMessage.StatusCode = StatusCode.UnKnownError;
-                //}
-                resultMessage.StatusCode = GetGetExceptionStatusCode(exception);
-                resultMessage.Message = GetExceptionMessage(exception);
-                resultMessage.IsSucceed = false;
+                resultMessage.Message = exception.GetExceptionMessage();
+                resultMessage.StatusCode = exception.GetGetExceptionStatusCode();
             }
             return resultMessage;
         }
@@ -217,53 +194,7 @@ namespace Surging.Core.KestrelHttpServer
             }
         }
 
-        private static string GetExceptionMessage(Exception exception)
-        {
-            if (exception == null)
-                return string.Empty;
-
-            var message = exception.Message;
-            //if (exception.InnerException != null)
-            //{
-            //    message += "|InnerException:" + GetExceptionMessage(exception.InnerException);
-            //}
-
-            if (exception is CPlatformException)
-            {
-                message = exception.Message;
-                return message;
-            }
-            if (exception.InnerException != null)
-            {
-                if (exception.InnerException is CPlatformException)
-                {
-                    message = exception.InnerException.Message;
-                    return message;
-                }
-                message += exception.InnerException.Message;
-            }
-
-            return message;
-        }
-
-        private StatusCode GetGetExceptionStatusCode(Exception exception)
-        {
-            var statusCode = StatusCode.UnKnownError;
-            if (exception is CPlatformException)
-            {
-                statusCode = ((CPlatformException)exception).ExceptionCode;
-                return statusCode;
-            }
-            if (exception.InnerException != null)
-            {
-                if (exception.InnerException is CPlatformException)
-                {
-                    statusCode = ((CPlatformException)exception.InnerException).ExceptionCode;
-                    return statusCode;
-                }
-            }
-            return statusCode;
-        }
+       
 
         #endregion Private Method
     }

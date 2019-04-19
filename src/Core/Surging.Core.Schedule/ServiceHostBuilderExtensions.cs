@@ -12,12 +12,12 @@ namespace Surging.Core.Schedule
             return hostBuilder.MapServices(mapper =>
             {
                 var jobEntities = mapper.Resolve<IJobEntityProvider>().GetJobEntities();
-                var srcpScheduleJobManager = mapper.Resolve<ISurgingScheduleJobManager>();
+                var surgingScheduleJobManager = mapper.Resolve<ISurgingScheduleJobManager>();
                 foreach (var jobEntity in jobEntities)
                 {
-                    srcpScheduleJobManager.ScheduleAsync(jobEntity).Wait();
+                    surgingScheduleJobManager.ScheduleAsync(jobEntity).Wait();
                 }
-                srcpScheduleJobManager.Start().Wait();
+                surgingScheduleJobManager.Start().Wait();
             });
         }
     }

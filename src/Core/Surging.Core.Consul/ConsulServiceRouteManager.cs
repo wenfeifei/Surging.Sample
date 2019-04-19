@@ -9,7 +9,6 @@ using Surging.Core.CPlatform.Routing;
 using Surging.Core.CPlatform.Routing.Implementation;
 using Surging.Core.CPlatform.Runtime.Client;
 using Surging.Core.CPlatform.Serialization;
-using Surging.Core.CPlatform.Transport.Implementation;
 using Surging.Core.CPlatform.Utilities;
 using System;
 using System.Collections.Generic;
@@ -122,7 +121,6 @@ namespace Surging.Core.Consul
 
         protected override async Task SetRoutesAsync(IEnumerable<ServiceRouteDescriptor> routes)
         {
-
             foreach (var serviceRoute in routes)
             {
                 var nodeData = _serializer.Serialize(serviceRoute);
@@ -185,7 +183,6 @@ namespace Surging.Core.Consul
 
         private async Task<ServiceRoute[]> GetRoutes(IEnumerable<string> childrens)
         {
-
             childrens = childrens.ToArray();
             var routes = new List<ServiceRoute>(childrens.Count());
 
@@ -206,7 +203,8 @@ namespace Surging.Core.Consul
         {
             ServiceRoute result = null;
             var watcher = new NodeMonitorWatcher(_consul, _manager, path,
-                async (oldData, newData) => await NodeChange(oldData, newData), tmpPath => {
+                async (oldData, newData) => await NodeChange(oldData, newData), tmpPath =>
+                {
                     var index = tmpPath.LastIndexOf("/");
                     return _serviceHeartbeatManager.ExistsWhitelist(tmpPath.Substring(index + 1));
                 });
@@ -345,9 +343,10 @@ namespace Surging.Core.Consul
             //触发路由被创建事件。
             OnCreated(newRoutes.Select(route => new ServiceRouteEventArgs(route)).ToArray());
 
-            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Information))
-                _logger.LogInformation("路由数据更新成功。");
+            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
+                _logger.LogDebug("路由数据更新成功。");
         }
-        #endregion
+
+        #endregion 私有方法
     }
 }

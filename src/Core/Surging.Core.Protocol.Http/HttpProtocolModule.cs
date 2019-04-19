@@ -53,7 +53,7 @@ namespace Surging.Core.Protocol.Http
                     await messageListener.StartAsync(endPoint);
                     return messageListener;
                 }, serviceExecutor);
-            }).As<IServiceHost>().SingleInstance();
+            }).As<IServiceHost>();
         }
 
         private static void RegisterHttpProtocol(ContainerBuilderWrapper builder)
@@ -74,7 +74,7 @@ namespace Surging.Core.Protocol.Http
                     await messageListener.StartAsync(endPoint);
                     return messageListener;
                 }, serviceExecutor);
-            }).As<IServiceHost>().SingleInstance();
+            }).As<IServiceHost>();
         }
     }
 }

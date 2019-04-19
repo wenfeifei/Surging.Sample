@@ -14,6 +14,8 @@
 
         public string CachePath { get; set; }
 
+        public string MqttRoutePath { get; set; }
+
         public string ReloadOnChange { get; set; }
 
         public string EnableChildrenMonitor { get; set; }

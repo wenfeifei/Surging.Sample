@@ -21,9 +21,9 @@ namespace Surging.Core.EventBusRabbitMQ
                     {
                         var subscriptionAdapt = mapper.Resolve<ISubscriptionAdapt>();
                         mapper.Resolve<IEventBus>().OnShutdown += (sender, args) =>
-                          {
-                              subscriptionAdapt.Unsubscribe();
-                          };
+                        {
+                            subscriptionAdapt.Unsubscribe();
+                        };
                         mapper.Resolve<ISubscriptionAdapt>().SubscribeAt();
                     });
                 });

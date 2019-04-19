@@ -16,8 +16,9 @@ namespace Surging.Core.Consul.Configurations
              string subscriberPath = "services/serviceSubscribers/",
             string commandPath = "services/serviceCommands/",
             string cachePath = "services/serviceCaches/",
+            string mqttRoutePath = "services/mqttServiceRoutes/",
             bool reloadOnChange = false, bool enableChildrenMonitor = false) :
-            this(connectionString, TimeSpan.FromSeconds(20), routePath, subscriberPath, commandPath, cachePath, reloadOnChange, enableChildrenMonitor)
+            this(connectionString, TimeSpan.FromSeconds(20), routePath, subscriberPath, commandPath, cachePath, mqttRoutePath, reloadOnChange, enableChildrenMonitor)
         {
         }
 
@@ -30,11 +31,13 @@ namespace Surging.Core.Consul.Configurations
         /// <param name="subscriberPath">订阅者配置命令。</param>
         /// <param name="routePath">路由路径配置路径</param>
         /// <param name="cachePath">缓存中心配置路径</param>
+        /// <param name="mqttRoutePath">Mqtt路由路径配置路径</param>
         public ConfigInfo(string connectionString, TimeSpan sessionTimeout,
             string routePath = "services/serviceRoutes/",
              string subscriberPath = "services/serviceSubscribers/",
             string commandPath = "services/serviceCommands/",
             string cachePath = "services/serviceCaches/",
+            string mqttRoutePath = "services/mqttServiceRoutes/",
             bool reloadOnChange = false, bool enableChildrenMonitor = false)
         {
             CachePath = cachePath;
@@ -43,6 +46,7 @@ namespace Surging.Core.Consul.Configurations
             RoutePath = routePath;
             SubscriberPath = subscriberPath;
             CommandPath = commandPath;
+            MqttRoutePath = mqttRoutePath;
             EnableChildrenMonitor = enableChildrenMonitor;
             if (!string.IsNullOrEmpty(connectionString))
             {
@@ -91,6 +95,11 @@ namespace Surging.Core.Consul.Configurations
         /// 路由配置路径。
         /// </summary>
         public string RoutePath { get; set; }
+
+        /// <summary>
+        /// Mqtt路由配置路径。
+        /// </summary>
+        public string MqttRoutePath { get; set; }
 
         /// <summary>
         /// 缓存中心配置中心

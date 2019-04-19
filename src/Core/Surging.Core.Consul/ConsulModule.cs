@@ -7,6 +7,7 @@ using Surging.Core.Consul.WatcherProvider.Implementation;
 using Surging.Core.CPlatform;
 using Surging.Core.CPlatform.Cache;
 using Surging.Core.CPlatform.Module;
+using Surging.Core.CPlatform.Mqtt;
 using Surging.Core.CPlatform.Routing;
 using Surging.Core.CPlatform.Runtime.Client;
 using Surging.Core.CPlatform.Runtime.Server;
@@ -35,20 +36,21 @@ namespace Surging.Core.Consul
                .UseConsulServiceSubscribeManager(builder, configInfo)
               .UseConsulCommandManager(builder, configInfo)
               .UseConsulCacheManager(builder, configInfo)
-              .UseConsulWatch(builder, configInfo);
+              .UseConsulWatch(builder, configInfo)
+              .UseConsulMqttRouteManager(builder, configInfo);
         }
 
         public ConsulModule UseConsulRouteManager(ContainerBuilderWrapper builder, ConfigInfo configInfo)
         {
             UseRouteManager(builder, provider =>
-                new ConsulServiceRouteManager(
-                    GetConfigInfo(configInfo),
-                    provider.GetRequiredService<ISerializer<byte[]>>(),
-                    provider.GetRequiredService<ISerializer<string>>(),
-                    provider.GetRequiredService<IClientWatchManager>(),
-                    provider.GetRequiredService<IServiceRouteFactory>(),
-                    provider.GetRequiredService<ILogger<ConsulServiceRouteManager>>(),
-                    provider.GetRequiredService<IServiceHeartbeatManager>()));
+           new ConsulServiceRouteManager(
+               GetConfigInfo(configInfo),
+            provider.GetRequiredService<ISerializer<byte[]>>(),
+              provider.GetRequiredService<ISerializer<string>>(),
+              provider.GetRequiredService<IClientWatchManager>(),
+              provider.GetRequiredService<IServiceRouteFactory>(),
+              provider.GetRequiredService<ILogger<ConsulServiceRouteManager>>(),
+               provider.GetRequiredService<IServiceHeartbeatManager>()));
             return this;
         }
 
@@ -74,34 +76,48 @@ namespace Surging.Core.Consul
         public ConsulModule UseConsulCommandManager(ContainerBuilderWrapper builder, ConfigInfo configInfo)
         {
             UseCommandManager(builder, provider =>
-            {
-                var result = new ConsulServiceCommandManager(
-                    GetConfigInfo(configInfo),
-                    provider.GetRequiredService<ISerializer<byte[]>>(),
-                    provider.GetRequiredService<ISerializer<string>>(),
-                    provider.GetRequiredService<IServiceRouteManager>(),
-                    provider.GetRequiredService<IClientWatchManager>(),
-                    provider.GetRequiredService<IServiceEntryManager>(),
-                    provider.GetRequiredService<ILogger<ConsulServiceCommandManager>>(),
+          {
+              var result = new ConsulServiceCommandManager(
+                   GetConfigInfo(configInfo),
+                provider.GetRequiredService<ISerializer<byte[]>>(),
+                  provider.GetRequiredService<ISerializer<string>>(),
+                  provider.GetRequiredService<IServiceRouteManager>(),
+                  provider.GetRequiredService<IClientWatchManager>(),
+                  provider.GetRequiredService<IServiceEntryManager>(),
+                  provider.GetRequiredService<ILogger<ConsulServiceCommandManager>>(),
                     provider.GetRequiredService<IServiceHeartbeatManager>());
-                return result;
-            });
+              return result;
+          });
             return this;
         }
 
         public ConsulModule UseConsulServiceSubscribeManager(ContainerBuilderWrapper builder, ConfigInfo configInfo)
         {
             UseSubscribeManager(builder, provider =>
-            {
-                var result = new ConsulServiceSubscribeManager(
-                    GetConfigInfo(configInfo),
-                    provider.GetRequiredService<ISerializer<byte[]>>(),
-                    provider.GetRequiredService<ISerializer<string>>(),
-                    provider.GetRequiredService<IClientWatchManager>(),
-                    provider.GetRequiredService<IServiceSubscriberFactory>(),
-                    provider.GetRequiredService<ILogger<ConsulServiceSubscribeManager>>());
-                return result;
-            });
+          {
+              var result = new ConsulServiceSubscribeManager(
+                  GetConfigInfo(configInfo),
+                  provider.GetRequiredService<ISerializer<byte[]>>(),
+                  provider.GetRequiredService<ISerializer<string>>(),
+                  provider.GetRequiredService<IClientWatchManager>(),
+                  provider.GetRequiredService<IServiceSubscriberFactory>(),
+                  provider.GetRequiredService<ILogger<ConsulServiceSubscribeManager>>());
+              return result;
+          });
+            return this;
+        }
+
+        public ConsulModule UseConsulMqttRouteManager(ContainerBuilderWrapper builder, ConfigInfo configInfo)
+        {
+            UseMqttRouteManager(builder, provider =>
+           new ConsulMqttServiceRouteManager(
+               GetConfigInfo(configInfo),
+            provider.GetRequiredService<ISerializer<byte[]>>(),
+              provider.GetRequiredService<ISerializer<string>>(),
+              provider.GetRequiredService<IClientWatchManager>(),
+              provider.GetRequiredService<IMqttServiceFactory>(),
+              provider.GetRequiredService<ILogger<ConsulMqttServiceRouteManager>>(),
+              provider.GetRequiredService<IServiceHeartbeatManager>()));
             return this;
         }
 
@@ -143,6 +159,12 @@ namespace Surging.Core.Consul
             return builder;
         }
 
+        public ContainerBuilderWrapper UseMqttRouteManager(ContainerBuilderWrapper builder, Func<IServiceProvider, IMqttServiceRouteManager> factory)
+        {
+            builder.RegisterAdapter(factory).InstancePerLifetimeScope();
+            return builder;
+        }
+
         private ConfigInfo GetConfigInfo(ConfigInfo config)
         {
             ConsulOption option = null;
@@ -162,7 +184,8 @@ namespace Surging.Core.Consul
                     option.SubscriberPath ?? config.SubscriberPath,
                     option.CommandPath ?? config.CommandPath,
                     option.CachePath ?? config.CachePath,
-                    option.ReloadOnChange != null ? bool.Parse(option.ReloadOnChange) :
+                    option.MqttRoutePath ?? config.MqttRoutePath,
+                   option.ReloadOnChange != null ? bool.Parse(option.ReloadOnChange) :
                     config.ReloadOnChange,
                     option.EnableChildrenMonitor != null ? bool.Parse(option.EnableChildrenMonitor) :
                     config.EnableChildrenMonitor

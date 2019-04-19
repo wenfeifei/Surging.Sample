@@ -5,7 +5,7 @@
     }
 
     public interface IFullAudited<TUser> : IAudited<TUser>, IFullAudited, IDeletionAudited<TUser>
-        where TUser : IEntity<string>
+        where TUser : IEntity<long>
     {
     }
 }

@@ -4,6 +4,7 @@ using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Microsoft.Extensions.Logging;
+using Surging.Core.CPlatform;
 using Surging.Core.CPlatform.Messages;
 using Surging.Core.CPlatform.Serialization;
 using Surging.Core.CPlatform.Transport;
@@ -13,11 +14,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Surging.Core.CPlatform;
 
 namespace Surging.Core.Protocol.Http
 {
-    class DotNettyHttpServerMessageListener : IMessageListener, IDisposable
+    internal class DotNettyHttpServerMessageListener : IMessageListener, IDisposable
     {
         #region Field
 
@@ -64,6 +64,7 @@ namespace Surging.Core.Protocol.Http
         {
             if (_logger.IsEnabled(LogLevel.Debug))
                 _logger.LogDebug($"准备启动服务主机，监听地址：{endPoint}。");
+            Environment.SetEnvironmentVariable("io.netty.allocator.numDirectArenas", "0");
             var serverCompletion = new TaskCompletionSource();
             var bossGroup = new MultithreadEventLoopGroup(1);
             var workerGroup = new MultithreadEventLoopGroup();//Default eventLoopCount is Environment.ProcessorCount * 2
@@ -97,7 +98,6 @@ namespace Surging.Core.Protocol.Http
             {
                 _logger.LogError($"Http服务主机启动失败，监听地址：{endPoint}。 ");
             }
-
         }
 
         public void CloseAsync()
@@ -111,7 +111,6 @@ namespace Surging.Core.Protocol.Http
 
         #region Implementation of IDisposable
 
-
         public void Dispose()
         {
             Task.Run(async () =>
@@ -123,9 +122,10 @@ namespace Surging.Core.Protocol.Http
         #endregion Implementation of IDisposable
 
         #region Help Class
+
         private class ServerHandler : SimpleChannelInboundHandler<IFullHttpRequest>
         {
-            readonly TaskCompletionSource completion = new TaskCompletionSource();
+            private readonly TaskCompletionSource completion = new TaskCompletionSource();
 
             private readonly Action<IChannelHandlerContext, TransportMessage> _readAction;
             private readonly ILogger _logger;

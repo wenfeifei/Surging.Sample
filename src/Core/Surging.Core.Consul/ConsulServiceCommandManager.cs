@@ -46,7 +46,6 @@ namespace Surging.Core.Consul
             _consul = new ConsulClient(config =>
             {
                 config.Address = new Uri($"http://{configInfo.Host}:{configInfo.Port}");
-
             }, null, h => { h.UseProxy = false; h.Proxy = null; });
             EnterServiceCommands().Wait();
             _serviceRouteManager.Removed += ServiceRouteManager_Removed;
@@ -102,7 +101,6 @@ namespace Surging.Core.Consul
             if (newCommand == null)
                 //触发删除事件。
                 OnRemoved(new ServiceCommandEventArgs(oldCommand));
-
             else if (oldCommand == null)
                 OnCreated(new ServiceCommandEventArgs(newCommand));
             else
@@ -154,8 +152,6 @@ namespace Surging.Core.Consul
         {
             _consul.KV.Delete($"{_configInfo.CommandPath}{e.Route.ServiceDescriptor.Id}").Wait();
         }
-
-
 
         private ServiceCommandDescriptor GetServiceCommand(byte[] data)
         {
@@ -234,7 +230,7 @@ namespace Surging.Core.Consul
 
         private async Task EnterServiceCommands()
         {
-            if (_serviceCommands != null && _configInfo.EnableChildrenMonitor)
+            if (_serviceCommands != null && _serviceCommands.Length > 0 && _configInfo.EnableChildrenMonitor)
                 return;
             Action<string[]> action = null;
             if (_configInfo.EnableChildrenMonitor)
@@ -331,8 +327,8 @@ namespace Surging.Core.Consul
             //触发服务命令被创建事件。
             OnCreated(newCommands.Select(command => new ServiceCommandEventArgs(command)).ToArray());
 
-            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Information))
-                _logger.LogInformation("服务命令数据更新成功。");
+            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
+                _logger.LogDebug("服务命令数据更新成功。");
         }
     }
 }

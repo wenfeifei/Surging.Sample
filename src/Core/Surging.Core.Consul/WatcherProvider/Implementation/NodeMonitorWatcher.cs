@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 
 namespace Surging.Core.Consul.WatcherProvider.Implementation
 {
-    class NodeMonitorWatcher : WatcherBase
+    internal class NodeMonitorWatcher : WatcherBase
     {
         private readonly Action<byte[], byte[]> _action;
         private readonly IClientWatchManager _manager;
         private readonly ConsulClient _client;
         private readonly string _path;
         private byte[] _currentData = new byte[0];
-        Func<string, bool> _allowChange;
+        private Func<string, bool> _allowChange;
+
         public NodeMonitorWatcher(ConsulClient client, IClientWatchManager manager, string path,
             Action<byte[], byte[]> action, Func<string, bool> allowChange)
         {

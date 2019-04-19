@@ -7,17 +7,17 @@ namespace Surging.Core.CPlatform.Configurations.Remote
     public class RemoteConfigurationSource : IConfigurationSource
     {
         /// <summary>
-        /// 要调用的URI
+        /// The uri to call to fetch
         /// </summary>
         public Uri ConfigurationUri { get; set; }
 
         /// <summary>
-        /// 确定远程源是否为可选的。
+        /// Determines if the remote source is optional
         /// </summary>
         public bool Optional { get; set; }
 
         /// <summary>
-        /// HttpMessageHandler用于与远程配置提供程序通信。
+        /// The HttpMessageHandler used to communicate with remote configuration provider.
         /// </summary>
         public HttpMessageHandler BackchannelHttpHandler { get; set; }
 

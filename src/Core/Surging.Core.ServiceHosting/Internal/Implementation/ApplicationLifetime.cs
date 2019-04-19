@@ -4,9 +4,6 @@ using System.Threading;
 
 namespace Surging.Core.ServiceHosting.Internal.Implementation
 {
-    /// <summary>
-    /// 描述应用生命周期
-    /// </summary>
     public class ApplicationLifetime : IApplicationLifetime
     {
         private readonly CancellationTokenSource _startedSource = new CancellationTokenSource();
@@ -14,33 +11,17 @@ namespace Surging.Core.ServiceHosting.Internal.Implementation
         private readonly CancellationTokenSource _stoppedSource = new CancellationTokenSource();
         private readonly ILogger<ApplicationLifetime> _logger;
 
-        /// <summary>
-        /// 应用生命周期构造器
-        /// </summary>
-        /// <param name="logger"></param>
         public ApplicationLifetime(ILogger<ApplicationLifetime> logger)
         {
             _logger = logger;
         }
 
-        /// <summary>
-        /// 应用启动状态点
-        /// </summary>
         public CancellationToken ApplicationStarted => _startedSource.Token;
 
-        /// <summary>
-        /// 应用停止状态点
-        /// </summary>
         public CancellationToken ApplicationStopping => _stoppingSource.Token;
 
-        /// <summary>
-        /// 应用停止后
-        /// </summary>
         public CancellationToken ApplicationStopped => _stoppedSource.Token;
 
-        /// <summary>
-        /// 触发应用启动事件
-        /// </summary>
         public void NotifyStarted()
         {
             try

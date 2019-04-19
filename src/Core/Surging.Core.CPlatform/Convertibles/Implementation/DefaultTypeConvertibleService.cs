@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Surging.Core.CPlatform.Exceptions;
+using Surging.Core.CPlatform.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,12 +48,23 @@ namespace Surging.Core.CPlatform.Convertibles.Implementation
             if (conversionType == null)
                 throw new ArgumentNullException(nameof(conversionType));
 
-            if (conversionType.GetTypeInfo().IsInstanceOfType(instance))
-                return instance;
-
             if (_logger.IsEnabled(LogLevel.Debug))
                 _logger.LogDebug($"准备将 {instance.GetType()} 转换为：{conversionType}。");
+            if (instance.GetType() == typeof(string) && !instance.ToString().IsValidJson())
+            {
+                if (conversionType == typeof(object) || conversionType == typeof(string))
+                {
+                    return instance;
+                }
+                return ConvertInstaceType(instance, conversionType);
 
+            }
+
+            return ConvertInstaceType(instance, conversionType);
+        }
+
+        private object ConvertInstaceType(object instance, Type conversionType)
+        {
             object result = null;
             foreach (var converter in _converters)
             {
@@ -62,7 +74,7 @@ namespace Surging.Core.CPlatform.Convertibles.Implementation
             }
             if (result != null)
                 return result;
-            var exception = new CPlatformException($"无法将实例：{instance}转换为{conversionType}。");
+            var exception = new CPlatformException($"无法将实例：{instance}转换为{conversionType}。",StatusCode.CPlatformError);
 
             if (_logger.IsEnabled(LogLevel.Error))
                 _logger.LogError(exception, $"将 {instance.GetType()} 转换成 {conversionType} 时发生了错误。");

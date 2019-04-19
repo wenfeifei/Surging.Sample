@@ -12,9 +12,6 @@ using System.Reflection;
 
 namespace Surging.Core.ServiceHosting.Internal.Implementation
 {
-    /// <summary>
-    /// Startupï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-    /// </summary>
     public class StartupLoader
     {
         public static StartupMethods LoadMethods(IServiceProvider hostingServiceProvider, IConfigurationBuilder config, Type startupType, string environmentName)
@@ -59,7 +56,7 @@ namespace Surging.Core.ServiceHosting.Internal.Implementation
             if (string.IsNullOrEmpty(startupAssemblyName))
             {
                 throw new ArgumentException(
-                    string.Format("'{0}' ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½.",
+                    string.Format("'{0}' ²»ÄÜÎª¿Õ.",
                     nameof(startupAssemblyName)),
                     nameof(startupAssemblyName));
             }
@@ -67,7 +64,7 @@ namespace Surging.Core.ServiceHosting.Internal.Implementation
             var assembly = Assembly.Load(new AssemblyName(startupAssemblyName));
             if (assembly == null)
             {
-                throw new InvalidOperationException(String.Format("ï¿½ï¿½ï¿½ï¿½ '{0}' ï¿½ï¿½ï¿½ï¿½ï¿½Ü¼ï¿½ï¿½ï¿½", startupAssemblyName));
+                throw new InvalidOperationException(String.Format("³ÌÐò¼¯ '{0}' ´íÎó²»ÄÜ¼ÓÔØ", startupAssemblyName));
             }
 
             var startupNameWithEnv = "Startup" + environmentName;
@@ -92,7 +89,7 @@ namespace Surging.Core.ServiceHosting.Internal.Implementation
 
             if (type == null)
             {
-                throw new InvalidOperationException(String.Format("ï¿½ï¿½ï¿½ï¿½ '{0}' ï¿½ï¿½ï¿½ï¿½ '{1}' ï¿½ï¿½ï¿½Ü´Ó³ï¿½ï¿½ï¿½ '{2}'ï¿½Òµï¿½.",
+                throw new InvalidOperationException(String.Format("ÀàÐÍ '{0}' »òÕß '{1}' ²»ÄÜ´Ó³ÌÐò¼¯ '{2}'ÕÒµ½.",
                     startupNameWithEnv,
                     startupNameWithoutEnv,
                     startupAssemblyName));
@@ -129,14 +126,14 @@ namespace Surging.Core.ServiceHosting.Internal.Implementation
             var selectedMethods = methods.Where(method => method.Name.Equals(methodNameWithEnv, StringComparison.OrdinalIgnoreCase)).ToList();
             if (selectedMethods.Count > 1)
             {
-                throw new InvalidOperationException(string.Format("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½  '{0}' ï¿½ï¿½Ö§ï¿½ï¿½.", methodNameWithEnv));
+                throw new InvalidOperationException(string.Format("¶à¸öÖØÔØ·½·¨  '{0}' ²»Ö§³Ö.", methodNameWithEnv));
             }
             if (selectedMethods.Count == 0)
             {
                 selectedMethods = methods.Where(method => method.Name.Equals(methodNameWithNoEnv, StringComparison.OrdinalIgnoreCase)).ToList();
                 if (selectedMethods.Count > 1)
                 {
-                    throw new InvalidOperationException(string.Format("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½  '{0}' ï¿½ï¿½Ö§ï¿½ï¿½.", methodNameWithNoEnv));
+                    throw new InvalidOperationException(string.Format("¶à¸öÖØÔØ·½·¨  '{0}' ²»Ö§³Ö.", methodNameWithNoEnv));
                 }
             }
 
@@ -145,7 +142,7 @@ namespace Surging.Core.ServiceHosting.Internal.Implementation
             {
                 if (required)
                 {
-                    throw new InvalidOperationException(string.Format("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ±ï¿½ï¿½ï¿½Îª'{0}' ï¿½ï¿½ï¿½ï¿½ '{1}' ï¿½Ò²ï¿½ï¿½ï¿½ '{2}' ï¿½ï¿½ï¿½ï¿½.",
+                    throw new InvalidOperationException(string.Format("¹«¹²·½·¨Ãû³Æ±ØÐëÎª'{0}' »òÕß '{1}' ÕÒ²»µ½ '{2}' ÀàÐÍ.",
                         methodNameWithEnv,
                         methodNameWithNoEnv,
                         startupType.FullName));
@@ -156,7 +153,7 @@ namespace Surging.Core.ServiceHosting.Internal.Implementation
             {
                 if (required)
                 {
-                    throw new InvalidOperationException(string.Format(" '{0}'ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ '{1}' ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ '{2}'.",
+                    throw new InvalidOperationException(string.Format(" '{0}'µÄ·½·¨ÔÚÀàÐÍ '{1}' ±ØÐëÓÐ·µ»ØÀàÐÍ '{2}'.",
                         methodInfo.Name,
                         startupType.FullName,
                         returnType.Name));

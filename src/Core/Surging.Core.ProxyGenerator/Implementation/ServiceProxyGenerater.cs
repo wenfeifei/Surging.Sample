@@ -31,6 +31,7 @@ namespace Surging.Core.ProxyGenerator.Implementation
 
         private readonly IServiceIdGenerator _serviceIdGenerator;
         private readonly ILogger<ServiceProxyGenerater> _logger;
+
         #endregion Field
 
         #region Constructor
@@ -283,7 +284,6 @@ namespace Surging.Core.ProxyGenerator.Implementation
                     parameterDeclarationList.Add(Parameter(
                                         Identifier(parameter.Name))
                                         .WithType(GetQualifiedNameSyntax(parameter.ParameterType)));
-
                 }
                 parameterDeclarationList.Add(Token(SyntaxKind.CommaToken));
 
@@ -317,7 +317,6 @@ namespace Surging.Core.ProxyGenerator.Implementation
             {
                 expressionSyntax = GenericName(
                 Identifier("Invoke")).WithTypeArgumentList(((GenericNameSyntax)returnDeclaration).TypeArgumentList);
-
             }
             else
             {

@@ -28,7 +28,6 @@ namespace Surging.Core.Protocol.WS
             var section = AppConfig.GetSection("WebSocket");
             if (section.Exists())
                 options = section.Get<WebSocketOptions>();
-
             base.RegisterBuilder(builder);
             builder.Register(provider =>
             {
@@ -39,7 +38,6 @@ namespace Surging.Core.Protocol.WS
                       options
                       );
             }).As(typeof(IWSServiceEntryProvider)).SingleInstance();
-
             if (AppConfig.ServerOptions.Protocol == CommunicationProtocol.WS)
             {
                 RegisterDefaultProtocol(builder, options);
@@ -56,9 +54,9 @@ namespace Surging.Core.Protocol.WS
             {
                 return new DefaultWSServerMessageListener(
                     provider.Resolve<ILogger<DefaultWSServerMessageListener>>(),
-                    provider.Resolve<IWSServiceEntryProvider>(),
-                    options
-                    );
+                      provider.Resolve<IWSServiceEntryProvider>(),
+                      options
+                      );
             }).SingleInstance();
             builder.Register(provider =>
             {
@@ -68,7 +66,7 @@ namespace Surging.Core.Protocol.WS
                     await messageListener.StartAsync(endPoint);
                     return messageListener;
                 }, null);
-            }).As<IServiceHost>().SingleInstance();
+            }).As<IServiceHost>();
         }
 
         private static void RegisterWSProtocol(ContainerBuilderWrapper builder, WebSocketOptions options)
@@ -88,7 +86,7 @@ namespace Surging.Core.Protocol.WS
                     await messageListener.StartAsync(endPoint);
                     return messageListener;
                 });
-            }).As<IServiceHost>().SingleInstance();
+            }).As<IServiceHost>();
         }
     }
 }

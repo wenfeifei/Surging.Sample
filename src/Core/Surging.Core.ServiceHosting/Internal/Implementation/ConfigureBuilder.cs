@@ -4,9 +4,6 @@ using System.Reflection;
 
 namespace Surging.Core.ServiceHosting.Internal.Implementation
 {
-    /// <summary>
-    /// 配置构造器
-    /// </summary>
     public class ConfigureBuilder
     {
         public ConfigureBuilder(MethodInfo configure)

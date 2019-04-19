@@ -1,15 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Surging.Core.CPlatform.Exceptions;
 using Surging.Core.CPlatform.Filters;
 using Surging.Core.CPlatform.Messages;
 using Surging.Core.CPlatform.Routing;
-using Surging.Core.CPlatform.Serialization;
 using Surging.Core.CPlatform.Transport;
 using Surging.Core.CPlatform.Transport.Implementation;
 using Surging.Core.CPlatform.Utilities;
 using System;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Surging.Core.CPlatform.Runtime.Server.Implementation
@@ -22,23 +21,19 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation
         private readonly ILogger<DefaultServiceExecutor> _logger;
         private readonly IServiceRouteProvider _serviceRouteProvider;
         private readonly IAuthorizationFilter _authorizationFilter;
-        private readonly ISerializer<string> _serializer;
 
         #endregion Field
 
         #region Constructor
 
-        public DefaultServiceExecutor(IServiceEntryLocate serviceEntryLocate,
-            IServiceRouteProvider serviceRouteProvider,
+        public DefaultServiceExecutor(IServiceEntryLocate serviceEntryLocate, IServiceRouteProvider serviceRouteProvider,
             IAuthorizationFilter authorizationFilter,
-            ILogger<DefaultServiceExecutor> logger,
-            ISerializer<string> serializer)
+            ILogger<DefaultServiceExecutor> logger)
         {
             _serviceEntryLocate = serviceEntryLocate;
             _logger = logger;
             _serviceRouteProvider = serviceRouteProvider;
             _authorizationFilter = authorizationFilter;
-            _serializer = serializer;
         }
 
         #endregion Constructor
@@ -118,7 +113,6 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation
         {
             try
             {
-                var cancelTokenSource = new CancellationTokenSource();
                 var result = await entry.Func(remoteInvokeMessage.ServiceKey, remoteInvokeMessage.Parameters);
                 var task = result as Task;
 
@@ -128,7 +122,8 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation
                 }
                 else
                 {
-                    await task;
+                    if (!task.IsCompletedSuccessfully)
+                        await task;
                     var taskType = task.GetType().GetTypeInfo();
                     if (taskType.IsGenericType)
                         resultMessage.Result = taskType.GetProperty("Result").GetValue(task);
@@ -136,22 +131,15 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation
 
                 if (remoteInvokeMessage.DecodeJOject && !(resultMessage.Result is IConvertible && UtilityType.ConvertibleType.GetTypeInfo().IsAssignableFrom(resultMessage.Result.GetType())))
                 {
-                    resultMessage.Result = _serializer.Serialize(resultMessage.Result, true); //JsonConvert.SerializeObject(resultMessage.Result);
+                    resultMessage.Result = JsonConvert.SerializeObject(resultMessage.Result);
                 }
             }
             catch (Exception exception)
             {
                 if (_logger.IsEnabled(LogLevel.Error))
                     _logger.LogError(exception, "执行本地逻辑时候发生了错误。");
-                resultMessage.ExceptionMessage = GetExceptionMessage(exception);
-                if (exception is CPlatformException)
-                {
-                    resultMessage.StatusCode = ((CPlatformException)exception).ExceptionCode;
-                }
-                else
-                {
-                    resultMessage.StatusCode = StatusCode.UnKnownError;
-                }
+                resultMessage.ExceptionMessage = exception.GetExceptionMessage();
+                resultMessage.StatusCode = exception.GetGetExceptionStatusCode();
             }
         }
 
@@ -173,18 +161,7 @@ namespace Surging.Core.CPlatform.Runtime.Server.Implementation
             }
         }
 
-        private static string GetExceptionMessage(Exception exception)
-        {
-            if (exception == null)
-                return string.Empty;
-
-            var message = exception.Message;
-            if (exception.InnerException != null)
-            {
-                message += "|InnerException:" + GetExceptionMessage(exception.InnerException);
-            }
-            return message;
-        }
+      
 
         #endregion Private Method
     }

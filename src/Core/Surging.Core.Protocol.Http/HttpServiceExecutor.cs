@@ -138,22 +138,13 @@ namespace Surging.Core.Protocol.Http
                         resultMessage.Data = taskType.GetProperty("Result").GetValue(task);
                 }
                 resultMessage.IsSucceed = resultMessage.Data != null;
-                resultMessage.StatusCode = resultMessage.IsSucceed ? StatusCode.OK : StatusCode.RequestError; //StatusCode.Success : (int)StatusCode.RequestError;
+                resultMessage.StatusCode = resultMessage.IsSucceed ? StatusCode.Ok : StatusCode.RequestError;
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
                 if (_logger.IsEnabled(LogLevel.Error))
-                    _logger.LogError(exception, "执行远程调用逻辑时候发生了错误。");
-                if (exception is CPlatformException)
-                {
-                    resultMessage.StatusCode = ((CPlatformException)exception).ExceptionCode;
-                }
-                else
-                {
-                    resultMessage.StatusCode = StatusCode.UnKnownError;
-                }
-                resultMessage.Message = GetExceptionMessage(exception);
-                resultMessage.IsSucceed = false;
+                    _logger.LogError(ex, "执行远程调用逻辑时候发生了错误。");
+                resultMessage = new HttpResultMessage<object> { Data = null, Message = ex.GetExceptionMessage(), StatusCode = ex.GetGetExceptionStatusCode() };
             }
             return resultMessage;
         }
@@ -178,23 +169,14 @@ namespace Surging.Core.Protocol.Http
                         resultMessage.Data = taskType.GetProperty("Result").GetValue(task);
                 }
                 resultMessage.IsSucceed = resultMessage.Data != null;
-                resultMessage.StatusCode = resultMessage.IsSucceed ? StatusCode.OK : StatusCode.RequestError;
+                resultMessage.StatusCode = resultMessage.IsSucceed ? StatusCode.Ok : StatusCode.RequestError;
             }
             catch (Exception exception)
             {
                 if (_logger.IsEnabled(LogLevel.Error))
                     _logger.LogError(exception, "执行本地逻辑时候发生了错误。");
-                // resultMessage.Message = "执行发生了错误。";
-                if (exception is CPlatformException)
-                {
-                    resultMessage.StatusCode = ((CPlatformException)exception).ExceptionCode;
-                }
-                else
-                {
-                    resultMessage.StatusCode = StatusCode.UnKnownError;
-                }
-                resultMessage.Message = GetExceptionMessage(exception);
-                resultMessage.IsSucceed = false;
+                resultMessage.Message = exception.GetExceptionMessage();
+                resultMessage.StatusCode = exception.GetGetExceptionStatusCode();
             }
             return resultMessage;
         }
@@ -217,18 +199,6 @@ namespace Surging.Core.Protocol.Http
             }
         }
 
-        private static string GetExceptionMessage(Exception exception)
-        {
-            if (exception == null)
-                return string.Empty;
-
-            var message = exception.Message;
-            if (exception.InnerException != null)
-            {
-                message += "|InnerException:" + GetExceptionMessage(exception.InnerException);
-            }
-            return message;
-        }
 
         #endregion Private Method
     }

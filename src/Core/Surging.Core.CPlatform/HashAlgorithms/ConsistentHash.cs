@@ -4,14 +4,24 @@ using System.Linq;
 
 namespace Surging.Core.CPlatform.HashAlgorithms
 {
+    /// <summary>
+    /// 针对<see cref="T"/>哈希算法实现
+    /// </summary>
+    /// <typeparam name="T">类型</typeparam>
+    /// <remarks>
+    /// 	<para>创建：范亮</para>
+    /// 	<para>日期：2016/4/2</para>
+    /// </remarks>
     public class ConsistentHash<T>
     {
         #region 字段
+
         private readonly SortedDictionary<int, T> _ring = new SortedDictionary<int, T>();
         private int[] _nodeKeysInRing = null;
         private readonly IHashAlgorithm _hashAlgorithm;
         private readonly int _virtualNodeReplicationFactor = 1000;
-        #endregion
+
+        #endregion 字段
 
         public ConsistentHash(IHashAlgorithm hashAlgorithm)
         {
@@ -25,6 +35,7 @@ namespace Surging.Core.CPlatform.HashAlgorithms
         }
 
         #region 属性
+
         /// <summary>
         /// 复制哈希节点数
         /// </summary>
@@ -36,8 +47,8 @@ namespace Surging.Core.CPlatform.HashAlgorithms
         {
             get { return _virtualNodeReplicationFactor; }
         }
-        #endregion
 
+        #endregion 属性
 
         /// <summary>
         /// 添加节点
@@ -116,7 +127,6 @@ namespace Surging.Core.CPlatform.HashAlgorithms
                 _ring.Remove(hashOfVirtualNode);
             }
         }
-
 
         /// <summary>
         /// 顺时针查找对应哈希的位置

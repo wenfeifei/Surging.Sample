@@ -13,7 +13,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace Surging.Core.Consul
 {
     public class ConsulServiceCacheManager : ServiceCacheManagerBase, IDisposable
@@ -46,7 +45,6 @@ namespace Surging.Core.Consul
 
         public override async Task ClearAsync()
         {
-
             var queryResult = await _consul.KV.List(_configInfo.CachePath);
 
             var response = queryResult.Response;
@@ -115,7 +113,6 @@ namespace Surging.Core.Consul
 
         private async Task<ServiceCache[]> GetCaches(IEnumerable<string> childrens)
         {
-
             childrens = childrens.ToArray();
             var caches = new List<ServiceCache>(childrens.Count());
 
@@ -183,10 +180,10 @@ namespace Surging.Core.Consul
             {
                 var watcher = new ChildrenMonitorWatcher(_consul, _manager, _configInfo.CachePath,
                     async (oldChildrens, newChildrens) => await ChildrenChange(oldChildrens, newChildrens),
-                 (result) => ConvertPaths(result).Result);
+                    (result) => ConvertPaths(result).Result);
                 action = currentData => watcher.SetCurrentData(currentData);
             }
-            
+
             if (_consul.KV.Keys(_configInfo.CachePath).Result.Response?.Count() > 0)
             {
                 var result = await _consul.GetChildrenAsync(_configInfo.CachePath);
@@ -202,7 +199,6 @@ namespace Surging.Core.Consul
                 _serviceCaches = new ServiceCache[0];
             }
         }
-
         private static bool DataEquals(IReadOnlyList<byte> data1, IReadOnlyList<byte> data2)
         {
             if (data1.Count != data2.Count)
@@ -283,10 +279,8 @@ namespace Surging.Core.Consul
             if (newCache == null)
                 //触发删除事件。
                 OnRemoved(new ServiceCacheEventArgs(oldCache));
-
             else if (oldCache == null)
                 OnCreated(new ServiceCacheEventArgs(newCache));
-
             else
                 //触发缓存变更事件。
                 OnChanged(new ServiceCacheChangedEventArgs(newCache, oldCache));
@@ -331,10 +325,10 @@ namespace Surging.Core.Consul
             //触发缓存被创建事件。
             OnCreated(newCaches.Select(cache => new ServiceCacheEventArgs(cache)).ToArray());
 
-            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Information))
-                _logger.LogInformation("缓存数据更新成功。");
+            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
+                _logger.LogDebug("缓存数据更新成功。");
         }
 
-        #endregion
+        #endregion 私有方法
     }
 }

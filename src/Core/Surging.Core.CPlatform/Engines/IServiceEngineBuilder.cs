@@ -1,12 +1,13 @@
 ﻿using Autofac;
+using System;
+using System.Collections.Generic;
 
 namespace Surging.Core.CPlatform.Engines
 {
-    /// <summary>
-    /// 服务引擎构造者
-    /// </summary>
     public interface IServiceEngineBuilder
     {
         void Build(ContainerBuilder serviceContainer);
+
+        ValueTuple<List<Type>, IEnumerable<string>>? ReBuild(ContainerBuilder serviceContainer);
     }
 }

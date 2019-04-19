@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Text.RegularExpressions;
 
 namespace Surging.Core.CPlatform.Utilities
@@ -12,6 +14,39 @@ namespace Surging.Core.CPlatform.Utilities
             if (str.Equals(String.Empty) || str == null) return false;
             var re = new Regex(op, RegexOptions.IgnoreCase);
             return re.IsMatch(str);
+        }
+        public static bool IsValidJson(this string strInput)
+        {
+            if (string.IsNullOrEmpty(strInput))
+            {
+                throw new ArgumentNullException(nameof(strInput));
+            }
+
+            strInput = strInput.Trim();
+            if ((strInput.StartsWith("{") && strInput.EndsWith("}")) || //For object
+                (strInput.StartsWith("[") && strInput.EndsWith("]"))) //For array
+            {
+                try
+                {
+                    var obj = JToken.Parse(strInput);
+                    return true;
+                }
+                catch (JsonReaderException jex)
+                {
+                    // :todo 日志
+                    //Exception in parsing json
+                    return false;
+                }
+                catch (Exception ex) //some other exception
+                {
+
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
