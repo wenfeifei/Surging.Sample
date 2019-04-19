@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Surging.Core.AutoMapper.AutoMapper;
 using Surging.Core.CPlatform;
 using Surging.Core.CPlatform.Module;
 using CPlatformAppConfig = Surging.Core.CPlatform.AppConfig;

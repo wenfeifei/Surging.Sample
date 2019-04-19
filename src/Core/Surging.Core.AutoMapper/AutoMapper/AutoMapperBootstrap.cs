@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Surging.Core.CPlatform.Utilities;
 using System.Linq;
 
-namespace Surging.Core.AutoMapper.AutoMapper
+namespace Surging.Core.AutoMapper
 {
     public class AutoMapperBootstrap : IAutoMapperBootstrap
     {

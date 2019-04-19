@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Surging.Core.AutoMapper.AutoMapper;
 using Surging.Core.ServiceHosting.Internal;
 
 namespace Surging.Core.AutoMapper

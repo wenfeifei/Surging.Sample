@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace Surging.Core.AutoMapper.AutoMapper
+namespace Surging.Core.AutoMapper
 {
     public static class MapperExtensions
     {
