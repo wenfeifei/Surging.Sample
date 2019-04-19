@@ -1,4 +1,5 @@
 ﻿using Surging.Core.AutoMapper;
+using Surging.Core.AutoMapper.AutoMapper;
 using Surging.Core.Dapper.Repositories;
 using Surging.Core.ProxyGenerator;
 using Surging.Debug.Test1.Domain.Demo.Entities;

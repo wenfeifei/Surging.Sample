@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Surging.Core.CPlatform.Messages;
+using System;
 
 namespace Surging.Core.CPlatform.Exceptions
 {

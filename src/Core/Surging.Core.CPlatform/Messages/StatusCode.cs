@@ -5,7 +5,7 @@
         /// <summary>
         /// 成功调用
         /// </summary>
-        OK = 200,
+        Ok = 200,
 
         /// <summary>
         /// 通信错误

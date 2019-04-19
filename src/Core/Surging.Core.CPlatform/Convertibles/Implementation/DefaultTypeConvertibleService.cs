@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Surging.Core.CPlatform.Exceptions;
+using Surging.Core.CPlatform.Messages;
 using Surging.Core.CPlatform.Utilities;
 using System;
 using System.Collections.Generic;

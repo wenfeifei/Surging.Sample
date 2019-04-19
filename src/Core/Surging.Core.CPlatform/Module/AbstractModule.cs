@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Surging.Core.CPlatform.Exceptions;
+using Surging.Core.CPlatform.Messages;
 using System;
 using System.Collections.Generic;
 using System.Reflection;

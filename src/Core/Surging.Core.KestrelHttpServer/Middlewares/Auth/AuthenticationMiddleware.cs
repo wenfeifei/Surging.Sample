@@ -59,7 +59,7 @@ namespace Surging.Core.KestrelHttpServer.Middlewares
                 var commandInfo = await serviceRouteProvider.GetRouteByPath(routPath);
                 if (commandInfo == null)
                 {
-                    throw new CPlatformException($"系统中不存在{routPath}的路由信息");
+                    throw new CPlatformException($"系统中不存在{routPath}的路由信息", StatusCode.CPlatformError);
                 }
 
                 if (!commandInfo.ServiceDescriptor.EnableAuthorization())

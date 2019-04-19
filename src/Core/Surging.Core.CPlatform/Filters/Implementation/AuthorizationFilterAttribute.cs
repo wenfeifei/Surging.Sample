@@ -1,4 +1,5 @@
-﻿using Surging.Core.CPlatform.Routing;
+﻿using Surging.Core.CPlatform.Messages;
+using Surging.Core.CPlatform.Routing;
 using System.Threading;
 
 namespace Surging.Core.CPlatform.Filters.Implementation
@@ -15,7 +16,7 @@ namespace Surging.Core.CPlatform.Filters.Implementation
             var result = OnAuthorization(serviceRouteContext);
             if (!result)
             {
-                serviceRouteContext.ResultMessage.StatusCode = Exceptions.StatusCode.UnAuthentication;
+                serviceRouteContext.ResultMessage.StatusCode = StatusCode.UnAuthentication;
                 serviceRouteContext.ResultMessage.ExceptionMessage = "令牌验证失败.";
             }
         }

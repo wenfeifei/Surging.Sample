@@ -1,6 +1,6 @@
 # Paths
 $packFolder = (Get-Item -Path "./" -Verbose).FullName
-$slnPath = Join-Path $packFolder "../"
+$slnPath = Join-Path $packFolder "../sln"
 $srcPath = Join-Path $slnPath "src/Core"
 
 $projects = (
