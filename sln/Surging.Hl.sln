@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Order", "Order", "{5FE192E1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D0658F8C-8245-4B4E-B34D-45B692E6C2D4}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose\hl\.env = docker-compose\hl\.env
+		..\docker-compose\hl\.env = ..\docker-compose\hl\.env
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommonComponents", "CommonComponents", "{8F4C34B7-54BE-4D40-9165-0A2ABFFBEBC4}"
@@ -117,7 +117,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{7600A862
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hl.Customer.Domain", "..\src\Servers\Customer\Hl.Customer.Domain\Hl.Customer.Domain.csproj", "{975E20D5-52D2-4480-A8E1-53B6DBA3E376}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose\hl\docker-compose.dcproj", "{FEA0C318-FFED-4D39-8781-265718CA43FF}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "..\docker-compose\hl\docker-compose.dcproj", "{FEA0C318-FFED-4D39-8781-265718CA43FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
