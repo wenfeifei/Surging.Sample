@@ -29,3 +29,4 @@ nupkg
 **/bower_components/
 **/wwwroot/lib/*
 /logs
+**/sln/.vs
