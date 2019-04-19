@@ -83,6 +83,8 @@ namespace Surging.Core.Swagger
         public string CacheMode { get; set; }
         public string AuthorizationRoutePath { get; set; }
         public string AuthorizationServiceKey { get; set; }
+
+        public string SecretKey { get; set; }
     }
 
     public class Contact

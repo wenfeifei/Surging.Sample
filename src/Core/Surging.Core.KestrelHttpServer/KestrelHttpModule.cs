@@ -3,6 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Surging.Core.CPlatform;
 using Surging.Core.CPlatform.Engines;
+using Surging.Core.CPlatform.Jwt;
+using Surging.Core.CPlatform.Jwt.Implementation;
 using Surging.Core.CPlatform.Module;
 using Surging.Core.CPlatform.Runtime.Server;
 using Surging.Core.CPlatform.Serialization;
@@ -26,6 +28,7 @@ namespace Surging.Core.KestrelHttpServer
         protected override void RegisterBuilder(ContainerBuilderWrapper builder)
         {
             base.RegisterBuilder(builder);
+            builder.RegisterType(typeof(JwtTokenProvider)).As(typeof(IJwtTokenProvider));
             var section = CPlatform.AppConfig.GetSection("Swagger");
             if (section.Exists())
                 if (section.Exists())
@@ -62,7 +65,7 @@ namespace Surging.Core.KestrelHttpServer
                     provider.Resolve<ILogger<KestrelHttpMessageListener>>(),
                     provider.Resolve<ISerializer<string>>(),
                     provider.Resolve<IServiceSchemaProvider>(),
-                     provider.Resolve<IServiceEngineLifetime>()
+                    provider.Resolve<IServiceEngineLifetime>()
                       );
             }).SingleInstance();
             builder.Register(provider =>
@@ -85,7 +88,7 @@ namespace Surging.Core.KestrelHttpServer
                     provider.Resolve<ILogger<KestrelHttpMessageListener>>(),
                     provider.Resolve<ISerializer<string>>(),
                     provider.Resolve<IServiceSchemaProvider>(),
-                     provider.Resolve<IServiceEngineLifetime>()
+                    provider.Resolve<IServiceEngineLifetime>()
                       );
             }).SingleInstance();
             builder.Register(provider =>

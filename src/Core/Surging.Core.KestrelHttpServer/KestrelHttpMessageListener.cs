@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Surging.Core.CPlatform.Engines;
+using Surging.Core.CPlatform.Jwt;
 using Surging.Core.CPlatform.Serialization;
 using Surging.Core.CPlatform.Utilities;
 using Surging.Core.KestrelHttpServer.Internal;
@@ -26,10 +27,10 @@ namespace Surging.Core.KestrelHttpServer
         private readonly ISerializer<string> _serializer;
         private readonly IServiceSchemaProvider _serviceSchemaProvider;
         private readonly IServiceEngineLifetime _lifetime;
-
         public KestrelHttpMessageListener(ILogger<KestrelHttpMessageListener> logger,
             ISerializer<string> serializer,
-            IServiceSchemaProvider serviceSchemaProvider, IServiceEngineLifetime lifetime) : base(logger, serializer)
+            IServiceSchemaProvider serviceSchemaProvider,
+            IServiceEngineLifetime lifetime) : base(logger, serializer)
         {
             _logger = logger;
             _serializer = serializer;

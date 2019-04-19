@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Surging.Core.ApiGateWay.Configurations;
+using Surging.Core.ApiGateWay.OAuth.Implementation.Configurations;
 using System;
 using System.Collections.Generic;
 
@@ -84,19 +85,19 @@ namespace Surging.Core.ApiGateWay
             }
         }
 
-        private static string _thirdPartyAuthenticationRoutePath = "oauth2/thirdparty/token";
+        //private static string _thirdPartyAuthenticationRoutePath = "oauth2/thirdparty/token";
 
-        public static string ThirdPartyAuthenticationRoutePath
-        {
-            get
-            {
-                return Configuration["ThirdPartyAuthenticationRoutePath"] ?? _thirdPartyAuthenticationRoutePath;
-            }
-            internal set
-            {
-                _thirdPartyAuthenticationRoutePath = value;
-            }
-        }
+        //public static string ThirdPartyAuthenticationRoutePath
+        //{
+        //    get
+        //    {
+        //        return Configuration["ThirdPartyAuthenticationRoutePath"] ?? _thirdPartyAuthenticationRoutePath;
+        //    }
+        //    internal set
+        //    {
+        //        _thirdPartyAuthenticationRoutePath = value;
+        //    }
+        //}
 
         public static Register Register
         {
@@ -130,6 +131,18 @@ namespace Surging.Core.ApiGateWay
                 var section = Configuration.GetSection("AccessPolicy");
                 if (section != null)
                     result = section.Get<AccessPolicy>();
+                return result;
+            }
+        }
+
+        public static JwtConfig JwtConfig
+        {
+            get
+            {
+                var result = new JwtConfig();
+                var section = Configuration.GetSection("JwtConfig");
+                if (section != null)
+                    result = section.Get<JwtConfig>();
                 return result;
             }
         }
