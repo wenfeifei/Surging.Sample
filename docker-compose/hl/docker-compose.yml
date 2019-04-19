@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.7'
 
 services: 
   hlservice.customer:
@@ -116,4 +116,4 @@ services:
 networks:
   src_srcp_demo_service_net: 
     external:
-      name: middleware_surging_demo_service_net
+      name: hl_surging_service_net
