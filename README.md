@@ -1,5 +1,7 @@
 # Surging Sample
 
+[![Build status](https://ci.appveyor.com/api/projects/status/github/liuhll/surging.sample?branch=master&svg=true)](https://ci.appveyor.com/project/liuhll/surging-sample)
+
 ## 开发与运行环境
 ### IDE
 - Visual Studio 2017/Visual Studio 2019
@@ -37,7 +39,7 @@ password: Surging!P4ss
 
 ```
 ### 4. 运行项目
-通过visual Studio打开`Surging.Hl.sln`解决方案,将`docker-compose`项目设置为启动项目，按`F5`启动项目。
+通过visual Studio打开`sln/Surging.Hl.sln`解决方案,将`docker-compose`项目设置为启动项目，按`F5`启动项目。
 
 ## 微服务组件
 
