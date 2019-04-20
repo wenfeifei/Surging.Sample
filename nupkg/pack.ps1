@@ -1,3 +1,10 @@
+Param(
+    [parameter(Mandatory=$false)][string]$repo="http://192.168.31.115:8081/nuget",
+    [parameter(Mandatory=$false)][bool]$push=$false,
+	[parameter(Mandatory=$false)][string]$apikey,
+	[parameter(Mandatory=$false)][bool]$build=$true
+)
+
 # Paths
 $packFolder = (Get-Item -Path "./" -Verbose).FullName
 $slnPath = Join-Path $packFolder "../sln"
@@ -31,10 +38,11 @@ $projects = (
   "WebSocketCore"
 )
 
-Set-Location $slnPath
-& dotnet restore Surging.sln
+if ($build) {
+  Set-Location $slnPath
+  & dotnet restore Surging.sln
 
-foreach($project in $projects) {
+  foreach($project in $projects) {
     $projectFolder = Join-Path $srcPath $project
     
     Set-Location $projectFolder
@@ -44,9 +52,20 @@ foreach($project in $projects) {
 	
 	$projectPackPath = Join-Path $projectFolder ("/bin/Release/" + $project + ".*.nupkg")
     Move-Item $projectPackPath $packFolder
+	
+}
+  Move-Item $projectPackPath $packFolder
+
+  Set-Location $packFolder
 }
 
-Move-Item $projectPackPath $packFolder
 
 
-Set-Location $packFolder
+if($push) {
+    if ([string]::IsNullOrEmpty($apikey)){
+        Write-Warning -Message "未设置nuget仓库的APIKEY"
+		exit 1
+	}
+	dotnet nuget push *.nupkg -s $repo -k $apikey
+}
+
