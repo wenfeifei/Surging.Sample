@@ -30,3 +30,4 @@ nupkg
 **/wwwroot/lib/*
 /logs
 **/sln/.vs
+global.json
