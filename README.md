@@ -1,6 +1,6 @@
 # Surging Sample
 
-[![Build status](https://ci.appveyor.com/api/projects/status/github/liuhll/surging.sample?branch=master&svg=true)](https://ci.appveyor.com/project/liuhll/surging-sample)
+ [![Build Status](https://api.travis-ci.com/liuhll/Surging.Sample.svg?branch=master)](https://travis-ci.com/liuhll/Surging.Sample)
 
 ## 开发与运行环境
 ### IDE
