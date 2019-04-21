@@ -1,4 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage()
+{
+    cat <<END
+pack.sh: linux环境下打包surging组件脚本
+Parameters:
+    -r | --repo <nuget repo>
+       nuget 仓库地址
+    -p | --push <push>
+       是否推送surging组件
+    --ship-build <ship build>
+       是否跳过build
+    -k | --apikey <api key>
+       nuget repo apikey
+    -h | --help 
+       显示帮助
+END
+}
 
 nuget_repo=""
 push=""
@@ -74,5 +94,5 @@ if [[ $push ]]; then {
         echo "未设置nuget仓库的APIKEY"
 		exit 1
 	}
-	dotnet nuget push *.nupkg -s $repo -k $apikey
+	dotnet nuget push *.nupkg -s $nuget_repo -k $apikey
 }
