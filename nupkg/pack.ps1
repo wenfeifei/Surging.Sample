@@ -1,6 +1,6 @@
 Param(
-    [parameter(Mandatory=$false)][string]$repo="http://192.168.31.115:8081/nuget",
-    [parameter(Mandatory=$false)][bool]$push=$false,
+  [parameter(Mandatory=$false)][string]$repo="http://192.168.31.115:8081/nuget",
+  [parameter(Mandatory=$false)][bool]$push=$false,
 	[parameter(Mandatory=$false)][string]$apikey,
 	[parameter(Mandatory=$false)][bool]$build=$true
 )
@@ -9,6 +9,7 @@ Param(
 $packFolder = (Get-Item -Path "./" -Verbose).FullName
 $slnPath = Join-Path $packFolder "../sln"
 $srcPath = Join-Path $packFolder "../src/Core"
+
 
 $projects = (
   "Surging.Core.ApiGateWay",
@@ -34,29 +35,38 @@ $projects = (
   "Surging.Core.Domain",
   "Surging.Core.Schedule",
   "Surging.Core.AutoMapper",
-  "Surging.Core.Dapper",
-  "WebSocketCore"
+  "Surging.Core.Dapper"
 )
+
+function Pack($projectFolder,$projectName) {
+  Set-Location $projectFolder
+  $releaseProjectFolder = (Join-Path $projectFolder "bin/Release")
+  if (Test-Path $releaseProjectFolder)
+  {
+     Remove-Item -Force -Recurse $releaseProjectFolder
+  }
+  
+   & dotnet msbuild /p:Configuration=Release /p:SourceLinkCreate=true
+   & dotnet msbuild /t:pack /p:Configuration=Release /p:SourceLinkCreate=true
+   if ($projectName) {
+    $projectPackPath = Join-Path $projectFolder ("/bin/Release/" + $projectName + ".*.nupkg")
+   }else {
+    $projectPackPath = Join-Path $projectFolder ("/bin/Release/" + $project + ".*.nupkg")
+   }
+   Move-Item -Force $projectPackPath $packFolder 
+}
 
 if ($build) {
   Set-Location $slnPath
   & dotnet restore Surging.sln
 
   foreach($project in $projects) {
-    $projectFolder = Join-Path $srcPath $project
-    
-    Set-Location $projectFolder
-    Remove-Item -Recurse (Join-Path $projectFolder "bin/Release")
-	& dotnet msbuild /p:Configuration=Release /p:SourceLinkCreate=true
-	& dotnet msbuild /t:pack /p:Configuration=Release /p:SourceLinkCreate=true
-	
-	$projectPackPath = Join-Path $projectFolder ("/bin/Release/" + $project + ".*.nupkg")
-    Move-Item $projectPackPath $packFolder
-	
+    Pack -projectFolder (Join-Path $srcPath $project)
   }
+  $webSocketProjectFolder = Join-Path $srcPath "WebSocketCore"   
+  Pack -projectFolder $webSocketProjectFolder -projectName "Surging.WebSocketCore"
+  Set-Location $packFolder
 }
-
-
 
 if($push) {
     if ([string]::IsNullOrEmpty($apikey)){
@@ -65,4 +75,3 @@ if($push) {
 	}
 	dotnet nuget push *.nupkg -s $repo -k $apikey
 }
-

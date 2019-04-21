@@ -71,22 +71,34 @@ projects=(
   "Surging.Core.Schedule"
   "Surging.Core.AutoMapper"
   "Surging.Core.Dapper"
-  "WebSocketCore"
 )
+
+function pack(){
+   projectFolder="${srcPath}/${project}"
+   cd ${projectFolder}
+   rm -fr "$projectFolder/bin/Release"
+   dotnet msbuild /p:Configuration=Release /p:SourceLinkCreate=true
+   dotnet msbuild /t:pack /p:Configuration=Release /p:SourceLinkCreate=true
+   projectMame=${projectMame:-}
+   if [[ "${projectMame:-}" ]]; then
+      projectPackPath="${projectFolder}/bin/Release/${projectMame}.*.nupkg"
+   else
+      projectPackPath="${projectFolder}/bin/Release/${project}.*.nupkg"
+   fi
+   mv $projectPackPath $workdir
+  
+}
+
 
 if [[ $build ]]; then
   cd ${slnPath}
   dotnet restore Surging.sln
-  for project in ${projects}
+  for project in ${projects[@]}
   do
-    projectFolder="${srcPath}/${project}"
-    cd ${projectFolder}
-    rm -fr "$projectFolder/bin/Release"
-    dotnet msbuild /p:Configuration=Release /p:SourceLinkCreate=true
-    dotnet msbuild /t:pack /p:Configuration=Release /p:SourceLinkCreate=true
-    projectPackPath="${projectFolder}/bin/Release/${project}.*.nupkg"
-    mv $projectPackPath $workdir
+    pack --project ${project}
   done
+  pack --project ${project} --projectMame "Surging.WebSocketCore"
+  cd ${workdir}
 fi
 
 if [[ $push ]]; then {
