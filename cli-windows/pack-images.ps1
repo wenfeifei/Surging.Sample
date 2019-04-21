@@ -35,7 +35,8 @@ if ($pushImages) {
         "product",
         "schedule",
         "stock",
-        "systemmanager",
+        "basicdata",
+        "organization",
         "wsserver"
 	)
     foreach ($service in $services) {
