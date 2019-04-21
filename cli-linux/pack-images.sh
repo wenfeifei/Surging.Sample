@@ -76,19 +76,23 @@ fi
 
 if [[ $push_images ]]; then
     echo "#################### Pushing images to registry ####################"
-    image_repo=$service
+    image_fqdn=""
     if [[ "${docker_project:-}" ]]; then
-       image_repo="${docker_project}/${image_repo}"
+      image_fqdn="${docker_project}"
     fi
-    if [[ "${container_registry:-}"]]; then
-       image_repo="${container_registry}/${image_repo}"
+    if [[ "${container_registry:-}" ]]; then
+      image_fqdn="${container_registry}/${image_fqdn}"
     fi
     services=(`cat ${workdir}/ServiceComponents`)
     for service in "${services[@]}"
     do
-        echo "推送${image_repo}:${image_tag} docker镜像到镜像仓库.."
-        docker tag "hlservice/${service}:${image_tag}" "${image_repo}:${image_tag}"
-        docker push "${image_repo}:${image_tag}"
+      image_repo=$service
+      if [[ "${image_fqdn:-}" ]]; then
+         image_repo="${image_fqdn}/${image_repo}"
+      fi
+      echo "推送${image_repo}:${image_tag} docker镜像到镜像仓库.."
+      docker tag "hlservice/${service}:${image_tag}" "${image_repo}:${image_tag}"
+      docker push "${image_repo}:${image_tag}"
     done
 fi
 
