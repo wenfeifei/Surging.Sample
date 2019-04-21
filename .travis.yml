@@ -8,6 +8,8 @@ services:
 
 env:
   COMPOSE_VERSION: 1.24.0
+  DOCKER_USER: bea084100123
+  DOCKER_PWD: Liuhliang881208
 
 before_install:
   - sudo rm /usr/local/bin/docker-compose
@@ -17,5 +19,6 @@ before_install:
   - sudo chmod +x nupkg/pack.sh
   - sudo nupkg/pack.sh
   - sudo chmod +x cli-linux/pack-images.sh
+  - sudo docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}
 script:
-  - cli-linux/pack-images.sh --clear-images
+  - sudo cli-linux/pack-images.sh --clear-images
