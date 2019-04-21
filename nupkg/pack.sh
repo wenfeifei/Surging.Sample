@@ -25,8 +25,8 @@ push=""
 apikey=""
 build="yes"
 workdir=$(cd $(dirname $0); pwd)
-slnPath="${workdir}/sln"
-srcPath="${workdir}/src"
+slnPath="${workdir}/../sln"
+srcPath="${workdir}/../src"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
