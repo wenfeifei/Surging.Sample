@@ -10,8 +10,8 @@ services:
       EventBusUserName:  ${RABBITMQ_USERNAME:-rabbitmq}
       EventBusPassword:  ${RABBITMQ_PASSWORD:-rabbitmq}
       EventBusPort: ${RABBITMQ_PORT:-5672}
-      SwaggerTitle: "客户管理微服务组件"
-      SwaggerDes: "客户信息管理服务"
+      SwaggerTitle: "hlservice.customer"
+      SwaggerDes: "客户信息管理服务组件API文档"
       SupportName: "LiuHongliang"
       SupportEmail: 1029765111@qq.com
     ports:
@@ -27,8 +27,8 @@ services:
       EventBusUserName:  ${RABBITMQ_USERNAME:-rabbitmq}
       EventBusPassword:  ${RABBITMQ_PASSWORD:-rabbitmq}
       EventBusPort: ${RABBITMQ_PORT:-5672}
-      SwaggerTitle: "身份认证微服务组件"
-      SwaggerDes: "微服务集群身份认证与授权组件"
+      SwaggerTitle: "hlservice.identity"
+      SwaggerDes: "微服务集群身份认证与授权组件API文档"
       SupportName: "LiuHongliang"
       SupportEmail: 1029765111@qq.com
     ports:
@@ -43,8 +43,8 @@ services:
       EventBusUserName:  ${RABBITMQ_USERNAME:-rabbitmq}
       EventBusPassword:  ${RABBITMQ_PASSWORD:-rabbitmq}
       EventBusPort: ${RABBITMQ_PORT:-5672}
-      SwaggerTitle: "订单微服务"
-      SwaggerDes: "订单微服务组件"
+      SwaggerTitle: "hlservice.order"
+      SwaggerDes: "订单微服务组件API文档"
       SupportName: "LiuHongliang"
       SupportEmail: 1029765111@qq.com
     ports:
@@ -59,8 +59,8 @@ services:
       EventBusUserName:  ${RABBITMQ_USERNAME:-rabbitmq}
       EventBusPassword:  ${RABBITMQ_PASSWORD:-rabbitmq}
       EventBusPort: ${RABBITMQ_PORT:-5672}
-      SwaggerTitle: "产品管理"
-      SwaggerDes: "产品管理微服务组件"
+      SwaggerTitle: "hlservice.product"
+      SwaggerDes: "产品管理微服务组件API文档"
       SupportName: "LiuHongliang"
       SupportEmail: 1029765111@qq.com
     ports:
@@ -75,8 +75,8 @@ services:
       EventBusUserName:  ${RABBITMQ_USERNAME:-rabbitmq}
       EventBusPassword:  ${RABBITMQ_PASSWORD:-rabbitmq}
       EventBusPort: ${RABBITMQ_PORT:-5672}
-      SwaggerTitle: "分布式任务调度组件"
-      SwaggerDes: "任务调度微服务组件"
+      SwaggerTitle: "hlservice.schedule"
+      SwaggerDes: "任务调度微服务组件API文档"
       SupportName: "LiuHongliang"
       SupportEmail: 1029765111@qq.com
     ports:
@@ -91,14 +91,14 @@ services:
       EventBusUserName:  ${RABBITMQ_USERNAME:-rabbitmq}
       EventBusPassword:  ${RABBITMQ_PASSWORD:-rabbitmq}
       EventBusPort: ${RABBITMQ_PORT:-5672}
-      SwaggerTitle: "库存管理"
-      SwaggerDes: "库存管理微服务组件"
+      SwaggerTitle: "hlservice.stock"
+      SwaggerDes: "库存管理微服务组件API文档"
       SupportName: "LiuHongliang"
       SupportEmail: 1029765111@qq.com
     ports:
       - "18085:8080"
 
-  hlservice.systemmanager:
+  hlservice.organization:
     environment:
       Register_Conn: ${REGISTER_CONN:-consul:8500}
       Register_SessionTimeout: ${REGISTER_SESSION_TIMEOUT:-50}
@@ -107,13 +107,28 @@ services:
       EventBusUserName:  ${RABBITMQ_USERNAME:-rabbitmq}
       EventBusPassword:  ${RABBITMQ_PASSWORD:-rabbitmq}
       EventBusPort: ${RABBITMQ_PORT:-5672}
-      SwaggerTitle: "系统管理"
-      SwaggerDes: "系统管理微服务组件"
+      SwaggerTitle: "hlservice.organization"
+      SwaggerDes: "组织机构微服务组件API文档"
       SupportName: "LiuHongliang"
       SupportEmail: 1029765111@qq.com
     ports:
       - "18086:8080"
 
+  hlservice.basicdata:
+    environment:
+      Register_Conn: ${REGISTER_CONN:-consul:8500}
+      Register_SessionTimeout: ${REGISTER_SESSION_TIMEOUT:-50}
+      UseEngineParts: ${NORMAL_SERVER_ENGINE}
+      EventBusConnection: ${RABBITMQ_CONNECTION:-rabbitmq}
+      EventBusUserName:  ${RABBITMQ_USERNAME:-rabbitmq}
+      EventBusPassword:  ${RABBITMQ_PASSWORD:-rabbitmq}
+      EventBusPort: ${RABBITMQ_PORT:-5672}
+      SwaggerTitle: "hlservice.basicdata"
+      SwaggerDes: "基础数据微服务组件API文档"
+      SupportName: "LiuHongliang"
+      SupportEmail: 1029765111@qq.com
+    ports:
+      - "18087:8080"
   hlservice.wsserver:
     environment:
       Register_Conn: ${REGISTER_CONN:-consul:8500}

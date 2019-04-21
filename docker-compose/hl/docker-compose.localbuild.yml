@@ -12,6 +12,7 @@ services:
         sln_name: sln/Surging.Hl.sln
     volumes:
       - ${LOG_DIR:-/var/logs}/customer:/app/logs
+      - ../../nupkg:/src/nupkg
     networks:
       - src_srcp_demo_service_net
 
@@ -26,6 +27,7 @@ services:
         sln_name: sln/Surging.Hl.sln
     volumes:
       - ${LOG_DIR:-/var/logs}/identity:/app/logs
+      - ../../nupkg:/src/nupkg
     networks:
       - src_srcp_demo_service_net
 
@@ -40,6 +42,7 @@ services:
         sln_name: sln/Surging.Hl.sln
     volumes:
       - ${LOG_DIR:-/var/logs}/order:/app/logs
+      - ../../nupkg:/src/nupkg
     networks:
       - src_srcp_demo_service_net
 
@@ -54,6 +57,7 @@ services:
         sln_name: sln/Surging.Hl.sln
     volumes:
       - ${LOG_DIR:-/var/logs}/product:/app/logs
+      - ../../nupkg:/src/nupkg
     networks:
       - src_srcp_demo_service_net
 
@@ -68,6 +72,7 @@ services:
         sln_name: sln/Surging.Hl.sln
     volumes:
       - ${LOG_DIR:-/var/logs}/schedule:/app/logs
+      - ../../nupkg:/src/nupkg
     networks:
       - src_srcp_demo_service_net
 
@@ -82,34 +87,22 @@ services:
         sln_name: sln/Surging.Hl.sln
     volumes:
       - ${LOG_DIR:-/var/logs}/stock:/app/logs
+      - ../../nupkg:/src/nupkg
     networks:
       - src_srcp_demo_service_net
 
-  hlservice.organization:
-    image: hlservice/organization:${TAG:-latest}
+  hlservice.systemmanager:
+    image: hlservice/systemmanager:${TAG:-latest}
     build:
       context: ../..
-      dockerfile: src/Servers/Organization/Hl.Organization.ServerHost/Dockerfile
+      dockerfile: src/Servers/SystemManager/Hl.SystemManager.ServerHost/Dockerfile
       args:
-        host_workdir: src/Servers/Organization/Hl.Organization.ServerHost
-        host_name: Hl.Organization.ServerHost.dll
+        host_workdir: src/Servers/SystemManager/Hl.SystemManager.ServerHost
+        host_name: Hl.SystemManager.ServerHost.dll
         sln_name: sln/Surging.Hl.sln
     volumes:
-      - ${LOG_DIR:-/var/logs}/organization:/app/logs
-    networks:
-      - src_srcp_demo_service_net
-
-  hlservice.basicdata:
-    image: hlservice/basicdata:${TAG:-latest}
-    build:
-      context: ../..
-      dockerfile: src/Servers/BasicData/Hl.BasicData.ServerHost/Dockerfile
-      args:
-        host_workdir: src/Servers/BasicData/Hl.BasicData.ServerHost
-        host_name: Hl.BasicData.ServerHost.dll
-        sln_name: sln/Surging.Hl.sln
-    volumes:
-      - ${LOG_DIR:-/var/logs}/basicdata:/app/logs
+      - ${LOG_DIR:-/var/logs}/systemmanager:/app/logs
+      - ../../nupkg:/src/nupkg
     networks:
       - src_srcp_demo_service_net
 
@@ -124,9 +117,9 @@ services:
         sln_name: sln/Surging.Hl.sln
     volumes:
       - ${LOG_DIR:-/var/logs}/wsserver:/app/logs
+      - ../../nupkg:/src/nupkg
     networks:
       - src_srcp_demo_service_net
-
 
 networks:
   src_srcp_demo_service_net: 

@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
+
+  <Import Project="..\..\..\Shares\Props\hostpackage.props" />
+  <ItemGroup>
+    <ProjectReference Include="..\Hl.BasicData.Application\Hl.BasicData.Application.csproj" />
+  </ItemGroup>
+</Project>

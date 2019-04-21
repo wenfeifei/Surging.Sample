@@ -37,12 +37,17 @@ services:
     volumes:
       - ../../src/Shares/Configs:/app/configs
 
-  hlservice.systemmanager:
+  hlservice.organization:
     environment:
       LogConfigPath: /app/configs/log4net.config
     volumes:
       - ../../src/Shares/Configs:/app/configs
 
+  hlservice.basicdata:
+    environment:
+      LogConfigPath: /app/configs/log4net.config
+    volumes:
+      - ../../src/Shares/Configs:/app/configs
   hlservice.wsserver:
     environment:
       LogConfigPath: /app/configs/log4net.config
