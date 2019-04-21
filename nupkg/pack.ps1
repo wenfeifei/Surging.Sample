@@ -53,10 +53,7 @@ if ($build) {
 	$projectPackPath = Join-Path $projectFolder ("/bin/Release/" + $project + ".*.nupkg")
     Move-Item $projectPackPath $packFolder
 	
-}
-  Move-Item $projectPackPath $packFolder
-
-  Set-Location $packFolder
+  }
 }
 
 
