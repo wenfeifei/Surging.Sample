@@ -26,7 +26,7 @@ apikey=""
 build="yes"
 workdir=$(cd $(dirname $0); pwd)
 slnPath="${workdir}/../sln"
-srcPath="${workdir}/../src"
+srcPath="${workdir}/../src/Core"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -84,15 +84,17 @@ if [[ $build ]]; then
     rm -fr "$projectFolder/bin/Release"
     dotnet msbuild /p:Configuration=Release /p:SourceLinkCreate=true
     dotnet msbuild /t:pack /p:Configuration=Release /p:SourceLinkCreate=true
-    $projectPackPath="${projectFolder}/bin/Release/${project}.*.nupkg"
+    projectPackPath="${projectFolder}/bin/Release/${project}.*.nupkg"
     mv $projectPackPath $workdir
   done
 fi
 
 if [[ $push ]]; then {
-    if ([string]::IsNullOrEmpty($apikey)){
+    if [[ !$apikey ]]; then {
         echo "未设置nuget仓库的APIKEY"
 		exit 1
 	}
+  fi
 	dotnet nuget push *.nupkg -s $nuget_repo -k $apikey
 }
+fi
