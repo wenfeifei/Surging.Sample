@@ -22,7 +22,7 @@ Components
 cli-windows
 cli-mac
 cli-linux
-nupkg
+#nupkg
 **/bin/
 **/obj/
 #**/node_modules/
