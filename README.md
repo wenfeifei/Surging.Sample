@@ -55,4 +55,5 @@ password: Surging!P4ss
 | Product | 产品管理服务组件 | 18083 | * | * | |
 | Schedule | 分布式任务调度管理组件 | 18084 | * | * | |
 | Stock | 库存管理服务组件 | 18085 | * | * | |
-| SystemManager | 系统管理服务组件 | 18086 | * | * | |
+| Organization | 组织机构服务组件 | 18086 | * | * | |
+| BasicData | 基础数据微服务组件 | 18087 | * | * | |
