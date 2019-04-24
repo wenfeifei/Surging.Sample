@@ -43,13 +43,13 @@ while [[ $# -gt 0 ]]; do
         image_tag="$2"
         shift 2 ;;
     -b | --build-solution )
-        build_solution='yes'; shift 2;;
+        build_solution='yes'; shift 1;;
     -p | --docker-project )
        docker_project="$2"; shift 2;;
     --skip-image-push )
-        push_images=''; shift 2;;
+        push_images=''; shift 1;;
     --clear-images )
-       clear_images='yes'; shift;;
+       clear_images='yes'; shift 1;;
     -h | --help )
         usage; exit 1 ;;
 
