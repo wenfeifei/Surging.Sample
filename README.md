@@ -21,9 +21,9 @@
 ## 运行项目
 
 ### 1. 打包Surging组件
-获取源代码后，进入到nuget目录，通过`pack.ps1`的脚本打包Surging组件
+获取源代码后，进入到nupkg目录，通过`pack.ps1`的脚本打包Surging组件
 ```
-cd ./nuget
+cd ./nupkg
 ./pack.ps1
 ```
 
