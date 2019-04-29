@@ -96,15 +96,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configs", "Configs", "{912D
 		..\src\Shares\Configs\surgingSettings.json = ..\src\Shares\Configs\surgingSettings.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{7600A862-6A17-4E16-8E98-588F38BF2EDD}"
-	ProjectSection(SolutionItems) = preProject
-		..\src\Shares\Props\applicationpackage.props = ..\src\Shares\Props\applicationpackage.props
-		..\src\Shares\Props\common.props = ..\src\Shares\Props\common.props
-		..\src\Shares\Props\domainpackage.props = ..\src\Shares\Props\domainpackage.props
-		..\src\Shares\Props\hostpackage.props = ..\src\Shares\Props\hostpackage.props
-		..\src\Shares\Props\ws.applicationpackage.props = ..\src\Shares\Props\ws.applicationpackage.props
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hl.Customer.Domain", "..\src\Servers\Customer\Hl.Customer.Domain\Hl.Customer.Domain.csproj", "{975E20D5-52D2-4480-A8E1-53B6DBA3E376}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "..\docker-compose\hl\docker-compose.dcproj", "{FEA0C318-FFED-4D39-8781-265718CA43FF}"
@@ -389,7 +380,6 @@ Global
 		{840A4430-B4BA-414A-A986-3C3446D50D38} = {DC7959F9-6F18-4220-B69A-760EBC44CC20}
 		{E38B822E-B5A8-4651-A6FA-92A261454678} = {DC7959F9-6F18-4220-B69A-760EBC44CC20}
 		{912DDE6A-7149-4619-AFFB-36DA7273F994} = {D0658F8C-8245-4B4E-B34D-45B692E6C2D4}
-		{7600A862-6A17-4E16-8E98-588F38BF2EDD} = {D0658F8C-8245-4B4E-B34D-45B692E6C2D4}
 		{975E20D5-52D2-4480-A8E1-53B6DBA3E376} = {5DA2851C-F88A-4E5B-84B1-B2ABF7B63969}
 		{F09DB139-4C00-4188-918F-CDBFEECF5CCF} = {35C1C8D3-74EA-49EA-BDC8-6F75A58E1ECB}
 		{C608DCF6-049B-4E93-826F-A431AD59DD66} = {F09DB139-4C00-4188-918F-CDBFEECF5CCF}
