@@ -13,7 +13,7 @@ drop table if exists bd_dictionary;
 /*==============================================================*/
 create table bd_dictionary
 (
-   Id                   bigint not null comment '主键',
+   Id                   bigint not null auto_increment comment '主键',
    Code                 varchar(50) not null comment '唯一编码',
    Name                 varchar(50) not null comment '名称',
    ParentId             bigint not null comment '父级Id',
@@ -24,14 +24,11 @@ create table bd_dictionary
    CreateTime           datetime comment '创建日期',
    UpdateBy             bigint comment '修改人',
    UpdateTime           datetime comment '修改日期',
-   IsDelete             int comment '软删除标识'
+   IsDeleted            int comment '软删除标识',
+   DeleteBy             bigint comment '删除用户',
+   DeleteTime           datetime comment '删除时间',
+   primary key (Id)
 );
 
 alter table bd_dictionary comment '字典表';
-
-alter table bd_dictionary
-   add unique AK_Key_1 (Id);
-
-alter table bd_dictionary
-   add primary key (Id);
 
