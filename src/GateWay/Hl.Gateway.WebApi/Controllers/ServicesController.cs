@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Surging.Core.ApiGateWay;
 using Surging.Core.ApiGateWay.OAuth;
+using Surging.Core.ApiGateWay.OAuth.Models;
 using Surging.Core.CPlatform;
 using Surging.Core.CPlatform.Exceptions;
 using Surging.Core.CPlatform.Filters.Implementation;
@@ -66,19 +67,20 @@ namespace Hl.Gateway.WebApi.Controllers
             {
                 if (OnAuthorization(path, model, ref result))
                 {
-                    if (path == GateWayAppConfig.AuthenticationRoutePath || path == GateWayAppConfig.ThirdPartyAuthenticationRoutePath)
+                    if (path == GateWayAppConfig.AuthenticationRoutePath)
                     {
-                        var accessSystemType = AccessSystemType.Inner;
-                        if (path == GateWayAppConfig.ThirdPartyAuthenticationRoutePath)
+                        dynamic paramInput = model["input"];
+                        var loginInput = new LoginInput()
                         {
-                            accessSystemType = AccessSystemType.ThirdParty;
-                        }
+                            UserName = paramInput["userName"].ToString(),
+                            Password = paramInput["password"].ToString()
+                        };
 
-                        var token = await _authorizationServerProvider.GenerateTokenCredential(model, accessSystemType);
+                        var token = await _authorizationServerProvider.GenerateTokenCredential(loginInput);
                         if (token != null)
                         {
                             result = ServiceResult<object>.Create(true, token);
-                            result.StatusCode = (int)MessageStatusCode.OK;
+                            result.StatusCode = (int)MessageStatusCode.Ok;
                         }
                         else
                         {
@@ -181,7 +183,7 @@ namespace Hl.Gateway.WebApi.Controllers
             var serializer = ServiceLocator.GetService<ISerializer<string>>();
             var dataObj = serializer.Deserialize(data, typeof(object), true);
             var serviceResult = ServiceResult<object>.Create(true, dataObj);
-            serviceResult.StatusCode = (int)MessageStatusCode.OK;
+            serviceResult.StatusCode = (int)MessageStatusCode.Ok;
             return serviceResult;
         }
     }
