@@ -57,6 +57,7 @@ namespace Hl.Gateway.WebApi.Controllers
             {
                 return new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.RequestError, Message = "请求错误" };
             }
+            var appConfig = GateWayAppConfig.ServicePart;
 
             if (servicePartProvider.IsPart(path))
             {
@@ -69,22 +70,26 @@ namespace Hl.Gateway.WebApi.Controllers
                 {
                     if (path == GateWayAppConfig.AuthenticationRoutePath)
                     {
-                        dynamic paramInput = model["input"];
-                        var loginInput = new LoginInput()
+                        try
                         {
-                            UserName = paramInput["userName"].ToString(),
-                            Password = paramInput["password"].ToString()
-                        };
-
-                        var token = await _authorizationServerProvider.GenerateTokenCredential(loginInput);
-                        if (token != null)
+                            var token = await _authorizationServerProvider.GenerateTokenCredential(model);
+                            if (token != null)
+                            {
+                                result = ServiceResult<object>.Create(true, token);
+                                result.StatusCode = (int)MessageStatusCode.Ok;
+                            }
+                            else
+                            {
+                                result = new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.UnAuthentication, Message = "不合法的身份凭证" };
+                            }
+                        }                      
+                        catch (CPlatformException ex)
                         {
-                            result = ServiceResult<object>.Create(true, token);
-                            result.StatusCode = (int)MessageStatusCode.Ok;
+                            result = new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.CPlatformError, Message = ex.Message };
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            result = new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.UnAuthentication, Message = "不合法的身份凭证" };
+                            result = new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.UnKnownError, Message = ex.Message };
                         }
                     }
                     else
