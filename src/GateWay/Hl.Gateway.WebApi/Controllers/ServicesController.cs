@@ -98,12 +98,12 @@ namespace Hl.Gateway.WebApi.Controllers
                         {
                             if (!string.IsNullOrEmpty(serviceKey))
                             {
-                                var data = (string)await _serviceProxyProvider.Invoke<object>(model, path, serviceKey);
+                                var data = await _serviceProxyProvider.Invoke<object>(model, path, serviceKey);
                                 return CreateServiceResult(data);
                             }
                             else
                             {
-                                var data = (string)await _serviceProxyProvider.Invoke<object>(model, path);
+                                var data = await _serviceProxyProvider.Invoke<object>(model, path);
                                 if (data == null)
                                 {
                                     return new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.UnKnownError, Message = "服务异常" };
@@ -114,6 +114,10 @@ namespace Hl.Gateway.WebApi.Controllers
                         catch (CPlatformException ex)
                         {
                             return new ServiceResult<object> { IsSucceed = false, StatusCode = (int)ex.ExceptionCode, Message = ex.Message };
+                        }
+                        catch (Exception ex)
+                        {
+                            return new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.UnKnownError, Message = ex.Message };
                         }
                     }
                 }
@@ -183,13 +187,33 @@ namespace Hl.Gateway.WebApi.Controllers
             }
         }
 
-        private ServiceResult<object> CreateServiceResult(string data)
+        private ServiceResult<object> CreateServiceResult(object data)
         {
-            var serializer = ServiceLocator.GetService<ISerializer<string>>();
-            var dataObj = serializer.Deserialize(data, typeof(object), true);
-            var serviceResult = ServiceResult<object>.Create(true, dataObj);
-            serviceResult.StatusCode = (int)MessageStatusCode.Ok;
-            return serviceResult;
+            if (data.GetType() == typeof(string))
+            {
+                var dataStr = (string)data;
+                if (dataStr.IsValidJson())
+                {
+                    var serializer = ServiceLocator.GetService<ISerializer<string>>();
+                    var dataObj = serializer.Deserialize(dataStr, typeof(object), true);
+                    var serviceResult = ServiceResult<object>.Create(true, dataObj);
+                    serviceResult.StatusCode = (int)MessageStatusCode.Ok;
+                    return serviceResult;
+                }
+                else
+                {
+                    var serviceResult = ServiceResult<object>.Create(true, data);
+                    serviceResult.StatusCode = (int)MessageStatusCode.Ok;
+                    return serviceResult;
+
+                }
+            }
+            else
+            {
+                var serviceResult = ServiceResult<object>.Create(true, data);
+                serviceResult.StatusCode = (int)MessageStatusCode.Ok;
+                return serviceResult;
+            }
         }
     }
 }
