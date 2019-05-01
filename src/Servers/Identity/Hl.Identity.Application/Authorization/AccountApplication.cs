@@ -33,14 +33,5 @@ namespace Hl.Identity.Application.Authorization
             };
         }
 
-        public async Task<string> Register(RegisterInput input)
-        {
-            var validator = GetService<RegisterValidator>();
-            var validatorResult = await validator.ValidateAsync(input);
-            validatorResult.IsValidResult();
-            var userEntity = input.MapTo<UserInfo>();
-            await _userManager.CreateAsync(userEntity);
-            return "注册用户成功";
-        }
     }
 }
