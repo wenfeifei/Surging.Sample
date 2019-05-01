@@ -1,6 +1,19 @@
 version: '3.7'
 
 services: 
+  hlservice.basicdata:
+    image: hlservice/basicdata:${TAG:-latest}
+    build:
+      context: ../..
+      dockerfile: src/Servers/BasicData/Hl.BasicData.ServerHost/Dockerfile
+      args:
+        host_workdir: src/Servers/BasicData/Hl.BasicData.ServerHost
+        host_name: Hl.BasicData.ServerHost.dll
+        sln_name: sln/Surging.HlWithIdentity.sln
+    volumes:
+      - ${LOG_DIR:-/var/logs}/basicdata:/app/logs
+    networks:
+      - src_srcp_demo_service_net
 
   hlservice.identity:
     image: hlservice/identity:${TAG:-latest}

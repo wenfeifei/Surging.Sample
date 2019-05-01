@@ -13,7 +13,6 @@ namespace Hl.Identity.Domain.Employee
         public async Task CreateEmployee(EmployeeAggregate employee)
         {
            
-
             await UnitOfWorkAsync(async (conn, tran) =>
             {
                 var employeeId = await GetService<IDapperRepository<EmployeeAggregate, long>>().InsertAndGetIdAsync(employee,conn,tran);

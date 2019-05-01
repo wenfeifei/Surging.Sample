@@ -1,14 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\..\Shares\Props\hostpackage.props" />
-
-  <ItemGroup>
-    <None Remove="configs\identitySettings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="configs\identitySettings.json" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Hl.Identity.Application\Hl.Identity.Application.csproj" />
   </ItemGroup>
