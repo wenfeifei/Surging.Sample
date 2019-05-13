@@ -1,8 +1,6 @@
-﻿using DapperExtensions.Mapper;
-using Hl.Core.ClassMapper;
-using Hl.Identity.Domain.Authorization.Users;
+﻿using Hl.Core.ClassMapper;
 
-namespace Hl.Identity.Domain.Authorization.ClassMappers
+namespace Hl.Identity.Domain.Authorization.Users.ClassMappers
 {
     public class UserRoleClassMapper : HlClassMapper<UserRole>
     {
