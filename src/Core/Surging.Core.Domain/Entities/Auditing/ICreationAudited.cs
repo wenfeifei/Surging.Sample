@@ -2,11 +2,11 @@
 {
     public interface ICreationAudited : IHasCreationTime
     {
-        string CreatorUserId { get; set; }
+        long? CreatorUserId { get; set; }
     }
 
     public interface ICreationAudited<TUser> : ICreationAudited
-        where TUser : IEntity<string>
+        where TUser : IEntity<long>
     {
         TUser CreatorUser { get; set; }
     }

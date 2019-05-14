@@ -7,6 +7,7 @@ namespace Surging.Core.AutoMapper
 {
     public class AutoMapperModule : EnginePartModule
     {
+
         public override void Initialize(CPlatformContainer serviceProvider)
         {
             base.Initialize(serviceProvider);
@@ -22,5 +23,7 @@ namespace Surging.Core.AutoMapper
             }
             builder.RegisterType<AutoMapperBootstrap>().As<IAutoMapperBootstrap>();
         }
+
+
     }
 }

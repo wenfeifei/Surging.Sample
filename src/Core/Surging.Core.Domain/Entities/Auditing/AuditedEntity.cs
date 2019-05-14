@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
 namespace Surging.Core.Domain.Entities.Auditing
 {
@@ -13,12 +15,12 @@ namespace Surging.Core.Domain.Entities.Auditing
     {
         public virtual DateTime? LastModificationTime { get; set; }
 
-        public virtual string LastModifierUserId { get; set; }
+        public virtual long? LastModifierUserId { get; set; }
     }
 
     [Serializable]
     public abstract class AuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPrimaryKey>, IAudited<TUser>
-        where TUser : IEntity<string>
+        where TUser : IEntity<long>
     {
         [ForeignKey("CreatorUserId")]
         public virtual TUser CreatorUser { get; set; }

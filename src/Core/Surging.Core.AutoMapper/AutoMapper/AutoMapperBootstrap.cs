@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.Attributes;
+using Microsoft.Extensions.Logging;
+using Surging.Core.CPlatform.Utilities;
 using System.Linq;
 
 namespace Surging.Core.AutoMapper
@@ -8,8 +10,8 @@ namespace Surging.Core.AutoMapper
     {
         public void Initialize()
         {
-            Mapper.Initialize(config =>
-            {
+            var logger = ServiceLocator.GetService<ILogger<AutoMapperBootstrap>>();
+            Mapper.Initialize(config => {
                 if (AppConfig.Assemblies.Any())
                 {
                     foreach (var assembly in AppConfig.Assemblies)
@@ -17,14 +19,19 @@ namespace Surging.Core.AutoMapper
                         assembly.MapTypes(config);
                     }
                 }
-                if (AppConfig.Profiles.Any())
+
+                var profiles = AppConfig.Profiles;
+                if (profiles.Any())
                 {
-                    foreach (var profile in AppConfig.Profiles)
+                    foreach (var profile in profiles)
                     {
+                        logger.LogDebug($"解析到{profile.GetType().FullName}映射关系");
                         config.AddProfile(profile);
                     }
                 }
+
             });
         }
+
     }
 }

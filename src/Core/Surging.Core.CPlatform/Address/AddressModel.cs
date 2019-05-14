@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Newtonsoft.Json;
+using System.Net;
 
 namespace Surging.Core.CPlatform.Address
 {
@@ -13,6 +14,7 @@ namespace Surging.Core.CPlatform.Address
         /// <returns></returns>
         public abstract EndPoint CreateEndPoint();
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal ProcessorTime { get; set; }
 
         /// <summary>

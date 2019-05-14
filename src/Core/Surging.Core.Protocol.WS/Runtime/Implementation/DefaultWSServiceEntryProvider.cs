@@ -27,7 +27,10 @@ namespace Surging.Core.Protocol.WS.Runtime.Implementation
 
         #region Constructor
 
-        public DefaultWSServiceEntryProvider(IServiceEntryProvider serviceEntryProvider, ILogger<DefaultWSServiceEntryProvider> logger, CPlatformContainer serviceProvider, WebSocketOptions options)
+        public DefaultWSServiceEntryProvider(IServiceEntryProvider serviceEntryProvider,
+            ILogger<DefaultWSServiceEntryProvider> logger,
+            CPlatformContainer serviceProvider,
+            WebSocketOptions options)
         {
             _types = serviceEntryProvider.GetTypes();
             _logger = logger;
@@ -95,7 +98,6 @@ namespace Surging.Core.Protocol.WS.Runtime.Implementation
         {
             var wsBehavior = _serviceProvider.GetInstances(service) as WebSocketBehavior;
             if (option != null)
-
             {
                 wsBehavior.IgnoreExtensions = option.IgnoreExtensions;
                 wsBehavior.Protocol = option.Protocol;

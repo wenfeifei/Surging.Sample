@@ -26,18 +26,11 @@ namespace Surging.Core.CPlatform.Support
             }
         }
 
-        /// <summary>
-        ///  故障转移次数,默认为3
-        /// </summary>
         public int FailoverCluster { get; set; } = 3;
-
-        /// <summary>
-        /// 是否强制打开熔断
-        /// </summary>
         public bool CircuitBreakerForceOpen { get; set; }
 
         /// <summary>
-        /// 容错策略--包括Failover(自动切换重试远程调用)和Injection(直接本地模块调用)
+        /// 容错策略
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public StrategyType Strategy { get; set; }
@@ -53,7 +46,7 @@ namespace Surging.Core.CPlatform.Support
         public bool RequestCacheEnabled { get; set; }
 
         /// <summary>
-        /// 指定服务默认返回的脚本
+        /// 注入
         /// </summary>
         public string Injection { get; set; } = "return null";
 
@@ -63,14 +56,11 @@ namespace Surging.Core.CPlatform.Support
         public string FallBackName { get; set; }
 
         /// <summary>
-        /// 负载分流策略--默认轮询
+        /// 负载分流策略
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public AddressSelectorMode ShuntStrategy { get; set; } = AddressSelectorMode.Polling;
 
-        /// <summary>
-        /// 动态创建的代理类的名称空间(程序集名称)
-        /// </summary>
         public string[] InjectionNamespaces { get; set; }
 
         /// <summary>

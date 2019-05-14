@@ -20,8 +20,7 @@ namespace Surging.Core.Protocol.WS
         private readonly WebSocketOptions _options;
 
         public DefaultWSServerMessageListener(ILogger<DefaultWSServerMessageListener> logger,
-            IWSServiceEntryProvider wsServiceEntryProvider,
-            WebSocketOptions options)
+            IWSServiceEntryProvider wsServiceEntryProvider, WebSocketOptions options)
         {
             _logger = logger;
             _entries = wsServiceEntryProvider.GetEntries().ToList();
@@ -35,19 +34,16 @@ namespace Surging.Core.Protocol.WS
             try
             {
                 foreach (var entry in _entries)
-                {
                     _wssv.AddWebSocketService(entry.Path, entry.FuncBehavior);
-                }
-
                 _wssv.KeepClean = _options.KeepClean;
                 _wssv.WaitTime = TimeSpan.FromSeconds(_options.WaitTime);
                 _wssv.Start();
                 if (_logger.IsEnabled(LogLevel.Debug))
-                    _logger.LogDebug($"WS服务主机启动成功，监听地址：{endPoint}");
+                    _logger.LogDebug($"WS服务主机启动成功，监听地址：{endPoint}。");
             }
             catch
             {
-                _logger.LogError($"WS服务主机启动失败，监听地址：{endPoint}");
+                _logger.LogError($"WS服务主机启动失败，监听地址：{endPoint}。 ");
             }
         }
 

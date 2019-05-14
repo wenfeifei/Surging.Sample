@@ -8,36 +8,27 @@ namespace Surging.Core.CPlatform.Exceptions
     /// </summary>
     public class CPlatformException : Exception
     {
-        public StatusCode ExceptionCode { get; }
-
+        private readonly StatusCode _exceptionCode;
         /// <summary>
         /// 初始化构造函数
         /// </summary>
         /// <param name="message">异常消息。</param>
         /// <param name="innerException">内部异常。</param>
-        public CPlatformException(string message, Exception innerException = null, StatusCode exceptionCode = StatusCode.CPlatformError) : base(message, innerException)
+        //public CPlatformException(string message, Exception innerException = null) : base(message, innerException)
+        //{
+        //    _exceptionCode = StatusCode.CPlatformError;
+        //}
+
+        public CPlatformException(string message, Exception innerException = null, StatusCode status = StatusCode.CPlatformError) : base(message, innerException)
         {
-            ExceptionCode = exceptionCode;
+            _exceptionCode = status;
         }
 
-        /// <summary>
-        /// 初始化构造函数
-        /// </summary>
-        /// <param name="message">异常消息。</param>
-        /// <param name="innerException">内部异常。</param>
-        public CPlatformException(string message, StatusCode exceptionCode = StatusCode.CPlatformError) : base(message)
+        public CPlatformException(string message, StatusCode status = StatusCode.CPlatformError) : base(message)
         {
-            ExceptionCode = exceptionCode;
+            _exceptionCode = status;
         }
 
-        /// <summary>
-        /// 初始化构造函数
-        /// </summary>
-        /// <param name="message">异常消息。</param>
-        /// <param name="innerException">内部异常。</param>
-        public CPlatformException(string message) : base(message)
-        {
-            ExceptionCode = StatusCode.CPlatformError;
-        }
+        public StatusCode ExceptionCode { get { return _exceptionCode; } }
     }
 }

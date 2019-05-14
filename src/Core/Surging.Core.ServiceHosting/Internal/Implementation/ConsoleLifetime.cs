@@ -4,9 +4,6 @@ using System.Threading.Tasks;
 
 namespace Surging.Core.ServiceHosting.Internal.Implementation
 {
-    /// <summary>
-    /// 当服务以控制台启动时,描述主机的整个生命周期
-    /// </summary>
     public class ConsoleLifetime : IHostLifetime
     {
         private readonly ManualResetEvent _shutdownBlock = new ManualResetEvent(false);

@@ -8,11 +8,12 @@ namespace Surging.Core.CPlatform.Exceptions
     /// </summary>
     public class CommunicationException : CPlatformException
     {
-        public CommunicationException(string message, Exception innerException = null) : base(message, innerException, StatusCode.BusinessError)
-        {
-        }
-
-        public CommunicationException(string message) : base(message, StatusCode.BusinessError)
+        /// <summary>
+        /// 初始构造函数
+        /// </summary>
+        /// <param name="message">异常消息。</param>
+        /// <param name="innerException">内部异常。</param>
+        public CommunicationException(string message, Exception innerException = null) : base(message, innerException,StatusCode.CommunicationError)
         {
         }
     }

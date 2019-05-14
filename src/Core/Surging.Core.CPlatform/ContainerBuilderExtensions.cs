@@ -17,6 +17,7 @@ using Surging.Core.CPlatform.Ids;
 using Surging.Core.CPlatform.Ids.Implementation;
 using Surging.Core.CPlatform.Ioc;
 using Surging.Core.CPlatform.Module;
+using Surging.Core.CPlatform.Mqtt;
 using Surging.Core.CPlatform.Routing;
 using Surging.Core.CPlatform.Routing.Implementation;
 using Surging.Core.CPlatform.Runtime.Client;
@@ -49,7 +50,6 @@ using System.Text.RegularExpressions;
 
 namespace Surging.Core.CPlatform
 {
-
     /// <summary>
     /// 服务构建者。
     /// </summary>
@@ -176,6 +176,18 @@ namespace Surging.Core.CPlatform
             return builder;
         }
 
+        /// <summary>
+        /// 设置mqtt服务路由管理者。
+        /// </summary>
+        /// <param name="builder">mqtt服务构建者。</param>
+        /// <param name="factory">mqtt服务路由管理者实例工厂。</param>
+        /// <returns>服务构建者。</returns>
+        public static IServiceBuilder UseMqttRouteManager(this IServiceBuilder builder, Func<IServiceProvider, IMqttServiceRouteManager> factory)
+        {
+            builder.Services.RegisterAdapter(factory).InstancePerLifetimeScope();
+            return builder;
+        }
+
         #endregion RouteManager
 
         /// <summary>
@@ -269,11 +281,6 @@ namespace Surging.Core.CPlatform
 
         #region Configuration Watch
 
-        /// <summary>
-        /// 添加同步更新配置文件的监听处理
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
         public static IServiceBuilder AddConfigurationWatch(this IServiceBuilder builder)
         {
             var services = builder.Services;
@@ -411,7 +418,6 @@ namespace Surging.Core.CPlatform
         public static IServiceBuilder AddRelateServiceRuntime(this IServiceBuilder builder)
         {
             var services = builder.Services;
-
             services.RegisterType(typeof(DefaultHealthCheckService)).As(typeof(IHealthCheckService)).SingleInstance();
             services.RegisterType(typeof(DefaultAddressResolver)).As(typeof(IAddressResolver)).SingleInstance();
             services.RegisterType(typeof(RemoteInvokeService)).As(typeof(IRemoteInvokeService)).SingleInstance();
@@ -435,7 +441,6 @@ namespace Surging.Core.CPlatform
             services.RegisterType(typeof(DefaultServiceRouteProvider)).As(typeof(IServiceRouteProvider)).SingleInstance();
             services.RegisterType(typeof(DefaultServiceRouteFactory)).As(typeof(IServiceRouteFactory)).SingleInstance();
             services.RegisterType(typeof(DefaultServiceSubscriberFactory)).As(typeof(IServiceSubscriberFactory)).SingleInstance();
-
             services.RegisterType(typeof(ServiceTokenGenerator)).As(typeof(IServiceTokenGenerator)).SingleInstance();
             services.RegisterType(typeof(HashAlgorithm)).As(typeof(IHashAlgorithm)).SingleInstance();
             services.RegisterType(typeof(ServiceEngineLifetime)).As(typeof(IServiceEngineLifetime)).SingleInstance();
@@ -484,7 +489,7 @@ namespace Surging.Core.CPlatform
             try
             {
                 var services = builder.Services;
-                var referenceAssemblies = GetReferenceAssembly(virtualPaths);
+                var referenceAssemblies = GetAssemblies(virtualPaths);
                 foreach (var assembly in referenceAssemblies)
                 {
                     services.RegisterAssemblyTypes(assembly)
@@ -520,17 +525,11 @@ namespace Surging.Core.CPlatform
             }
         }
 
-        /// <summary>
-        /// 依赖注入ServiceBus
-        /// </summary>
-        /// <param name="builder">Ioc容器构建者</param>
-        /// <param name="virtualPaths">返回注册模块信息</param>
-        /// <returns></returns>
         public static IServiceBuilder RegisterServiceBus
             (this IServiceBuilder builder, params string[] virtualPaths)
         {
             var services = builder.Services;
-            var referenceAssemblies = GetReferenceAssembly(virtualPaths);
+            var referenceAssemblies = GetAssemblies(virtualPaths);
 
             foreach (var assembly in referenceAssemblies)
             {
@@ -545,13 +544,13 @@ namespace Surging.Core.CPlatform
         /// <summary>
         ///依赖注入仓储模块程序集
         /// </summary>
-        /// <param name="builder">Ioc容器构建者</param>
+        /// <param name="builder">IOC容器</param>
         /// <returns>返回注册模块信息</returns>
         public static IServiceBuilder RegisterRepositories
          (this IServiceBuilder builder, params string[] virtualPaths)
         {
             var services = builder.Services;
-            var referenceAssemblies = GetReferenceAssembly(virtualPaths);
+            var referenceAssemblies = GetAssemblies(virtualPaths);
 
             foreach (var assembly in referenceAssemblies)
             {
@@ -561,29 +560,11 @@ namespace Surging.Core.CPlatform
             return builder;
         }
 
-        /// <summary>
-        /// 依赖注入第三方模块
-        /// </summary>
-        /// <param name="builder">IOC容器</param>
-        /// <param name="virtualPaths">返回注册模块信息</param>
-        /// <returns></returns>
         public static IServiceBuilder RegisterModules(
-        this IServiceBuilder builder, params string[] virtualPaths)
+      this IServiceBuilder builder, params string[] virtualPaths)
         {
             var services = builder.Services;
-            List<Assembly> referenceAssemblies = new List<Assembly>();
-            if (virtualPaths.Any())
-            {
-                referenceAssemblies = GetReferenceAssembly(virtualPaths);
-            }
-            else
-            {
-                string[] assemblyNames = DependencyContext
-                    .Default.GetDefaultAssemblyNames().Select(p => p.Name).ToArray();
-                assemblyNames = GetFilterAssemblies(assemblyNames);
-                foreach (var name in assemblyNames)
-                    referenceAssemblies.Add(Assembly.Load(name));
-            }
+            var referenceAssemblies = GetAssemblies(virtualPaths);
             if (builder == null) throw new ArgumentNullException("builder");
             var packages = ConvertDictionary(AppConfig.ServerOptions.Packages);
             foreach (var moduleAssembly in referenceAssemblies)
@@ -608,10 +589,10 @@ namespace Surging.Core.CPlatform
             return builder;
         }
 
-        public static List<Type> GetInterfaceService(this IServiceBuilder builder)
+        public static List<Type> GetInterfaceService(this IServiceBuilder builder, params string[] virtualPaths)
         {
             var types = new List<Type>();
-            var referenceAssemblies = GetReferenceAssembly();
+            var referenceAssemblies = GetReferenceAssembly(virtualPaths);
             referenceAssemblies.ForEach(p =>
             {
                 types.AddRange(p.GetTypes().Where(t => typeof(IServiceKey).GetTypeInfo().IsAssignableFrom(t) && t.IsInterface));
@@ -619,21 +600,20 @@ namespace Surging.Core.CPlatform
             return types;
         }
 
-        public static IEnumerable<string> GetDataContractName(this IServiceBuilder builder)
+        public static IEnumerable<string> GetDataContractName(this IServiceBuilder builder, params string[] virtualPaths)
         {
             var namespaces = new List<string>();
-            var assemblies = builder.GetInterfaceService()
-                 .Select(p => p.Assembly)
-                 .Union(GetSystemModules())
-                 .Distinct()
+            var assemblies = builder.GetInterfaceService(virtualPaths)
+                .Select(p => p.Assembly)
+                .Union(GetSystemModules())
+                .Distinct()
                 .ToList();
 
-            var referenceAssemblies = builder.GetInterfaceService();
-            referenceAssemblies.ForEach(p =>
+            assemblies.ForEach(assembly =>
             {
-                namespaces.AddRange(p.Assembly.GetTypes().Where(t => t.GetCustomAttribute<DataContractAttribute>() != null).Select(n => n.Namespace));
+                namespaces.AddRange(assembly.GetTypes().Where(t => t.GetCustomAttribute<DataContractAttribute>() != null).Select(n => n.Namespace));
             });
-            return namespaces.Distinct();
+            return namespaces;
         }
 
         public static IServiceBuilder RegisterInstanceByConstraint(this IServiceBuilder builder, params string[] virtualPaths)
@@ -653,42 +633,27 @@ namespace Surging.Core.CPlatform
 
         }
 
-        private static List<Assembly> GetSystemModules()
-        {
-            var assemblies = new List<Assembly>();
-            var referenceAssemblies = GetReferenceAssembly();
-            foreach (var referenceAssembly in referenceAssemblies)
-            {
-                var abstractModules = GetAbstractModules(referenceAssembly);
-                if (abstractModules.Any(p => p.GetType().IsSubclassOf(typeof(SystemModule))))
-                {
-                    assemblies.Add(referenceAssembly);
-                }
-            }
-            return assemblies;
-        }
-
         private static IDictionary<string, string> ConvertDictionary(List<ModulePackage> list)
         {
             var result = new Dictionary<string, string>();
             list.ForEach(p =>
             {
                 var usingModule = p.Using;
-                if (AppConfig.ServerOptions.Environment != RuntimeEnvironment.Development)
+                if (AppConfig.ServerOptions.Environment == RuntimeEnvironment.Production)
                 {
                     usingModule = p.Using.Replace("KestrelHttpModule", "").Replace(";;", ";");
                 }
 
-                result.Add(p.TypeName, usingModule);
+                result.Add(p.TypeName, p.Using);
             });
             return result;
         }
 
         private static List<Assembly> GetReferenceAssembly(params string[] virtualPaths)
         {
-            var refAssemblies = new List<Assembly>();//Assembly 通过此类能够载入操纵一个程序集，并获取程序集内部信息
+            var refAssemblies = new List<Assembly>();
             var rootPath = AppContext.BaseDirectory;
-            var existsPath = virtualPaths.Any();//判断是否有数据
+            var existsPath = virtualPaths.Any();
             if (existsPath && !string.IsNullOrEmpty(AppConfig.ServerOptions.RootPath))
                 rootPath = AppConfig.ServerOptions.RootPath;
             var result = _referenceAssembly;
@@ -711,6 +676,40 @@ namespace Surging.Core.CPlatform
                 });
             }
             return result;
+        }
+
+        private static List<Assembly> GetSystemModules()
+        {
+            var assemblies = new List<Assembly>();
+            var referenceAssemblies = GetReferenceAssembly();
+            foreach (var referenceAssembly in referenceAssemblies)
+            {
+                var abstractModules = GetAbstractModules(referenceAssembly);
+                if (abstractModules.Any(p => p.GetType().IsSubclassOf(typeof(SystemModule))))
+                {
+                    assemblies.Add(referenceAssembly);
+                }
+            }
+            return assemblies;
+        }
+
+        private static List<Assembly> GetAssemblies(params string[] virtualPaths)
+        {
+            var referenceAssemblies = new List<Assembly>();
+            if (virtualPaths.Any())
+            {
+                referenceAssemblies = GetReferenceAssembly(virtualPaths);
+            }
+            else
+            {
+                string[] assemblyNames = DependencyContext
+                    .Default.GetDefaultAssemblyNames().Select(p => p.Name).ToArray();
+                assemblyNames = GetFilterAssemblies(assemblyNames);
+                foreach (var name in assemblyNames)
+                    referenceAssemblies.Add(Assembly.Load(name));
+                _referenceAssembly.AddRange(referenceAssemblies.Except(_referenceAssembly));
+            }
+            return referenceAssemblies;
         }
 
         private static List<AbstractModule> GetAbstractModules(Assembly assembly)
@@ -767,9 +766,8 @@ namespace Surging.Core.CPlatform
             {
                 return
                     Directory.GetFiles(parentDir, "*.dll").Select(Path.GetFullPath).Where(
-                        a => !notRelatedRegex.IsMatch(a)).ToList();
+                        a => !notRelatedRegex.IsMatch(Path.GetFileName(a))).ToList();
             }
         }
     }
-
 }

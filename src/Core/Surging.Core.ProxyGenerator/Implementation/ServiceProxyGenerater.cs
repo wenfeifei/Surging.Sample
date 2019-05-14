@@ -31,6 +31,7 @@ namespace Surging.Core.ProxyGenerator.Implementation
 
         private readonly IServiceIdGenerator _serviceIdGenerator;
         private readonly ILogger<ServiceProxyGenerater> _logger;
+
         #endregion Field
 
         #region Constructor
@@ -73,16 +74,23 @@ namespace Surging.Core.ProxyGenerator.Implementation
                         MetadataReference.CreateFromFile(typeof(Task).GetTypeInfo().Assembly.Location)
                     }),
                 _logger);
-
-            using (stream)
+            if (stream != null)
             {
+                using (stream)
+                {
 #if NET
                 var assembly = Assembly.Load(stream.ToArray());
 #else
-                var assembly = AssemblyLoadContext.Default.LoadFromStream(stream);
+                    var assembly = AssemblyLoadContext.Default.LoadFromStream(stream);
 #endif
-                return assembly.GetExportedTypes();
+                    return assembly.GetExportedTypes();
+                }
             }
+            else
+            {
+                return new List<Type>();
+            }
+
         }
 
         /// <summary>
@@ -283,7 +291,6 @@ namespace Surging.Core.ProxyGenerator.Implementation
                     parameterDeclarationList.Add(Parameter(
                                         Identifier(parameter.Name))
                                         .WithType(GetQualifiedNameSyntax(parameter.ParameterType)));
-
                 }
                 parameterDeclarationList.Add(Token(SyntaxKind.CommaToken));
 
@@ -317,7 +324,6 @@ namespace Surging.Core.ProxyGenerator.Implementation
             {
                 expressionSyntax = GenericName(
                 Identifier("Invoke")).WithTypeArgumentList(((GenericNameSyntax)returnDeclaration).TypeArgumentList);
-
             }
             else
             {

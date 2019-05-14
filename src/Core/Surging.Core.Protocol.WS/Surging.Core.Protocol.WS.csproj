@@ -1,16 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <Import Project="..\..\..\common.props" />
-
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Description>封装了ws协议,对外提供WebSocket服务</Description>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <Description>封装基于Websocket协议的通信组件包</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -18,9 +18,9 @@ namespace Surging.Core.CPlatform.Cache
 
         #region Equality members
 
-        /// <summary>确定指定的对象是否等于当前对象</summary>
-        /// <returns>如果指定的对象等于当前对象，则为true；否则，为false。</returns>
-        /// <param name="obj">要与当前对象进行比较的对象。 </param>
+        /// <summary>Determines whether the specified object is equal to the current object.</summary>
+        /// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        /// <param name="obj">The object to compare with the current object. </param>
         public override bool Equals(object obj)
         {
             var model = obj as ServiceCache;

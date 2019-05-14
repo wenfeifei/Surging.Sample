@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Surging.Core.ProxyGenerator.Implementation
 {
@@ -20,7 +21,7 @@ namespace Surging.Core.ProxyGenerator.Implementation
         private readonly IRemoteInvokeService _remoteInvokeService;
         private readonly ITypeConvertibleService _typeConvertibleService;
         private readonly IServiceProvider _serviceProvider;
-        private Type[] _serviceTypes;
+        private Type[] _serviceTypes = new Type[0];
 
         #endregion Field
 
@@ -47,6 +48,7 @@ namespace Surging.Core.ProxyGenerator.Implementation
 
         #region Implementation of IServiceProxyFactory
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public object CreateProxy(Type type)
         {
             var instance = ServiceResolver.Current.GetService(type);
@@ -60,6 +62,7 @@ namespace Surging.Core.ProxyGenerator.Implementation
             return instance;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public object CreateProxy(string key, Type type)
         {
             var instance = ServiceResolver.Current.GetService(type, key);
@@ -73,6 +76,7 @@ namespace Surging.Core.ProxyGenerator.Implementation
             return instance;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T CreateProxy<T>(string key) where T : class
         {
             var instanceType = typeof(T);
@@ -92,10 +96,12 @@ namespace Surging.Core.ProxyGenerator.Implementation
             return CreateProxy<T>(null);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RegisterProxType(string[] namespaces, params Type[] types)
         {
             var proxyGenerater = _serviceProvider.GetService<IServiceProxyGenerater>();
-            _serviceTypes = proxyGenerater.GenerateProxys(types, namespaces).ToArray();
+            var serviceTypes = proxyGenerater.GenerateProxys(types, namespaces).ToArray();
+            _serviceTypes = _serviceTypes.Except(serviceTypes).Concat(serviceTypes).ToArray();
             proxyGenerater.Dispose();
         }
 

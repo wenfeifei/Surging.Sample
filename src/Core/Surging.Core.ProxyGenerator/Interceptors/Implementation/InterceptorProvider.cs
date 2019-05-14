@@ -32,7 +32,8 @@ namespace Surging.Core.ProxyGenerator.Interceptors.Implementation
                 }) as IInvocation;
         }
 
-        public IInvocation GetCacheInvocation(object proxy, IDictionary<string, object> parameters, string serviceId, Type returnType)
+        public IInvocation GetCacheInvocation(object proxy, IDictionary<string, object> parameters,
+    string serviceId, Type returnType)
         {
             var entry = (from q in _serviceEntryManager.GetAllEntries()
                          let k = q.Attributes

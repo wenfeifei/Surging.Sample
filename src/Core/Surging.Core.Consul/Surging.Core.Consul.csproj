@@ -4,14 +4,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Description>使用Consul作为微服务集群的注册中心</Description>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <Description>封装Consul作为微服务集群的注册中心</Description>
   </PropertyGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Consul" Version="0.7.2.6" />
@@ -19,6 +14,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Surging.Core.CPlatform\Surging.Core.CPlatform.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Internal\Cluster\HealthChecks\" />
+    <Folder Include="Internal\Cluster\Implementation\Selectors\Implementation\" />
+    <Folder Include="Internal\Implementation\" />
   </ItemGroup>
 
 </Project>

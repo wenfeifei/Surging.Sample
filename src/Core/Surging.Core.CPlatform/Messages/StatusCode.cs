@@ -5,7 +5,7 @@
         /// <summary>
         /// 成功调用
         /// </summary>
-        OK = 200,
+        Ok = 200,
 
         /// <summary>
         /// 通信错误
@@ -31,6 +31,11 @@
         /// 数据访问错误
         /// </summary>
         DataAccessError = 505,
+
+        /// <summary>
+        /// 用户友好类异常
+        /// </summary>
+        UserFriendly = 506,
 
         /// <summary>
         /// 未被认证

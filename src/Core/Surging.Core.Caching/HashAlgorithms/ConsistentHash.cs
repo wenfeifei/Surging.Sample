@@ -15,11 +15,13 @@ namespace Surging.Core.Caching.HashAlgorithms
     public class ConsistentHash<T>
     {
         #region 字段
+
         private readonly SortedDictionary<int, T> _ring = new SortedDictionary<int, T>();
         private int[] _nodeKeysInRing = null;
         private readonly IHashAlgorithm _hashAlgorithm;
         private readonly int _virtualNodeReplicationFactor = 1000;
-        #endregion
+
+        #endregion 字段
 
         public ConsistentHash(IHashAlgorithm hashAlgorithm)
         {
@@ -33,20 +35,29 @@ namespace Surging.Core.Caching.HashAlgorithms
         }
 
         #region 属性
+
         /// <summary>
         /// 复制哈希节点数
         /// </summary>
+        /// <remarks>
+        /// 	<para>创建：范亮</para>
+        /// 	<para>日期：2016/4/2</para>
+        /// </remarks>
         public int VirtualNodeReplicationFactor
         {
             get { return _virtualNodeReplicationFactor; }
         }
-        #endregion
 
+        #endregion 属性
 
         /// <summary>
         /// 添加节点
         /// </summary>
         /// <param name="node">节点</param>
+        /// <remarks>
+        /// 	<para>创建：范亮</para>
+        /// 	<para>日期：2016/4/2</para>
+        /// </remarks>
         public void Add(T node, string value)
         {
             AddNode(node, value);
@@ -62,6 +73,10 @@ namespace Surging.Core.Caching.HashAlgorithms
         /// 删除节点
         /// </summary>
         /// <param name="node">节点</param>
+        /// <remarks>
+        /// 	<para>创建：范亮</para>
+        /// 	<para>日期：2016/4/2</para>
+        /// </remarks>
         public void Remove(string node)
         {
             RemoveNode(node);
@@ -73,6 +88,10 @@ namespace Surging.Core.Caching.HashAlgorithms
         /// </summary>
         /// <param name="item">值</param>
         /// <returns>返回节点</returns>
+        /// <remarks>
+        /// 	<para>创建：范亮</para>
+        /// 	<para>日期：2016/4/2</para>
+        /// </remarks>
         public T GetItemNode(string item)
         {
             var hashOfItem = _hashAlgorithm.Hash(item);
@@ -84,6 +103,10 @@ namespace Surging.Core.Caching.HashAlgorithms
         /// 添加节点
         /// </summary>
         /// <param name="node">节点</param>
+        /// <remarks>
+        /// 	<para>创建：范亮</para>
+        /// 	<para>日期：2016/4/2</para>
+        /// </remarks>
         private void AddNode(T node, string value)
         {
             for (var i = 0; i < _virtualNodeReplicationFactor; i++)
@@ -97,6 +120,10 @@ namespace Surging.Core.Caching.HashAlgorithms
         /// 删除节点
         /// </summary>
         /// <param name="node">节点</param>
+        /// <remarks>
+        /// 	<para>创建：范亮</para>
+        /// 	<para>日期：2016/4/2</para>
+        /// </remarks>
         private void RemoveNode(string value)
         {
             for (var i = 0; i < _virtualNodeReplicationFactor; i++)
@@ -106,13 +133,16 @@ namespace Surging.Core.Caching.HashAlgorithms
             }
         }
 
-
         /// <summary>
         /// 顺时针查找对应哈希的位置
         /// </summary>
         /// <param name="keys">键集合数</param>
         /// <param name="hashOfItem">哈希值</param>
         /// <returns>返回哈希的位置</returns>
+        /// <remarks>
+        /// 	<para>创建：范亮</para>
+        /// 	<para>日期：2016/4/2</para>
+        /// </remarks>
         private int GetClockwiseNearestNode(int[] keys, int hashOfItem)
         {
             var begin = 0;

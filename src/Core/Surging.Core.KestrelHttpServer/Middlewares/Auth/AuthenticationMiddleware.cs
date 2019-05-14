@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Surging.Core.CPlatform;
 using Surging.Core.CPlatform.Exceptions;
+using Surging.Core.CPlatform.Jwt;
 using Surging.Core.CPlatform.Messages;
 using Surging.Core.CPlatform.Routing;
 using Surging.Core.CPlatform.Utilities;
@@ -39,7 +40,7 @@ namespace Surging.Core.KestrelHttpServer.Middlewares
             catch (CPlatformException ex)
             {
                 var resultMessage = new HttpResultMessage()
-                { IsSucceed = false, Message = ex.Message, StatusCode = ex.ExceptionCode };
+                { IsSucceed = false, Message = ex.Message, StatusCode = StatusCode.CPlatformError };
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(resultMessage));
             }
             catch (Exception ex)
@@ -48,6 +49,7 @@ namespace Surging.Core.KestrelHttpServer.Middlewares
                 { IsSucceed = false, Message = ex.StackTrace, StatusCode = StatusCode.RequestError };
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(resultMessage));
             }
+
         }
 
         private async Task OnAuthorize(HttpContext context)
@@ -59,7 +61,7 @@ namespace Surging.Core.KestrelHttpServer.Middlewares
                 var commandInfo = await serviceRouteProvider.GetRouteByPath(routPath);
                 if (commandInfo == null)
                 {
-                    throw new CPlatformException($"系统中不存在{routPath}的路由信息");
+                    throw new CPlatformException($"系统中不存在{routPath}的路由信息", StatusCode.CPlatformError);
                 }
 
                 if (!commandInfo.ServiceDescriptor.EnableAuthorization())
@@ -68,14 +70,15 @@ namespace Surging.Core.KestrelHttpServer.Middlewares
                 }
 
                 var token = context.Request.GetTokenFromHeader();
-                var authorizationServerProvider = ServiceLocator.GetService<IAuthorizationServerProvider>();
-                var isSuccess = await authorizationServerProvider.ValidateClientAuthentication(token);
+                var jwtTokenProvider = ServiceLocator.GetService<IJwtTokenProvider>();
+                var isSuccess = jwtTokenProvider.ValidateToken(token, AppConfig.SwaggerOptions.Authorization.SecretKey);
 
                 if (isSuccess)
                 {
                     if (!string.IsNullOrEmpty(AppConfig.SwaggerOptions.Authorization.AuthorizationRoutePath))
                     {
                         var apiPath = context.Request.Path.ToString().TrimStart('/');
+                        var authorizationServerProvider = ServiceLocator.GetService<IAuthorizationServerProvider>();
                         await authorizationServerProvider.Authorize(apiPath, new Dictionary<string, object>()
                         {
                             {"apiPath", apiPath}
@@ -102,7 +105,6 @@ namespace Surging.Core.KestrelHttpServer.Middlewares
             if (len == -1)
                 routePath = urlSpan.TrimStart("/").ToString().ToLower();
             else
-
                 routePath = urlSpan.Slice(0, len).TrimStart("/").ToString().ToLower();
             return routePath;
         }
@@ -116,4 +118,5 @@ namespace Surging.Core.KestrelHttpServer.Middlewares
             return builder.UseMiddleware<AuthenticationMiddleware>();
         }
     }
+
 }

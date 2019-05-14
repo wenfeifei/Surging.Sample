@@ -11,7 +11,7 @@ namespace Surging.Core.CPlatform.Runtime.Session
         {
         }
 
-        public override string UserId
+        public override long? UserId
         {
             get
             {

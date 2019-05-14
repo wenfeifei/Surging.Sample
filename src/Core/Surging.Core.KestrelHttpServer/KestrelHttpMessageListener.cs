@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Surging.Core.CPlatform.Engines;
+using Surging.Core.CPlatform.Jwt;
 using Surging.Core.CPlatform.Serialization;
 using Surging.Core.CPlatform.Utilities;
 using Surging.Core.KestrelHttpServer.Internal;
@@ -24,16 +26,16 @@ namespace Surging.Core.KestrelHttpServer
         private IWebHost _host;
         private readonly ISerializer<string> _serializer;
         private readonly IServiceSchemaProvider _serviceSchemaProvider;
-
-
+        private readonly IServiceEngineLifetime _lifetime;
         public KestrelHttpMessageListener(ILogger<KestrelHttpMessageListener> logger,
             ISerializer<string> serializer,
-            IServiceSchemaProvider serviceSchemaProvider) : base(logger, serializer)
+            IServiceSchemaProvider serviceSchemaProvider,
+            IServiceEngineLifetime lifetime) : base(logger, serializer)
         {
             _logger = logger;
             _serializer = serializer;
             _serviceSchemaProvider = serviceSchemaProvider;
-
+            _lifetime = lifetime;
         }
 
         public async Task StartAsync(EndPoint endPoint)
@@ -41,22 +43,27 @@ namespace Surging.Core.KestrelHttpServer
             var ipEndPoint = endPoint as IPEndPoint;
             try
             {
-                _host = new WebHostBuilder()
-                 .UseContentRoot(Directory.GetCurrentDirectory())
-                 .UseKestrel(options =>
-                 {
-                     options.Listen(ipEndPoint);
-                 })
-                 .ConfigureServices(ConfigureServices)
-                 .ConfigureLogging((logger) =>
-                 {
-                     logger.AddConfiguration(
-                            CPlatform.AppConfig.GetSection("Logging"));
-                 })
-                 .Configure(AppResolve)
-                 .Build();
+                var hostBuilder = new WebHostBuilder()
+                  .UseContentRoot(Directory.GetCurrentDirectory())
+                  .UseKestrel(options =>
+                  {
+                      options.Listen(ipEndPoint);
+                  })
+                  .ConfigureServices(ConfigureServices)
+                  .ConfigureLogging((logger) =>
+                  {
+                      logger.AddConfiguration(
+                             CPlatform.AppConfig.GetSection("Logging"));
+                  })
+                  .Configure(AppResolve);
 
-                await _host.RunAsync();
+                if (Directory.Exists(CPlatform.AppConfig.ServerOptions.WebRootPath))
+                    hostBuilder = hostBuilder.UseWebRoot(CPlatform.AppConfig.ServerOptions.WebRootPath);
+                _host = hostBuilder.Build();
+                _lifetime.ServiceEngineStarted.Register(async () =>
+                {
+                    await _host.RunAsync();
+                });
             }
             catch
             {
@@ -77,7 +84,7 @@ namespace Surging.Core.KestrelHttpServer
                     {
                         annotationXmlDir = EnvironmentHelper.GetEnvironmentVariable(AppConfig.SwaggerOptions.AnnotationXmlDir);
                     }
-                    var xmlPaths = _serviceSchemaProvider.GetSchemaFilesPath(annotationXmlDir);
+                    var xmlPaths = _serviceSchemaProvider.GetSchemaFilesPath(annotationXmlDir, AppConfig.SwaggerOptions.DtoXmls);
                     foreach (var xmlPath in xmlPaths)
                     {
                         options.IncludeXmlComments(xmlPath);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Surging.Core.CPlatform.Engines;
 using Surging.Core.CPlatform.Engines.Implementation;
 using Surging.Core.CPlatform.Utilities;
@@ -14,6 +15,7 @@ namespace Surging.Core.AutoMapper
 {
     public class AppConfig
     {
+
         public static IEnumerable<Assembly> Assemblies
         {
             get
@@ -32,16 +34,27 @@ namespace Surging.Core.AutoMapper
         {
             get
             {
+                var logger = ServiceLocator.GetService<ILogger<AppConfig>>();
                 var profiles = new List<Profile>();
                 var referenceAssemblies = GetAllReferenceAssemblies();
                 foreach (var assembly in referenceAssemblies)
                 {
-                    var profileTypes = assembly.DefinedTypes.Select(p => p.AsType()).Where(p => typeof(Profile).IsAssignableFrom(p));
+                    var profileTypes = assembly.DefinedTypes.Select(p => p.AsType()).Where(p => typeof(Profile).IsAssignableFrom(p) && !p.IsAbstract).ToList();
                     if (profileTypes.Any())
                     {
                         foreach (var profileType in profileTypes)
                         {
-                            profiles.Add(Activator.CreateInstance(profileType) as Profile);
+                            try
+                            {
+                                var profile = Activator.CreateInstance(profileType) as Profile;
+                                profiles.Add(profile);
+                            }
+                            catch (Exception e)
+                            {
+                                if (logger.IsEnabled(LogLevel.Warning))
+                                    logger.LogWarning($"构建profile失败,profile类型为{profileType.FullName}");
+                            }
+
                         }
                     }
                 }
@@ -141,5 +154,6 @@ namespace Surging.Core.AutoMapper
             }
             return directories.Any() ? directories.Distinct().ToArray() : virPaths;
         }
+
     }
 }

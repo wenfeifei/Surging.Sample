@@ -54,25 +54,25 @@ namespace Surging.Core.Domain.Repositories
 
         Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity);
 
-        //       TEntity InsertOrUpdate(TEntity entity);
+        TEntity InsertOrUpdate(TEntity entity);
 
-        //       Task<TEntity> InsertOrUpdateAsync(TEntity entity);
+        Task<TEntity> InsertOrUpdateAsync(TEntity entity);
 
-        //       TPrimaryKey InsertOrUpdateAndGetId(TEntity entity);
+        TPrimaryKey InsertOrUpdateAndGetId(TEntity entity);
 
-        //       Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity);
+        Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity);
 
         #endregion Insert
 
         #region Update
 
-        //        TEntity Update(TEntity entity);
+        TEntity Update(TEntity entity);
 
         Task<TEntity> UpdateAsync(TEntity entity);
 
-        //       TEntity Update(TPrimaryKey id, Action<TEntity> updateAction);
+        TEntity Update(TPrimaryKey id, Action<TEntity> updateAction);
 
-        //        Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction);
+        Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction);
 
         #endregion Update
 
@@ -82,13 +82,13 @@ namespace Surging.Core.Domain.Repositories
 
         Task DeleteAsync(TEntity entity);
 
-        //        void Delete(TPrimaryKey id);
+        void Delete(TPrimaryKey id);
 
-        //       Task DeleteAsync(TPrimaryKey id);
+        Task DeleteAsync(TPrimaryKey id);
 
-        //       void Delete(Expression<Func<TEntity, bool>> predicate);
+        void Delete(Expression<Func<TEntity, bool>> predicate);
 
-        //        Task DeleteAsync(Expression<Func<TEntity, bool>> predicate);
+        Task DeleteAsync(Expression<Func<TEntity, bool>> predicate);
 
         #endregion Delete
 

@@ -15,11 +15,15 @@ namespace Surging.Core.CPlatform.Runtime.Client.Address.Resolvers.Implementation
     public class HashAlgorithmAdrSelector : AddressSelectorBase
     {
         private readonly IHealthCheckService _healthCheckService;
-        private readonly ConcurrentDictionary<string, ConsistentHash<AddressModel>> _concurrent = new ConcurrentDictionary<string, ConsistentHash<AddressModel>>();
 
-        private readonly IList<ValueTuple<string, AddressModel>> _unHealths = new List<ValueTuple<string, AddressModel>>();
+        private readonly ConcurrentDictionary<string, ConsistentHash<AddressModel>> _concurrent =
+    new ConcurrentDictionary<string, ConsistentHash<AddressModel>>();
+
+        private readonly List<ValueTuple<string, AddressModel>> _unHealths =
+    new List<ValueTuple<string, AddressModel>>();
 
         private readonly IHashAlgorithm _hashAlgorithm;
+
         public HashAlgorithmAdrSelector(IServiceRouteManager serviceRouteManager, IHealthCheckService healthCheckService, IHashAlgorithm hashAlgorithm)
         {
             _healthCheckService = healthCheckService;
@@ -30,12 +34,13 @@ namespace Surging.Core.CPlatform.Runtime.Client.Address.Resolvers.Implementation
         }
 
         #region Overrides of AddressSelectorBase
+
         /// <summary>
         /// 选择一个地址。
         /// </summary>
         /// <param name="context">地址选择上下文。</param>
         /// <returns>地址模型。</returns>
-        protected override async Task<AddressModel> SelectAsync(AddressSelectContext context)
+        protected override async ValueTask<AddressModel> SelectAsync(AddressSelectContext context)
         {
             var key = GetCacheKey(context.Descriptor);
             var addressEntry = _concurrent.GetOrAdd(key, k =>
@@ -72,6 +77,7 @@ namespace Surging.Core.CPlatform.Runtime.Client.Address.Resolvers.Implementation
             } while (!IsHealth);
             return addressModel;
         }
+
         #endregion Overrides of AddressSelectorBase
 
         #region Private Method
@@ -105,6 +111,6 @@ namespace Surging.Core.CPlatform.Runtime.Client.Address.Resolvers.Implementation
             _concurrent.TryRemove(key, out ConsistentHash<AddressModel> value);
         }
 
-        #endregion
+        #endregion Private Method
     }
 }

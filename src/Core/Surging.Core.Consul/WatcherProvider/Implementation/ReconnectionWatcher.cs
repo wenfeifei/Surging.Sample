@@ -1,4 +1,4 @@
-﻿namespace SSurging.Core.ConsulWatcherProvider
+﻿namespace Surging.Core.Consul.WatcherProvider
 {
     public class ReconnectionWatcher
     {

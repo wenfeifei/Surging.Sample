@@ -18,7 +18,7 @@ namespace Surging.Core.KestrelHttpServer.Internal
             _serviceEntryProvider = serviceEntryProvider;
         }
 
-        public IEnumerable<string> GetSchemaFilesPath(string annotationXmlDir)
+        public IEnumerable<string> GetSchemaFilesPath(string annotationXmlDir, IEnumerable<string> dtoXmls = null)
         {
             var result = new List<string>();
             var assemblieFiles = _serviceEntryProvider.GetALLEntries()
@@ -35,6 +35,19 @@ namespace Surging.Core.KestrelHttpServer.Internal
 
                 if (File.Exists(path))
                     result.Add(path);
+            }
+            if (dtoXmls != null && dtoXmls.Any())
+            {
+                foreach (var dtoxml in dtoXmls)
+                {
+                    var path = dtoxml;
+                    if (!string.IsNullOrEmpty(annotationXmlDir))
+                    {
+                        path = Path.Combine(annotationXmlDir, dtoxml);
+                    }
+                    if (File.Exists(path))
+                        result.Add(path);
+                }
             }
             return result;
         }

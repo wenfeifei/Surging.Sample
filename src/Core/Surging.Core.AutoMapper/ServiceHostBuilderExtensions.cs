@@ -1,8 +1,7 @@
 ﻿using Autofac;
-using Surging.Core.AutoMapper;
 using Surging.Core.ServiceHosting.Internal;
 
-namespace Surging.Core
+namespace Surging.Core.AutoMapper
 {
     public static class ServiceHostBuilderExtensions
     {

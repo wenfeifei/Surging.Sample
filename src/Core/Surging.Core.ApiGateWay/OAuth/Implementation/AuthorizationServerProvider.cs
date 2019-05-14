@@ -1,7 +1,11 @@
 ﻿using Newtonsoft.Json;
+using Surging.Core.ApiGateWay.OAuth.Models;
 using Surging.Core.Caching;
 using Surging.Core.CPlatform;
 using Surging.Core.CPlatform.Cache;
+using Surging.Core.CPlatform.Exceptions;
+using Surging.Core.CPlatform.Extensions;
+using Surging.Core.CPlatform.Jwt;
 using Surging.Core.CPlatform.Routing;
 using Surging.Core.ProxyGenerator;
 using Surging.Core.System.SystemType;
@@ -21,51 +25,61 @@ namespace Surging.Core.ApiGateWay.OAuth
     {
         private readonly IServiceProxyProvider _serviceProxyProvider;//务代理
         private readonly IServiceRouteProvider _serviceRouteProvider;//用务路由
-        private readonly CPlatformContainer _serviceProvider;//服务
-        private readonly ICacheProvider _cacheProvider;//缓存
-
+        private readonly IJwtTokenProvider _jwtTokenProvider;
         /// <summary>
         /// 安全验证服务提供类构造
         /// </summary>
         /// <param name="configInfo">配置信息</param>
         /// <param name="serviceProxyProvider">服务代理</param>
         /// <param name="serviceRouteProvider">用务路由</param>
-        /// <param name="serviceProvider">用务</param>
-        public AuthorizationServerProvider(ConfigInfo configInfo, IServiceProxyProvider serviceProxyProvider
-           , IServiceRouteProvider serviceRouteProvider
-            , CPlatformContainer serviceProvider)
+        /// <param name="jwtTokenProvider">jwt token provider</param>
+        public AuthorizationServerProvider(
+            IServiceProxyProvider serviceProxyProvider,
+            IServiceRouteProvider serviceRouteProvider,
+            IJwtTokenProvider jwtTokenProvider)
         {
-            _serviceProvider = serviceProvider;
             _serviceProxyProvider = serviceProxyProvider;
             _serviceRouteProvider = serviceRouteProvider;
-            _cacheProvider = CacheContainer.GetService<ICacheProvider>(AppConfig.CacheMode);
+            _jwtTokenProvider = jwtTokenProvider;
         }
 
-        /// <summary>
-        /// 生成TOKEN凭证
-        /// </summary>
-        /// <param name="parameters">字典参数</param>
-        /// <param name="accessSystemType"></param>
-        /// <returns></returns>
-        public async Task<string> GenerateTokenCredential(Dictionary<string, object> parameters, AccessSystemType accessSystemType = AccessSystemType.Inner)
+        public async Task<string> GenerateTokenCredential(IDictionary<string, object> rpcParams)
         {
-            string result = null;
-
-            var tokenEndpointPath = accessSystemType == AccessSystemType.Inner ? AppConfig.AuthenticationRoutePath : AppConfig.ThirdPartyAuthenticationRoutePath;
-
-            var payload = await _serviceProxyProvider.Invoke<object>(parameters, tokenEndpointPath, AppConfig.AuthorizationServiceKey);
-            if (payload != null && !payload.Equals("null"))
+            LoginResult loginResult;
+            if (AppConfig.AuthorizationServiceKey.IsNullOrEmpty())
             {
-                var jwtHeader = JsonConvert.SerializeObject(new JWTSecureDataHeader() { TimeStamp = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") });
-                var base64Payload = ConverBase64String(JsonConvert.SerializeObject(payload));
-                var encodedString = $"{ConverBase64String(jwtHeader)}.{base64Payload}";
-                var route = await _serviceRouteProvider.GetRouteByPath(tokenEndpointPath);
-                var signature = HMACSHA256(encodedString, route.ServiceDescriptor.Token);
-                result = $"{encodedString}.{signature}";
-                _cacheProvider.Add(base64Payload, result, AppConfig.AccessTokenExpireTimeSpan);
+                loginResult = await _serviceProxyProvider.Invoke<LoginResult>(rpcParams, AppConfig.AuthenticationRoutePath);
             }
-            return result;
+            else
+            {
+                loginResult = await _serviceProxyProvider.Invoke<LoginResult>(rpcParams, AppConfig.AuthenticationRoutePath, AppConfig.AuthenticationServiceKey);
+            }
+            if (loginResult == null)
+            {
+                throw new BusinessException("当前系统无法登陆,请稍后重试");
+            }
+            if (loginResult.ResultType == LoginResultType.Fail)
+            {
+                throw new AuthException(loginResult.ErrorMessage);
+            }
+            if (loginResult.ResultType == LoginResultType.Error)
+            {
+                throw new BusinessException(loginResult.ErrorMessage);
+            }
+            var jwtHader = new Dictionary<string, object>() {
+                { "timeStamp", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") },
+                { "typ", "JWT" },
+                { "alg", AppConfig.JwtConfig.EncryptionAlgorithm }
+            };
+            var payload = loginResult.PayLoad;
+            payload.Add("iss", AppConfig.JwtConfig.Iss);
+            payload.Add("aud", AppConfig.JwtConfig.Aud);
+            payload.Add("iat", DateTime.Now);
+            payload.Add("exp", DateTime.Now.AddMinutes(AppConfig.JwtConfig.Period));
+            //payload.Add("ast", accessSystemType);
+            return _jwtTokenProvider.GenerateToken(jwtHader, payload, AppConfig.JwtConfig.SecretKey, AppConfig.JwtConfig.EncryptionAlgorithm);
         }
+
 
         public async Task<bool> Authorize(string apiPath, Dictionary<string, object> parameters)
         {
@@ -90,59 +104,20 @@ namespace Surging.Core.ApiGateWay.OAuth
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public string GetPayloadString(string token)
+        public IDictionary<string, object> GetPayLoad(string token)
         {
-            string result = null;
-            var jwtToken = token.Split('.');
-            if (jwtToken.Length == 3)
-            {
-                result = Encoding.UTF8.GetString(Convert.FromBase64String(jwtToken[1]));
-            }
-            return result;
+            return _jwtTokenProvider.GetPayLoad(token, AppConfig.JwtConfig.SecretKey);
         }
 
+
         /// <summary>
-        /// 验证客户端权限
+        /// 身份认证
         /// </summary>
         /// <param name="token">客户端TOKEN值</param>
         /// <returns></returns>
         public async Task<bool> ValidateClientAuthentication(string token)
         {
-            bool isSuccess = false;
-            var jwtToken = token.Split('.');
-            if (jwtToken.Length == 3)
-            {
-                isSuccess = await _cacheProvider.GetAsync<string>(jwtToken[1]) == token;
-            }
-            return isSuccess;
-        }
-
-        /// <summary>
-        /// 将字符串转换为BASE64编码的字符串
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        private string ConverBase64String(string str)
-        {
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(str));
-        }
-
-        /// <summary>
-        /// SHA256加密（根据KEY计算指定串的HASH值）
-        /// </summary>
-        /// <param name="message">待加密的串</param>
-        /// <param name="secret">KYE值</param>
-        /// <returns></returns>
-        private string HMACSHA256(string message, string secret)
-        {
-            secret = secret ?? "";
-            byte[] keyByte = Encoding.UTF8.GetBytes(secret);
-            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
-            using (var hmacsha256 = new HMACSHA256(keyByte))
-            {
-                byte[] hashmessage = hmacsha256.ComputeHash(messageBytes);
-                return Convert.ToBase64String(hashmessage);
-            }
+            return _jwtTokenProvider.ValidateToken(token, AppConfig.JwtConfig.SecretKey);
         }
     }
 }

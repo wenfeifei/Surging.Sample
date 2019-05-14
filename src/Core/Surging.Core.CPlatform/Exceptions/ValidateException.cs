@@ -1,5 +1,7 @@
 ﻿using Surging.Core.CPlatform.Messages;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Surging.Core.CPlatform.Exceptions
 {
@@ -11,6 +13,7 @@ namespace Surging.Core.CPlatform.Exceptions
 
         public ValidateException(string message) : base(message, StatusCode.ValidateError)
         {
+
         }
     }
 }

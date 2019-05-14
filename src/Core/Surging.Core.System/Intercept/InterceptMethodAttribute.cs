@@ -54,7 +54,7 @@ namespace Surging.Core.System.Intercept
         }
 
         /// <summary>
-        /// 缓存方式或采用的技术（枚举类型）
+        /// 采用什么进行缓存
         /// </summary>
         public CacheTargetType Mode
         {
@@ -63,7 +63,7 @@ namespace Surging.Core.System.Intercept
         }
 
         ///// <summary>
-        ///// 缓存部件类型（枚举类型），如DLL/接口
+        ///// 设置SectionType
         ///// </summary>
         public SectionType CacheSectionType
         {

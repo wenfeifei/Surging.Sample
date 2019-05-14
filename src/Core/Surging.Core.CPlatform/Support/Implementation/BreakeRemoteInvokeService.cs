@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Logging;
+using Surging.Core.CPlatform.Exceptions;
 using Surging.Core.CPlatform.Filters;
 using Surging.Core.CPlatform.Filters.Implementation;
 using Surging.Core.CPlatform.HashAlgorithms;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,7 +47,8 @@ namespace Surging.Core.CPlatform.Support.Implementation
                     FirstInvokeTime = DateTime.Now,
                     FinalRemoteInvokeTime = DateTime.Now
                 });
-            var command = await _commandProvider.GetCommand(serviceId);
+            var vt = _commandProvider.GetCommand(serviceId);
+            var command = vt.IsCompletedSuccessfully ? vt.Result : await vt;
             var intervalSeconds = (DateTime.Now - serviceInvokeInfos.FinalRemoteInvokeTime).TotalSeconds;
             bool reachConcurrentRequest() => serviceInvokeInfos.ConcurrentRequests > command.MaxConcurrentRequests;
             bool reachRequestVolumeThreshold() => intervalSeconds <= 10
@@ -64,7 +67,7 @@ namespace Surging.Core.CPlatform.Support.Implementation
                 {
                     if (intervalSeconds * 1000 > command.BreakeSleepWindowInMilliseconds)
                     {
-                        return await MonitorRemoteInvokeAsync(parameters, serviceId, serviceKey, decodeJOject, command.ExecutionTimeoutInMilliseconds, item);
+                        return await MonitorRemoteInvokeAsync(parameters, serviceId, serviceKey, decodeJOject, command.ExecutionTimeoutInMilliseconds, item, true);
                     }
                     else
                     {
@@ -79,7 +82,7 @@ namespace Surging.Core.CPlatform.Support.Implementation
             }
         }
 
-        private async Task<RemoteInvokeResultMessage> MonitorRemoteInvokeAsync(IDictionary<string, object> parameters, string serviceId, string serviceKey, bool decodeJOject, int requestTimeout, string item)
+        private async Task<RemoteInvokeResultMessage> MonitorRemoteInvokeAsync(IDictionary<string, object> parameters, string serviceId, string serviceKey, bool decodeJOject, int requestTimeout, string item, bool isAbnormalRequest = false)
         {
             CancellationTokenSource source = new CancellationTokenSource();
             var token = source.Token;
@@ -122,6 +125,28 @@ namespace Surging.Core.CPlatform.Support.Implementation
                     return v;
                 });
                 await ExecuteExceptionFilter(ex, invokeMessage, token);
+                if (ex.GetGetExceptionStatusCode() == StatusCode.BusinessError
+                    || ex.GetGetExceptionStatusCode() == StatusCode.ValidateError
+                    || ex.GetGetExceptionStatusCode() == StatusCode.UserFriendly)
+                {
+                    return new RemoteInvokeResultMessage()
+                    {
+                        ExceptionMessage = ex.GetExceptionMessage(),
+                        Result = null,
+                        StatusCode = ex.GetGetExceptionStatusCode()
+                    };
+                }
+
+                if (isAbnormalRequest)
+                {
+                    return new RemoteInvokeResultMessage()
+                    {
+                        ExceptionMessage = ex.GetExceptionMessage(),
+                        Result = null,
+                        StatusCode = ex.GetGetExceptionStatusCode()
+                    };
+                }
+
                 return null;
             }
         }
@@ -138,6 +163,7 @@ namespace Surging.Core.CPlatform.Support.Implementation
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private string GetHashItem(ServiceCommand command, IDictionary<string, object> parameters)
         {
             string result = "";

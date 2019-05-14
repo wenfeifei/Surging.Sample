@@ -1,20 +1,16 @@
-﻿using Hl.Core.Manager;
-using Surging.Core.CPlatform.Ioc;
-using System.Threading.Tasks;
+﻿using Surging.Core.Dapper.Manager;
+using Surging.Core.Dapper.Repositories;
 
 namespace Hl.Identity.Domain.Authorization.Users
 {
-    public class UserManager : ITransientDependency
+    public class UserManager : ManagerBase, IUserManager
     {
-        private readonly UserStore _userStore;
-        public UserManager(UserStore userStore)
+        private readonly IDapperRepository<UserInfo,long> _userRepository;
+        public UserManager(IDapperRepository<UserInfo, long> userRepository)
         {
-            _userStore = userStore;
+            _userRepository = userRepository;
         }
 
-        public async Task CreateAsync(UserInfo user)
-        {
-            await _userStore.CreateAsync(user);
-        }
+
     }
 }

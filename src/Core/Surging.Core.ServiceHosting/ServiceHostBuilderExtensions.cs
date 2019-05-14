@@ -9,17 +9,8 @@ using System.Reflection;
 
 namespace Surging.Core.ServiceHosting
 {
-    /// <summary>
-    /// 微服务主机扩展方法
-    /// </summary>
     public static class ServiceHostBuilderExtensions
     {
-        /// <summary>
-        /// 指定使用的启动类
-        /// </summary>
-        /// <param name="hostBuilder"></param>
-        /// <param name="startupType"></param>
-        /// <returns></returns>
         public static IServiceHostBuilder UseStartup(this IServiceHostBuilder hostBuilder, Type startupType)
         {
             return hostBuilder

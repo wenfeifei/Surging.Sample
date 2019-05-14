@@ -1,4 +1,6 @@
-﻿namespace Surging.Core.Domain.Entities
+﻿
+
+namespace Surging.Core.Domain.Entities
 {
     public interface IEntity<TPrimaryKey>
     {

@@ -1,4 +1,6 @@
-﻿namespace Surging.Core.CPlatform.Messages
+﻿using Surging.Core.CPlatform.Exceptions;
+
+namespace Surging.Core.CPlatform.Messages
 {
     public class HttpResultMessage<T> : HttpResultMessage
     {
@@ -12,7 +14,7 @@
         /// </summary>
         /// <param name="successd">状态值（true:成功 false：失败）</param>
         /// <param name="message">返回到客户端的消息</param>
-        /// <param name="data">返回到客户端的数据集</param>
+        /// <param name="entity">返回到客户端的数据集</param>
         /// <returns>返回信息结果集</returns>
         public static HttpResultMessage<T> Create(bool successd, string message, T data)
         {
@@ -87,6 +89,6 @@
         /// <summary>
         /// 状态码
         /// </summary>
-        public StatusCode StatusCode { get; set; }
+        public StatusCode StatusCode { get; set; } = StatusCode.Ok;
     }
 }

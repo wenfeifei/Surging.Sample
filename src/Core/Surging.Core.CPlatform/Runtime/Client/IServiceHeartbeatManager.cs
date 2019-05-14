@@ -1,5 +1,4 @@
-﻿
-namespace Surging.Core.CPlatform.Runtime.Client
+﻿namespace Surging.Core.CPlatform.Runtime.Client
 {
     public interface IServiceHeartbeatManager
     {

@@ -1,4 +1,6 @@
-﻿namespace Surging.Core.CPlatform.Messages
+﻿using Surging.Core.CPlatform.Exceptions;
+
+namespace Surging.Core.CPlatform.Messages
 {
     /// <summary>
     /// 远程调用结果消息。
@@ -13,7 +15,7 @@
         /// <summary>
         /// 状态码
         /// </summary>
-        public StatusCode StatusCode { get; set; } = StatusCode.OK;
+        public StatusCode StatusCode { get; set; } = StatusCode.Ok;
 
         /// <summary>
         /// 结果内容。
