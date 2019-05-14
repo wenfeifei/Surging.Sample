@@ -39,6 +39,9 @@ namespace Surging.Core.Dapper.Repositories
 
         Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, DbConnection conn, DbTransaction trans);
 
+        Task<int> GetCountAsync(Expression<Func<TEntity, bool>> predicate);
+
+        Task<int> GetCountAsync();
 
         Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate);
 

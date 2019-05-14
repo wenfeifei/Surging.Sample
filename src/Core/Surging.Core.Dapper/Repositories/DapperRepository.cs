@@ -599,5 +599,51 @@ namespace Surging.Core.Dapper.Repositories
 
             return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
         }
+
+        public async Task<int> GetCountAsync()
+        {
+            try
+            {
+                using (var conn = GetDbConnection())
+                {
+                    var predicate = _softDeleteQueryFilter.ExecuteFilter<TEntity, TPrimaryKey>();
+                    var pg = predicate.ToPredicateGroup<TEntity, TPrimaryKey>();
+                    var count = conn.Count<TEntity>(pg);
+                    return count;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message, ex);
+                }
+
+                throw new DataAccessException(ex.Message, ex);
+            }
+        }
+
+        public async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            try
+            {
+                using (var conn = GetDbConnection())
+                {
+                    predicate = _softDeleteQueryFilter.ExecuteFilter<TEntity, TPrimaryKey>(predicate);
+                    var pg = predicate.ToPredicateGroup<TEntity, TPrimaryKey>();
+                    var count = conn.Count<TEntity>(pg);
+                    return count;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message, ex);
+                }
+
+                throw new DataAccessException(ex.Message, ex);
+            }
+        }
     }
 }
