@@ -70,33 +70,33 @@ namespace Hl.Gateway.WebApi.Controllers
             }
             else
             {
-                if (OnAuthorization(path, model, ref result))
+                if (path == GateWayAppConfig.AuthenticationRoutePath)
                 {
-                    if (path == GateWayAppConfig.AuthenticationRoutePath)
+                    try
                     {
-                        try
+                        var token = await _authorizationServerProvider.GenerateTokenCredential(model);
+                        if (token != null)
                         {
-                            var token = await _authorizationServerProvider.GenerateTokenCredential(model);
-                            if (token != null)
-                            {
-                                result = ServiceResult<object>.Create(true, token);
-                                result.StatusCode = (int)MessageStatusCode.Ok;
-                            }
-                            else
-                            {
-                                result = new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.UnAuthentication, Message = "不合法的身份凭证" };
-                            }
-                        }                      
-                        catch (CPlatformException ex)
-                        {
-                            result = new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.CPlatformError, Message = ex.Message };
+                            result = ServiceResult<object>.Create(true, token);
+                            result.StatusCode = (int)MessageStatusCode.Ok;
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            result = new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.UnKnownError, Message = ex.Message };
+                            result = new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.UnAuthentication, Message = "不合法的身份凭证" };
                         }
                     }
-                    else
+                    catch (CPlatformException ex)
+                    {
+                        result = new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.CPlatformError, Message = ex.Message };
+                    }
+                    catch (Exception ex)
+                    {
+                        result = new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.UnKnownError, Message = ex.Message };
+                    }
+                }
+                else
+                {
+                    if (OnAuthorization(path, model, ref result))
                     {
                         try
                         {
@@ -124,7 +124,9 @@ namespace Hl.Gateway.WebApi.Controllers
                             return new ServiceResult<object> { IsSucceed = false, StatusCode = (int)MessageStatusCode.UnKnownError, Message = ex.Message };
                         }
                     }
+
                 }
+
             }
 
             return result;
