@@ -336,7 +336,7 @@ alter table auth_user comment '用户表';
 create table auth_user_group
 (
    Id                   bigint not null auto_increment comment '主键',
-   ParentId             varchar(22) not null comment '父用户组Id',
+   ParentId             bigint not null comment '父用户组Id',
    GroupName            varchar(50) not null comment '用户组名称',
    Status               int not null comment '状态',
    CreateBy             bigint comment '创建人',

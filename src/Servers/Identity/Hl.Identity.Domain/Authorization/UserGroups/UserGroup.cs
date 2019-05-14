@@ -8,9 +8,10 @@ namespace Hl.Identity.Domain.Authorization.UserGroups
         public UserGroup()
         {
             Status = Status.Valid;
+            ParentId = 0;
         }
 
-        public string ParentId { get; set; }
+        public long ParentId { get; set; }
         public string GroupName { get; set; }
         public Status Status { get; set; }
 
