@@ -8,6 +8,7 @@ namespace Hl.Identity.IApplication.UserGroups.Dtos
         public UserGroupProfile()
         {
             CreateMap<CreateUserGroupInput, UserGroup>();
+            CreateMap<UpdateUserGroupInput, UserGroup>();
         }
     }
 }

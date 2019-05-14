@@ -16,5 +16,8 @@ namespace Hl.Identity.IApplication.UserGroups
         /// <returns></returns>
         [Service(Name = "新增用户组",Director = Maintainer.Liuhll, Date = "2019-05-14")]
         Task<string> Create(CreateUserGroupInput input);
+
+        [Service(Name = "更新用户组", Director = Maintainer.Liuhll, Date = "2019-05-14")]
+        Task<string> Update(UpdateUserGroupInput input);
     }
 }
