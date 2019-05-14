@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Hl.Identity.Domain.Employee.Entities;
 
-namespace Hl.Identity.IApplication.Employee.Dtos
+namespace Hl.Identity.IApplication.Employees.Dtos
 {
     public class EmployeeProfiles : Profile
     {

@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Hl.Identity.IApplication.Employee.Dtos
+namespace Hl.Identity.IApplication.Employees.Dtos
 {
     public class CreateEmployeeInput
     {

@@ -1,21 +1,24 @@
 ﻿using System.Threading.Tasks;
+using Hl.Core.ServiceApi;
 using Hl.Core.Validates;
 using Hl.Identity.Domain.Authorization.Users;
 using Hl.Identity.Domain.Employee;
 using Hl.Identity.Domain.Employee.Entities;
-using Hl.Identity.IApplication.Employee;
-using Hl.Identity.IApplication.Employee.Dtos;
+using Hl.Identity.IApplication.Employees;
+using Hl.Identity.IApplication.Employees.Dtos;
 using Surging.Core.AutoMapper;
 using Surging.Core.CPlatform.Exceptions;
+using Surging.Core.CPlatform.Ioc;
 using Surging.Core.Dapper.Repositories;
 using Surging.Core.ProxyGenerator;
 
 
-namespace Hl.Identity.Application.Employee
+namespace Hl.Identity.Application.Employees
 {
+    [ModuleName(ApiConsts.Identity.ServiceKey,Version = "v1")]
     public class EmployeeApplication : ProxyServiceBase, IEmployeeApplication
     {       
-        public async Task<string> CreateEmployee(CreateEmployeeInput input)
+        public async Task<string> Create(CreateEmployeeInput input)
         {
             input.CheckDataAnnotations().CheckValidResult();
             var exsitEployee = await GetService<IDapperRepository<EmployeeAggregate, long>>().FirstOrDefaultAsync(p => p.UserName == input.UserName 
