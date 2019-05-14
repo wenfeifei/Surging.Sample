@@ -1,4 +1,5 @@
-﻿using Hl.Core.Maintenance;
+﻿using Hl.Core.Commons.Dtos;
+using Hl.Core.Maintenance;
 using Hl.Identity.IApplication.UserGroups.Dtos;
 using Surging.Core.CPlatform.Ioc;
 using Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attributes;
@@ -17,7 +18,20 @@ namespace Hl.Identity.IApplication.UserGroups
         [Service(Name = "新增用户组",Director = Maintainer.Liuhll, Date = "2019-05-14")]
         Task<string> Create(CreateUserGroupInput input);
 
+        /// <summary>
+        /// 更新用户组
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [Service(Name = "更新用户组", Director = Maintainer.Liuhll, Date = "2019-05-14")]
         Task<string> Update(UpdateUserGroupInput input);
+
+        /// <summary>
+        /// 删除用户组
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Service(Name = "删除用户组", Director = Maintainer.Liuhll, Date = "2019-05-14")]
+        Task<string> Delete(DeleteByIdInput input);
     }
 }

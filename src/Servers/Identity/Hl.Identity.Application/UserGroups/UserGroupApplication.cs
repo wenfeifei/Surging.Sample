@@ -1,4 +1,5 @@
-﻿using Hl.Core.ServiceApi;
+﻿using Hl.Core.Commons.Dtos;
+using Hl.Core.ServiceApi;
 using Hl.Core.Validates;
 using Hl.Identity.Domain.Authorization.UserGroups;
 using Hl.Identity.IApplication.UserGroups;
@@ -17,9 +18,12 @@ namespace Hl.Identity.Application.UserGroups
     public class UserGroupApplication : ProxyServiceBase, IUserGroupApplication
     {
         private readonly IDapperRepository<UserGroup, long> _userGroupRepository;
-        public UserGroupApplication(IDapperRepository<UserGroup, long> userGroupRepository)
+        private readonly IUserGroupManager _userGroupManager;
+        public UserGroupApplication(IDapperRepository<UserGroup, long> userGroupRepository,
+            IUserGroupManager userGroupManager)
         {
             _userGroupRepository = userGroupRepository;
+            _userGroupManager = userGroupManager;
         }
         public async Task<string> Create(CreateUserGroupInput input)
         {
@@ -33,8 +37,6 @@ namespace Hl.Identity.Application.UserGroups
             await _userGroupRepository.InsertAsync(userGroupEntity);
             return "新增用户组成功";
         }
-
-
 
         public async Task<string> Update(UpdateUserGroupInput input)
         {
@@ -62,6 +64,13 @@ namespace Hl.Identity.Application.UserGroups
             await _userGroupRepository.UpdateAsync(userGroup);
             return "更新用户组成功";
         }
+
+        public async Task<string> Delete(DeleteByIdInput input)
+        {
+            await _userGroupManager.DeleteUserGroupById(input.Id);
+            return "删除用户组成功";
+        }
+
 
         private async Task CheckUserGroupInput(UserGroupDtoBase input)
         {
