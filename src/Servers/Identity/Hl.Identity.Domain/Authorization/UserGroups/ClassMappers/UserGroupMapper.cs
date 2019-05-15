@@ -7,7 +7,7 @@ namespace Hl.Identity.Domain.Authorization.UserGroups.ClassMappers
     {
         public UserGroupMapper()
         {
-            Table("auth_user_group");
+            Table("auth_usergroup");
             AutoMap();
         }
     }

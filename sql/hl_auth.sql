@@ -33,7 +33,7 @@ drop table if exists auth_role_permission;
 
 drop table if exists auth_user;
 
-drop table if exists auth_user_group;
+drop table if exists auth_usergroup;
 
 drop table if exists auth_user_role;
 
@@ -328,12 +328,12 @@ create table auth_user
 );
 
 alter table auth_user comment '用户表';
-
+INSERT INTO `hl_auth`.`auth_user`(`Id`, `EmployeeId`, `Email`, `Phone`, `UserName`, `Password`, `LoginFailCount`, `Locked`, `Status`, `CreateBy`, `CreateTime`, `UpdateBy`, `UpdateTime`, `IsDeleted`, `DeleteBy`, `DeleteTime`) VALUES (1, 1, '1029765111@qq.com', '13123456789', 'liuhll', '909e74b36a584cb99e9a83636933a39b', 0, 0, 1, NULL, '2019-05-14 15:36:37', NULL, NULL, 0, NULL, NULL);
 
 /*==============================================================*/
-/* Table: auth_user_group                                       */
+/* Table: auth_usergroup                                       */
 /*==============================================================*/
-create table auth_user_group
+create table auth_usergroup
 (
    Id                   bigint not null auto_increment comment '主键',
    ParentId             bigint not null comment '父用户组Id',
@@ -350,8 +350,7 @@ create table auth_user_group
    primary key (Id)
 );
 
-alter table auth_user_group comment '用户组表';
-INSERT INTO `hl_auth`.`auth_user`(`Id`, `EmployeeId`, `Email`, `Phone`, `UserName`, `Password`, `LoginFailCount`, `Locked`, `Status`, `CreateBy`, `CreateTime`, `UpdateBy`, `UpdateTime`, `IsDeleted`, `DeleteBy`, `DeleteTime`) VALUES (1, 1, '1029765111@qq.com', '13123456789', 'liuhll', '909e74b36a584cb99e9a83636933a39b', 0, 0, 1, NULL, '2019-05-14 15:36:37', NULL, NULL, 0, NULL, NULL);
+alter table auth_usergroup comment '用户组表';
 
 /*==============================================================*/
 /* Table: auth_user_role                                        */
