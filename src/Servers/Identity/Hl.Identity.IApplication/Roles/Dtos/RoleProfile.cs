@@ -8,6 +8,7 @@ namespace Hl.Identity.IApplication.Roles.Dtos
         public RoleProfile()
         {
             CreateMap<CreateRoleInput, Role>();
+            CreateMap<UpdateRoleInput, Role>();
         }
     }
 }

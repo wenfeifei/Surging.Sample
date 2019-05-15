@@ -33,5 +33,18 @@ namespace Hl.Identity.Application.Roles
             await _roleRepository.InsertAsync(input.MapTo<Role>());
             return "新增角色成功";
         }
+
+        public async Task<string> Update(UpdateRoleInput input)
+        {
+            input.CheckDataAnnotations().CheckValidResult();
+            var role = await _roleRepository.SingleOrDefaultAsync(p => p.Id == input.Id);
+            if (role == null)
+            {
+                throw new UserFriendlyException($"不存在{input.Id}的角色信息");
+            }
+            role = input.MapTo(role);
+            await _roleRepository.UpdateAsync(role);
+            return "更新角色成功";
+        }
     }
 }
