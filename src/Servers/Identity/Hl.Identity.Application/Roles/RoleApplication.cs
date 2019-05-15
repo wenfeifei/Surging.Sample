@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Hl.Core.Commons.Dtos;
 using Hl.Core.ServiceApi;
 using Hl.Core.Validates;
 using Hl.Identity.Domain.Authorization.Roles;
@@ -16,10 +17,13 @@ namespace Hl.Identity.Application.Roles
     public class RoleApplication : ProxyServiceBase, IRoleApplication
     {
         private readonly IDapperRepository<Role, long> _roleRepository;
+        private readonly IRoleManager _roleManager;
 
-        public RoleApplication(IDapperRepository<Role, long> roleRepository)
+        public RoleApplication(IDapperRepository<Role, long> roleRepository,
+            IRoleManager roleManager)
         {
             _roleRepository = roleRepository;
+            _roleManager = roleManager;
         }
 
         public async Task<string> Create(CreateRoleInput input)
@@ -34,6 +38,7 @@ namespace Hl.Identity.Application.Roles
             return "新增角色成功";
         }
 
+
         public async Task<string> Update(UpdateRoleInput input)
         {
             input.CheckDataAnnotations().CheckValidResult();
@@ -45,6 +50,12 @@ namespace Hl.Identity.Application.Roles
             role = input.MapTo(role);
             await _roleRepository.UpdateAsync(role);
             return "更新角色成功";
+        }
+
+        public async Task<string> Delete(DeleteByIdInput input)
+        {
+            await _roleManager.DeleteRoleById(input.Id);
+            return "删除角色成功";
         }
     }
 }

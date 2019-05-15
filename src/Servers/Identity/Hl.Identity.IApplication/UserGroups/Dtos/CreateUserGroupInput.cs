@@ -1,4 +1,6 @@
-﻿namespace Hl.Identity.IApplication.UserGroups.Dtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Hl.Identity.IApplication.UserGroups.Dtos
 {
     public class CreateUserGroupInput : UserGroupDtoBase
     {
