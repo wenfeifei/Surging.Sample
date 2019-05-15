@@ -337,6 +337,7 @@ create table auth_user_group
 (
    Id                   bigint not null auto_increment comment '主键',
    ParentId             bigint not null comment '父用户组Id',
+   GroupCode            varchar(50),
    GroupName            varchar(50) not null comment '用户组名称',
    Status               int not null comment '状态',
    CreateBy             bigint comment '创建人',
