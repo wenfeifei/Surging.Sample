@@ -1,8 +1,8 @@
 ﻿using Hl.Core.ClassMapper;
-using Hl.Identity.Domain.Employee.Entities;
+using Hl.Identity.Domain.Employees.Entities;
 
 
-namespace Hl.Identity.Domain.Employee.ClassMappers
+namespace Hl.Identity.Domain.Employees.ClassMappers
 {
     class EmployeeMapper : HlClassMapper<EmployeeAggregate>
     {

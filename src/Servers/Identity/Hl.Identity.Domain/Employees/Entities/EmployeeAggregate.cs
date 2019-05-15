@@ -1,12 +1,12 @@
 ﻿
 using Hl.Core.Enums;
 using Hl.Identity.Domain.Authorization.Users;
-using Hl.Identity.Domain.Employee.Models;
+using Hl.Identity.Domain.Employees.Models;
 using Surging.Core.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
 
-namespace Hl.Identity.Domain.Employee.Entities
+namespace Hl.Identity.Domain.Employees.Entities
 {
     public class EmployeeAggregate : FullAuditedEntity<long>
     {

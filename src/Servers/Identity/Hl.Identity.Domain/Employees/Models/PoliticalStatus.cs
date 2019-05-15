@@ -1,4 +1,4 @@
-﻿namespace Hl.Identity.Domain.Employee.Models
+﻿namespace Hl.Identity.Domain.Employees.Models
 {
     public enum PoliticalStatus
     {

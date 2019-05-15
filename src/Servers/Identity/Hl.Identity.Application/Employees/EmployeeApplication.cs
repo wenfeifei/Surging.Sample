@@ -2,8 +2,8 @@
 using Hl.Core.ServiceApi;
 using Hl.Core.Validates;
 using Hl.Identity.Domain.Authorization.Users;
-using Hl.Identity.Domain.Employee;
-using Hl.Identity.Domain.Employee.Entities;
+using Hl.Identity.Domain.Employees;
+using Hl.Identity.Domain.Employees.Entities;
 using Hl.Identity.IApplication.Employees;
 using Hl.Identity.IApplication.Employees.Dtos;
 using Surging.Core.AutoMapper;

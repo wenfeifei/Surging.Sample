@@ -1,4 +1,4 @@
-﻿using Hl.Identity.Domain.Employee.Models;
+﻿using Hl.Identity.Domain.Employees.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 

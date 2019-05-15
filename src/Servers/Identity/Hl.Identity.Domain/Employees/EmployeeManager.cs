@@ -3,17 +3,15 @@ using Hl.Core.ServiceApi;
 using Hl.Core.Utils;
 using Hl.Identity.Domain.Authorization;
 using Hl.Identity.Domain.Authorization.Users;
-using Hl.Identity.Domain.Employee.Entities;
+using Hl.Identity.Domain.Employees.Entities;
 using Surging.Core.CPlatform.Exceptions;
-using Surging.Core.CPlatform.Extensions;
 using Surging.Core.Dapper.Manager;
 using Surging.Core.Dapper.Repositories;
 using Surging.Core.ProxyGenerator;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Hl.Identity.Domain.Employee
+namespace Hl.Identity.Domain.Employees
 {
     public class EmployeeManager : ManagerBase, IEmployeeManager
     {

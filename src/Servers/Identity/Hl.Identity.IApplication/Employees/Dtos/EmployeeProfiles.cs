@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Hl.Identity.Domain.Employee.Entities;
+using Hl.Identity.Domain.Employees.Entities;
 
 namespace Hl.Identity.IApplication.Employees.Dtos
 {
