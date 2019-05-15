@@ -9,6 +9,10 @@ namespace Hl.Identity.IApplication.UserGroups.Dtos
         public long ParentId { get; set; }
 
         [Required(ErrorMessage = "用户组名称不允许为空")]
+        [RegularExpression("^[a-zA-Z0-9_-]{4,50}$", ErrorMessage = "用户组编码格式不正确")]
+        public string GroupCode { get; set; }
+
+        [Required(ErrorMessage = "用户组名称不允许为空")]
         [MaxLength(50, ErrorMessage = "用户组名称最长不允许超过50")]
         public string GroupName { get; set; }
         public Status Status { get; set; }

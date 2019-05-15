@@ -12,6 +12,7 @@ namespace Hl.Identity.Domain.Authorization.UserGroups
         }
 
         public long ParentId { get; set; }
+        public string GroupCode { get; set; }
         public string GroupName { get; set; }
         public Status Status { get; set; }
 

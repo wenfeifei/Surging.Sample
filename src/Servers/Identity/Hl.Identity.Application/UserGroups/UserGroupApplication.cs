@@ -28,10 +28,10 @@ namespace Hl.Identity.Application.UserGroups
         public async Task<string> Create(CreateUserGroupInput input)
         {
             await CheckUserGroupInput(input);
-            var existUserGroup = await _userGroupRepository.FirstOrDefaultAsync(p => p.GroupName == input.GroupName);
+            var existUserGroup = await _userGroupRepository.FirstOrDefaultAsync(p => p.GroupCode == input.GroupCode);
             if (existUserGroup != null)
             {
-                throw new BusinessException($"已经存在{input.GroupName}的用户组");
+                throw new BusinessException($"已经存在{input.GroupCode}的用户组");
             }
             var userGroupEntity = input.MapTo<UserGroup>();
             await _userGroupRepository.InsertAsync(userGroupEntity);
@@ -52,12 +52,12 @@ namespace Hl.Identity.Application.UserGroups
                 throw new BusinessException($"不存在Id为{input.Id}的用户组");
             }
        
-            if (userGroup.GroupName != input.GroupName)
+            if (userGroup.GroupCode != input.GroupCode)
             {
-                var existUserGroup = await _userGroupRepository.FirstOrDefaultAsync(p => p.GroupName == input.GroupName);
+                var existUserGroup = await _userGroupRepository.FirstOrDefaultAsync(p => p.GroupCode == input.GroupCode);
                 if (existUserGroup != null)
                 {
-                    throw new BusinessException($"已经存在{input.GroupName}的用户组");
+                    throw new BusinessException($"已经存在{input.GroupCode}的用户组");
                 }
             }
             userGroup = input.MapTo(userGroup);
