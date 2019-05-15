@@ -29,7 +29,15 @@ namespace Hl.Identity.Application.UserGroups
         }
         public async Task<string> Create(CreateUserGroupInput input)
         {
-            await CheckUserGroupInput(input);
+            input.CheckDataAnnotations().CheckValidResult();
+            if (input.ParentId != 0)
+            {
+                var parentUserGroup = await _userGroupRepository.SingleOrDefaultAsync(p => p.Id == input.ParentId);
+                if (parentUserGroup == null)
+                {
+                    throw new BusinessException($"不存在父Id为{input.ParentId}的用户组");
+                }
+            }
             var existUserGroup = await _userGroupRepository.FirstOrDefaultAsync(p => p.GroupCode == input.GroupCode);
             if (existUserGroup != null)
             {
@@ -42,26 +50,12 @@ namespace Hl.Identity.Application.UserGroups
 
         public async Task<string> Update(UpdateUserGroupInput input)
         {
-            if (input.Id == input.ParentId)
-            {
-                throw new BusinessException($"Id与ParentId不允许相等");
-            }
-
-            await CheckUserGroupInput(input);
+            input.CheckDataAnnotations().CheckValidResult();
             var userGroup = await _userGroupRepository.SingleOrDefaultAsync(p => p.Id == input.Id);
             if (userGroup == null)
             {
                 throw new BusinessException($"不存在Id为{input.Id}的用户组");
-            }
-       
-            if (userGroup.GroupCode != input.GroupCode)
-            {
-                var existUserGroup = await _userGroupRepository.FirstOrDefaultAsync(p => p.GroupCode == input.GroupCode);
-                if (existUserGroup != null)
-                {
-                    throw new BusinessException($"已经存在{input.GroupCode}的用户组");
-                }
-            }
+            }      
             userGroup = input.MapTo(userGroup);
             await _userGroupRepository.UpdateAsync(userGroup);
             return "更新用户组成功";
@@ -96,18 +90,5 @@ namespace Hl.Identity.Application.UserGroups
             return userGroupChildrenOutputs;
         }
 
-        private async Task CheckUserGroupInput(UserGroupDtoBase input)
-        {
-            input.CheckDataAnnotations().CheckValidResult();
-            if (input.ParentId != 0)
-            {
-                var parentUserGroup = await _userGroupRepository.SingleOrDefaultAsync(p => p.Id == input.ParentId);
-                if (parentUserGroup == null)
-                {
-                    throw new BusinessException($"不存在父Id为{input.ParentId}的用户组");
-                }
-            }
-           
-        }
     }
 }
