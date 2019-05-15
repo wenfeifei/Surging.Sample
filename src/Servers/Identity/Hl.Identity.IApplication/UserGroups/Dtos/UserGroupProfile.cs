@@ -9,6 +9,7 @@ namespace Hl.Identity.IApplication.UserGroups.Dtos
         {
             CreateMap<CreateUserGroupInput, UserGroup>();
             CreateMap<UpdateUserGroupInput, UserGroup>();
+            CreateMap<UserGroup, GetUserGroupOutput>().ForMember(s => s.Children, opt => opt.Ignore());
         }
     }
 }

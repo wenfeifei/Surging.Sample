@@ -3,6 +3,7 @@ using Hl.Core.Maintenance;
 using Hl.Identity.IApplication.UserGroups.Dtos;
 using Surging.Core.CPlatform.Ioc;
 using Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attributes;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Hl.Identity.IApplication.UserGroups
@@ -33,5 +34,7 @@ namespace Hl.Identity.IApplication.UserGroups
         /// <returns></returns>
         [Service(Name = "删除用户组", Director = Maintainer.Liuhll, Date = "2019-05-14")]
         Task<string> Delete(DeleteByIdInput input);
+
+        Task<ICollection<GetUserGroupOutput>> GetAll();
     }
 }

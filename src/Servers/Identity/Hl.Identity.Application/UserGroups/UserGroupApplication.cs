@@ -10,6 +10,8 @@ using Surging.Core.CPlatform.Ioc;
 using Surging.Core.Dapper.Repositories;
 using Surging.Core.ProxyGenerator;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Hl.Identity.Application.UserGroups
@@ -71,6 +73,28 @@ namespace Hl.Identity.Application.UserGroups
             return "删除用户组成功";
         }
 
+        public async Task<ICollection<GetUserGroupOutput>> GetAll()
+        {
+            var topUserGroups = await _userGroupRepository.GetAllAsync(p => p.ParentId == 0);
+            var topUserGroupOutputs = topUserGroups.MapTo<ICollection<GetUserGroupOutput>>();
+            var allUserGroups = await _userGroupRepository.GetAllAsync();
+            foreach (var userGroupOutput in topUserGroupOutputs)
+            {
+                userGroupOutput.Children = await GetUserGroupChildren(userGroupOutput.Id, allUserGroups);
+            }
+            return topUserGroupOutputs;
+        }
+
+        private async Task<ICollection<GetUserGroupOutput>> GetUserGroupChildren(long userGroupId,IEnumerable<UserGroup> allUserGroups)
+        {
+            var userGroupChildren = allUserGroups.Where(p => p.ParentId == userGroupId);
+            var userGroupChildrenOutputs = userGroupChildren.MapTo<ICollection<GetUserGroupOutput>>();
+            foreach (var userGroupOutput in userGroupChildrenOutputs)
+            {
+                userGroupOutput.Children = await GetUserGroupChildren(userGroupOutput.Id, allUserGroups);
+            }
+            return userGroupChildrenOutputs;
+        }
 
         private async Task CheckUserGroupInput(UserGroupDtoBase input)
         {
