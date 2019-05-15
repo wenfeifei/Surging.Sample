@@ -645,5 +645,92 @@ namespace Surging.Core.Dapper.Repositories
                 throw new DataAccessException(ex.Message, ex);
             }
         }
+
+        public Task<IEnumerable<TEntity>> GetPageAsync(Expression<Func<TEntity, bool>> predicate, int index, int count, IDictionary<string, SortType> sortProps)
+        {
+            try
+            {
+                using (var conn = GetDbConnection())
+                {
+                    IList<ISort> sorts = new List<ISort>();
+
+                    if (sortProps != null && sortProps.Any())
+                    {
+                        foreach (var sortProp in sortProps)
+                        {
+                            var sort = new Sort()
+                            {
+                                PropertyName = sortProp.Key,
+                                Ascending = sortProp.Value == SortType.Asc ? true : false
+                            };
+                            sorts.Add(sort);
+                        };
+                    }
+                    predicate = _softDeleteQueryFilter.ExecuteFilter<TEntity, TPrimaryKey>(predicate);
+                    var pg = predicate.ToPredicateGroup<TEntity, TPrimaryKey>();
+                    var list = conn.GetPage<TEntity>(predicate, sorts, index, count);
+                    return Task.FromResult(list);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message, ex);
+                }
+
+                throw new DataAccessException(ex.Message, ex);
+            }
+
+        }
+
+        public Task<IEnumerable<TEntity>> GetPageAsync(Expression<Func<TEntity, bool>> predicate, int index, int count)
+        {
+            return GetPageAsync(predicate, index, count, null);
+        }
+
+        public Task<IEnumerable<TEntity>> GetPageAsync(int index, int count, IDictionary<string, SortType> sortProps)
+        {
+            try
+            {
+                using (var conn = GetDbConnection())
+                {
+                    IList<ISort> sorts = new List<ISort>();
+
+                    if (sortProps != null && sortProps.Any())
+                    {
+                        foreach (var sortProp in sortProps)
+                        {
+                            var sort = new Sort()
+                            {
+                                PropertyName = sortProp.Key,
+                                Ascending = sortProp.Value == SortType.Asc ? true : false
+                            };
+                            sorts.Add(sort);
+                        };
+                    }
+                    var predicate = _softDeleteQueryFilter.ExecuteFilter<TEntity, TPrimaryKey>();
+                    var pg = predicate.ToPredicateGroup<TEntity, TPrimaryKey>();
+                    var list = conn.GetPage<TEntity>(predicate, sorts, index, count);
+                    return Task.FromResult(list);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message, ex);
+                }
+
+                throw new DataAccessException(ex.Message, ex);
+            }
+
+        }
+
+        public Task<IEnumerable<TEntity>> GetPageAsync(int index, int count)
+        {
+            return GetPageAsync(index, count, null);
+        }
+
     }
 }
