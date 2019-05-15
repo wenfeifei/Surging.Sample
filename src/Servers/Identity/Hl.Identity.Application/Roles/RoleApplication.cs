@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Hl.Core.Commons.Dtos;
 using Hl.Core.ServiceApi;
 using Hl.Core.Validates;
@@ -9,6 +10,8 @@ using Surging.Core.AutoMapper;
 using Surging.Core.CPlatform.Exceptions;
 using Surging.Core.CPlatform.Ioc;
 using Surging.Core.Dapper.Repositories;
+using Surging.Core.Domain.PagedAndSorted;
+using Surging.Core.Domain.PagedAndSorted.Extensions;
 using Surging.Core.ProxyGenerator;
 
 namespace Hl.Identity.Application.Roles
@@ -56,6 +59,12 @@ namespace Hl.Identity.Application.Roles
         {
             await _roleManager.DeleteRoleById(input.Id);
             return "删除角色成功";
+        }
+
+        public async Task<IPagedResult<GetRoleOutput>> Query(QueryRoleInput input)
+        {  
+            var queryResult = await _roleRepository.GetAllAsync(p => p.Code.Contains(input.Code) && p.Name.Contains(input.Name));
+            return queryResult.MapTo<IEnumerable<GetRoleOutput>>().PageBy(input);
         }
     }
 }

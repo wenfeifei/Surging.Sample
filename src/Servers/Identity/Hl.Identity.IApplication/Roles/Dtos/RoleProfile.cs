@@ -9,6 +9,8 @@ namespace Hl.Identity.IApplication.Roles.Dtos
         {
             CreateMap<CreateRoleInput, Role>();
             CreateMap<UpdateRoleInput, Role>();
+            CreateMap<Role,GetRoleOutput>();
+
         }
     }
 }
