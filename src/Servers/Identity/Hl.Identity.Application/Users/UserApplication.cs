@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Hl.Core.Commons.Dtos;
 using Hl.Core.ServiceApi;
 using Hl.Core.Validates;
@@ -9,12 +10,14 @@ using Surging.Core.AutoMapper;
 using Surging.Core.CPlatform.Exceptions;
 using Surging.Core.CPlatform.Ioc;
 using Surging.Core.Dapper.Repositories;
+using Surging.Core.Domain.PagedAndSorted;
+using Surging.Core.Domain.PagedAndSorted.Extensions;
 using Surging.Core.ProxyGenerator;
 
 
 namespace Hl.Identity.Application.Employees
 {
-    [ModuleName(ApiConsts.Identity.ServiceKey,Version = "v1")]
+    [ModuleName(ApiConsts.Identity.ServiceKey, Version = "v1")]
     public class UserApplication : ProxyServiceBase, IUserApplication
     {
 
@@ -31,8 +34,8 @@ namespace Hl.Identity.Application.Employees
         public async Task<string> Create(CreateUserInput input)
         {
             input.CheckDataAnnotations().CheckValidResult();
-            var exsitUserInfo = await _userRepository.FirstOrDefaultAsync(p => p.UserName == input.UserName 
-            || p.Email == input.Email 
+            var exsitUserInfo = await _userRepository.FirstOrDefaultAsync(p => p.UserName == input.UserName
+            || p.Email == input.Email
             || p.Phone == input.Phone);
             if (exsitUserInfo != null)
             {
@@ -61,7 +64,7 @@ namespace Hl.Identity.Application.Employees
             }
             if (input.Email != userInfo.Email)
             {
-    
+
                 var exsitUser = await _userRepository.FirstOrDefaultAsync(p => p.Email == input.Email);
                 if (exsitUser != null)
                 {
@@ -69,7 +72,7 @@ namespace Hl.Identity.Application.Employees
                 }
             }
             if (input.Phone != userInfo.Phone)
-            {  
+            {
                 var exsitUser = await _userRepository.FirstOrDefaultAsync(p => p.Phone == input.Phone);
                 if (exsitUser != null)
                 {
@@ -79,6 +82,13 @@ namespace Hl.Identity.Application.Employees
             userInfo = input.MapTo(userInfo);
             await _userRepository.UpdateAsync(userInfo);
             return "更新员工信息成功";
+        }
+
+        public async Task<IPagedResult<GetUserOutput>> Query(QueryUserInput query)
+        {
+            var userList = await _userRepository.GetAllAsync(p => p.UserName.Contains(query.UserName) && p.ChineseName.Contains(query.ChineseName)
+            && p.Email.Contains(query.Email) && p.Phone.Contains(query.Phone));
+            return userList.MapTo<IEnumerable<GetUserOutput>>().PageBy(query);
         }
     }
 }
