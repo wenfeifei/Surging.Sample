@@ -46,7 +46,11 @@
       "SecretKey": "${SecretKey}",
       "AuthorizationRoutePath": "${AuthorizationRoutePath}",
       "AuthorizationServiceKey": "${AuthorizationServiceKey}"
-    }
+    },
+    "AnnotationXmlDir": "/app/annotationxmldir",
+    "DtoXmls": [
+      "Hl.Core.xml"
+    ]
   },
   "Logging": {
     "Debug": {
