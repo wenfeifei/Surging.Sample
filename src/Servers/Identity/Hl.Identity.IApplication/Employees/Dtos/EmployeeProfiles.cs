@@ -8,6 +8,7 @@ namespace Hl.Identity.IApplication.Employees.Dtos
         public EmployeeProfiles()
         {
             CreateMap<CreateEmployeeInput, EmployeeAggregate>();
+            CreateMap<UpdateEmployeeInput, EmployeeAggregate>();
         }
     }
 }

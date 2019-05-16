@@ -17,5 +17,13 @@ namespace Hl.Identity.IApplication.Employees
         /// <returns></returns>
         [Service(Director = Maintainer.Liuhll, Date = "2019-4-30", Name = "创建员工接口")]
         Task<string> Create(CreateEmployeeInput input);
+
+        /// <summary>
+        /// 修改员工
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Service(Director = Maintainer.Liuhll, Date = "2019-5-16", Name = "修改员工")]
+        Task<string> Update(UpdateEmployeeInput input);
     }
 }

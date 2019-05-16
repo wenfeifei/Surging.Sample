@@ -1,4 +1,5 @@
-﻿using Hl.Identity.Domain.Employees.Entities;
+﻿using Hl.Identity.Domain.Authorization.Users;
+using Hl.Identity.Domain.Employees.Entities;
 using Surging.Core.CPlatform.Ioc;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,6 @@ namespace Hl.Identity.Domain.Employees
 {
     public interface IEmployeeManager : ITransientDependency
     {
-        Task CreateEmployee(EmployeeAggregate employee);
+        Task CreateEmployee(EmployeeAggregate employee);        
     }
 }
