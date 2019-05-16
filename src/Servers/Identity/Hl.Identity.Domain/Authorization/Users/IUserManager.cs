@@ -8,5 +8,6 @@ namespace Hl.Identity.Domain.Authorization.Users
     public interface IUserManager : ITransientDependency
     {
         Task DeleteByUserId(long userId);
+        Task CreateUserInfo(UserInfo userInfo);
     }
 }

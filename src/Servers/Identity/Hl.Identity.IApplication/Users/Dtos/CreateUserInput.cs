@@ -1,10 +1,8 @@
-﻿using Hl.Identity.Domain.Employees.Models;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Hl.Identity.IApplication.Employees.Dtos
+namespace Hl.Identity.IApplication.Users.Dtos
 {
-    public class CreateEmployeeInput : EmployeeDtoBase
+    public class CreateUserInput : UserDtoBase
     {
 
         [Required(ErrorMessage = "用户名不允许为空")]

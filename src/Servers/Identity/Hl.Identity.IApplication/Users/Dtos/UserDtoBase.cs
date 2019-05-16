@@ -1,10 +1,10 @@
-﻿using Hl.Identity.Domain.Employees.Models;
+﻿using Hl.Identity.Domain.Authorization.Users;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Hl.Identity.IApplication.Employees.Dtos
+namespace Hl.Identity.IApplication.Users.Dtos
 {
-    public abstract class EmployeeDtoBase
+    public abstract class UserDtoBase
     {
         [Required(ErrorMessage = "员工名称不允许为空")]
         public string ChineseName { get; set; }
