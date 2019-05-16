@@ -15,7 +15,7 @@
       "HttpPort": "${HttpPort}|8080",
       "WSPort": "${WSPort}|96"
     },
-    "RequestCacheEnabled": false,
+    "RequestCacheEnabled": true,
     "Environment": "${Environment}|Development",
     "ForceDisplayStackTrace": "${ForceDisplayStackTrace}|false",
     "Packages": [
