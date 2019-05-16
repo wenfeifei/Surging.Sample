@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Hl.Core.Commons.Dtos;
 using Hl.Core.ServiceApi;
 using Hl.Core.Validates;
 using Hl.Identity.Domain.Authorization.Users;
@@ -52,6 +53,12 @@ namespace Hl.Identity.Application.Employees
             var employee = input.MapTo<EmployeeAggregate>();
             await GetService<IEmployeeManager>().CreateEmployee(employee);
             return "新增员工成功";
+        }
+
+        public async Task<string> Delete(DeleteByIdInput input)
+        {
+            await _employeeManager.DeleteEmployeeById(input.Id);
+            return "删除员工成功";
         }
 
         public async Task<string> Update(UpdateEmployeeInput input)

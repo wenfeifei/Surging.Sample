@@ -10,6 +10,7 @@ namespace Hl.Identity.Domain.Employees
 {
     public interface IEmployeeManager : ITransientDependency
     {
-        Task CreateEmployee(EmployeeAggregate employee);        
+        Task CreateEmployee(EmployeeAggregate employee);
+        Task DeleteEmployeeById(long id);
     }
 }

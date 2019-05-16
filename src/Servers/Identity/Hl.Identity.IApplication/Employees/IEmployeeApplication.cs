@@ -1,4 +1,5 @@
 ﻿
+using Hl.Core.Commons.Dtos;
 using Hl.Core.Maintenance;
 using Hl.Identity.IApplication.Employees.Dtos;
 using Surging.Core.CPlatform.Ioc;
@@ -25,5 +26,8 @@ namespace Hl.Identity.IApplication.Employees
         /// <returns></returns>
         [Service(Director = Maintainer.Liuhll, Date = "2019-5-16", Name = "修改员工")]
         Task<string> Update(UpdateEmployeeInput input);
+
+        [Service(Director = Maintainer.Liuhll, Date = "2019-5-16", Name = "删除员工")]
+        Task<string> Delete(DeleteByIdInput input);
     }
 }
