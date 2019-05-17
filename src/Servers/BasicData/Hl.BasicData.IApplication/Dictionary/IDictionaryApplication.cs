@@ -18,8 +18,7 @@ namespace Hl.BasicData.IApplication
         Task<string> CreateDict(CreateDictInput input);
 
         [Service(Director = Maintainer.Liuhll, Date = "2019-05-01", Name = "通过dictkey获取字典值")]
-        [InterceptMethod(CachingMethod.Get, Key = CacheConstants.GetDictValByKey, Mode = CacheTargetType.Redis)]
-        Task<HlDictionaryOutput> GetDictValByKey([CacheKey(1)]string dictKey);
+        Task<HlDictionaryOutput> GetDictValByKey(string dictKey);
 
     }
 }

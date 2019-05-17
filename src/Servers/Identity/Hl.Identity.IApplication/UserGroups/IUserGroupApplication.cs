@@ -20,7 +20,6 @@ namespace Hl.Identity.IApplication.UserGroups
         /// <param name="input"></param>
         /// <returns></returns>
         [Service(Name = "新增用户组",Director = Maintainer.Liuhll, Date = "2019-05-14")]
-        [InterceptMethod(CachingMethod.Remove, Key = CacheConstants.GetUserGroupsKey, Mode = CacheTargetType.Redis)]
         Task<string> Create(CreateUserGroupInput input);
 
         /// <summary>
@@ -29,7 +28,6 @@ namespace Hl.Identity.IApplication.UserGroups
         /// <param name="input"></param>
         /// <returns></returns>
         [Service(Name = "更新用户组", Director = Maintainer.Liuhll, Date = "2019-05-14")]
-        [InterceptMethod(CachingMethod.Remove, CacheConstants.GetUserGroupsKey,CacheConstants.GetUserGroupByIdKey, Mode = CacheTargetType.Redis)]
         Task<string> Update(UpdateUserGroupInput input);
 
         /// <summary>
@@ -38,10 +36,13 @@ namespace Hl.Identity.IApplication.UserGroups
         /// <param name="input"></param>
         /// <returns></returns>
         [Service(Name = "删除用户组", Director = Maintainer.Liuhll, Date = "2019-05-14")]
-        [InterceptMethod(CachingMethod.Remove, CacheConstants.GetUserGroupsKey, CacheConstants.GetUserGroupByIdKey, Mode = CacheTargetType.Redis)]
         Task<string> Delete(DeleteByIdInput input);
 
-        [InterceptMethod(CachingMethod.Get, CacheConstants.GetUserGroupsKey, Mode = CacheTargetType.Redis)]
+        /// <summary>
+        /// 获取用户组
+        /// </summary>
+        /// <returns></returns>
+        [Service(Name = "获取用户组", Director = Maintainer.Liuhll, Date = "2019-05-14")]
         Task<ICollection<GetUserGroupOutput>> GetAll();
     }
 }

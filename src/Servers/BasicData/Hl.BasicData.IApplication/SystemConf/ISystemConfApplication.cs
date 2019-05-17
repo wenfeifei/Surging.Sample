@@ -13,7 +13,6 @@ namespace Hl.BasicData.IApplication
     public interface ISystemConfApplication : IServiceKey
     {
         [Service(Director = Maintainer.Liuhll, Date = "2019-05-02", Name = "通过配置配置名称获取系统配置项")]
-        [InterceptMethod(CachingMethod.Get, Key = CacheConstants.GetSysConfByNameKey, Mode = CacheTargetType.Redis)]
-        Task<GetSystemConfOutput> GetSysConfByName([CacheKey(1)]string confName);
+        Task<GetSystemConfOutput> GetSysConfByName(string confName);
     }
 }
