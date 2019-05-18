@@ -461,6 +461,31 @@ namespace Surging.Core.Caching.RedisCache
             return connection;
         }
 
+        public void RemoveWithPrefix(string prefix)
+        {
+            var node = GetRedisNode(prefix);
+            var redis = GetRedisClient(new RedisEndpoint()
+            {
+                DbIndex = int.Parse(node.Db),
+                Host = node.Host,
+                Password = node.Password,
+                Port = int.Parse(node.Port),
+                MinSize = int.Parse(node.MinSize),
+                MaxSize = int.Parse(node.MaxSize),
+            });
+
+            redis.ScriptEvaluate(@"
+                local keys = redis.call('keys', ARGV[1]) 
+                for i=1,#keys,5000 do 
+                redis.call('del', unpack(keys, i, math.min(i+4999, #keys)))
+                end", values: new RedisValue[] { prefix });
+        }
+
+        public void Clear()
+        {
+            this.RemoveWithPrefix("*");
+        }
+
         #endregion 私有方法
     }
 }

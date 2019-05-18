@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Hl.Core.Cache;
 using Hl.Core.Commons.Dtos;
 using Hl.Core.ServiceApi;
 using Hl.Core.Validates;
+using Hl.Identity.Domain;
 using Hl.Identity.Domain.Authorization.Users;
 using Hl.Identity.IApplication.Employees;
 using Hl.Identity.IApplication.Users.Dtos;
@@ -41,15 +44,19 @@ namespace Hl.Identity.Application.Employees
             {
                 throw new BusinessException("已经存在该员工信息,请检查员工账号信息");
             }
-
             var userInfo = input.MapTo<UserInfo>();
-            await _userManager.CreateUserInfo(userInfo);
+
+            await CacheFactory.CreateCacheProvider().RemoveWithMatchAsync(CacheKeyConstants.QueryUsersKey,async ()=> {
+                await _userManager.CreateUserInfo(userInfo);
+            });
             return "新增员工成功";
         }
 
         public async Task<string> Delete(DeleteByIdInput input)
-        {
-            await _userManager.DeleteByUserId(input.Id);
+        {           
+            await CacheFactory.CreateCacheProvider().RemoveWithMatchAsync(CacheKeyConstants.QueryUsersKey, async ()=> {
+                await _userManager.DeleteByUserId(input.Id);
+            });
             return "删除员工成功";
         }
 
@@ -79,15 +86,22 @@ namespace Hl.Identity.Application.Employees
                     throw new BusinessException($"系统中已经存在{input.Phone}的用户信息");
                 }
             }
-            userInfo = input.MapTo(userInfo);
-            await _userRepository.UpdateAsync(userInfo);
+            userInfo = input.MapTo(userInfo);           
+            await CacheFactory.CreateCacheProvider().RemoveWithMatchAsync(CacheKeyConstants.QueryUsersKey,async ()=> {
+                await _userRepository.UpdateAsync(userInfo);
+            });
             return "更新员工信息成功";
         }
 
         public async Task<IPagedResult<GetUserOutput>> Query(QueryUserInput query)
         {
-            var userList = await _userRepository.GetAllAsync(p => p.UserName.Contains(query.UserName) && p.ChineseName.Contains(query.ChineseName)
-            && p.Email.Contains(query.Email) && p.Phone.Contains(query.Phone));
+            var userList = await CacheFactory.CreateCacheProvider().GetAsyn(string.Format(CacheKeyConstants.QueryUsersKey,query.UserName,query.ChineseName,query.Email,query.Phone), async () =>
+            {
+                return await _userRepository.GetAllAsync(p => p.UserName.Contains(query.UserName)
+                && p.ChineseName.Contains(query.ChineseName)
+                && p.Email.Contains(query.Email)
+                && p.Phone.Contains(query.Phone));
+            });
             return userList.MapTo<IEnumerable<GetUserOutput>>().PageBy(query);
         }
     }
