@@ -1,4 +1,6 @@
-﻿namespace Surging.Core.Caching
+﻿using System;
+
+namespace Surging.Core.CPlatform.Cache
 {
     public enum CacheTargetType
     {

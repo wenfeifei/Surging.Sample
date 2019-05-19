@@ -1,11 +1,8 @@
-﻿using Surging.Core.Caching;
+﻿using Surging.Core.CPlatform.Cache;
 using Surging.Core.CPlatform.Ioc;
 using Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attributes;
 using Surging.Core.System.Intercept;
 using Surging.Debug.Test1.IApplication.Demo.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Surging.Debug.Test1.IApplication.Demo

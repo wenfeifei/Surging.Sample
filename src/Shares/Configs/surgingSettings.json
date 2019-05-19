@@ -25,6 +25,11 @@
       }
     ]
   },
+  "CacheSection": {
+    "IsEnableRepositoryCache": true,
+    "CacheSectionName": "ddlCache",
+    "CacheType": "Redis"
+  },
   "Automapper": {
     "Assemblies": "Hl.*.IApplication;Surging.*.IApplication;Hl.*.Common;Surging.*.Common;"
   },

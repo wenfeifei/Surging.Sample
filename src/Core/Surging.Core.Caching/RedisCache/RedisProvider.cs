@@ -16,7 +16,7 @@ namespace Surging.Core.Caching.RedisCache
 
         private readonly Lazy<RedisContext> _context;
         private Lazy<long> _defaultExpireTime;
-        private const double ExpireTime = 60D;
+      //  private const double ExpireTime = 60D;
         private string _keySuffix;
         private Lazy<int> _connectTimeout;
         private readonly Lazy<ICacheClient<IDatabase>> _cacheClient;
@@ -66,7 +66,7 @@ namespace Surging.Core.Caching.RedisCache
         /// </remarks>
         public void Add(string key, object value)
         {
-            this.Add(key, value, TimeSpan.FromSeconds(ExpireTime));
+            this.Add(key, value, TimeSpan.FromMinutes(ExpireTime));
         }
 
         /// <summary>
@@ -407,6 +407,19 @@ namespace Surging.Core.Caching.RedisCache
             {
                 _connectTimeout = new Lazy<int>(() => value);
             }
+        }
+
+        public long ExpireTime
+        {
+            get
+            {
+                return _defaultExpireTime.Value;
+            }
+            set
+            {
+                _defaultExpireTime = new Lazy<long>(() => value);
+            }
+
         }
 
         #endregion 公共方法

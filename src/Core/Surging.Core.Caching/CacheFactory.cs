@@ -1,11 +1,8 @@
-﻿using Surging.Core.Caching;
-using Surging.Core.CPlatform.Cache;
+﻿using Surging.Core.CPlatform.Cache;
 using Surging.Core.CPlatform.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using CPlatformAppConfig = Surging.Core.CPlatform.AppConfig;
 
-namespace Hl.Core.Cache
+namespace Surging.Core.Caching
 {
     public static class CacheFactory
     {
@@ -13,7 +10,14 @@ namespace Hl.Core.Cache
         private static string cacheSectionName = "ddlCache";
         static CacheFactory()
         {
-            // :todo set value from setting
+            if (!string.IsNullOrEmpty(CPlatformAppConfig.CacheSectionOptions.CacheSectionName))
+            {
+                cacheSectionName = CPlatformAppConfig.CacheSectionOptions.CacheSectionName;
+            }
+            if (CPlatformAppConfig.CacheSectionOptions.CacheType != cacheType)
+            {
+                cacheType = CPlatformAppConfig.CacheSectionOptions.CacheType;
+            }
         }
 
         public static ICacheProvider CreateCacheProvider()
@@ -25,8 +29,8 @@ namespace Hl.Core.Cache
                     _cacheProvider = CacheContainer.GetService<ICacheProvider>($"{cacheSectionName}.{cacheType.ToString()}");
                     break;
                 default:
-                    throw new CPlatformException("暂时只支持redis缓存类型",null);
-                    
+                    throw new CPlatformException("暂时只支持redis缓存类型", null);
+
             }
             return _cacheProvider;
         }

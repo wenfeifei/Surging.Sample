@@ -1,14 +1,13 @@
 ﻿using Surging.Core.CPlatform.Cache;
+using Surging.Core.CPlatform.Exceptions;
 using Surging.Core.CPlatform.Serialization;
 using Surging.Core.CPlatform.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using CPlatformAppConfig = Surging.Core.CPlatform.AppConfig;
 
-namespace Hl.Core.Cache
+namespace Surging.Core.Caching
 {
     public static class ICacheProviderProviderExtensions
     {
@@ -22,20 +21,25 @@ namespace Hl.Core.Cache
                 var resultJson = cacheProvider.Get<string>(key);
                 if (string.IsNullOrEmpty(resultJson) || resultJson == "\"[]\"")
                 {
-                  
+
                     returnValue = await factory();
                     cacheProvider.Update(key, _serializer.Serialize(returnValue), storeTime);
                 }
                 else
                 {
-                    returnValue = _serializer.Deserialize(resultJson,typeof(T)) as T;
+                    returnValue = _serializer.Deserialize(resultJson, typeof(T)) as T;
                 }
                 return returnValue;
             }
-            catch
+            catch(Exception ex)
             {
+                if (ex is DataAccessException)
+                {
+                    throw ex;
+                }
                 returnValue = await factory();
                 return returnValue;
+               
             }
         }
 
@@ -67,7 +71,7 @@ namespace Hl.Core.Cache
 
         public static async Task RemoveWithMatchAsync(this ICacheProvider cacheProvider, string key)
         {
-            await Task.Run(()=> {
+            await Task.Run(() => {
                 var matchKey = "_*_" + Regex.Replace(key, @"{\d*}", "*");
                 cacheProvider.RemoveWithPrefix(matchKey);
             });
@@ -76,7 +80,7 @@ namespace Hl.Core.Cache
         public static async Task RemoveWithMatchAsync(this ICacheProvider cacheProvider, string key, Func<Task> action)
         {
             await action();
-            var matchKey = "_*_" + Regex.Replace(key, @"{\d*}", "*");
+            var matchKey = CPlatformAppConfig.CacheSectionOptions.CacheSectionName + Regex.Replace(key, @"{\d*}", "*");
             cacheProvider.RemoveWithPrefix(matchKey);
         }
 
@@ -84,16 +88,16 @@ namespace Hl.Core.Cache
         {
             foreach (var key in keys)
             {
-                var matchKey = "_*_" + Regex.Replace(key, @"{\d*}", "*");
+                var matchKey = CPlatformAppConfig.CacheSectionOptions.CacheSectionName + Regex.Replace(key, @"{\d*}", "*");
                 cacheProvider.RemoveWithPrefix(matchKey);
             }
-           
+
         }
         public static async Task RemoveWithMatchAsync(this ICacheProvider cacheProvider, params string[] keys)
         {
             foreach (var key in keys)
             {
-                var matchKey = "_*_" + Regex.Replace(key, @"{\d*}", "*");
+                var matchKey = CPlatformAppConfig.CacheSectionOptions.CacheSectionName + Regex.Replace(key, @"{\d*}", "*");
                 await Task.Run(() =>
                 {
                     cacheProvider.RemoveWithPrefix(matchKey);
@@ -101,12 +105,19 @@ namespace Hl.Core.Cache
             }
 
         }
-        public static async Task RemoveWithMatchAsync(this ICacheProvider cacheProvider,string[] keys, Func<Task> action)
+        public static async Task RemoveWithMatchAsync(this ICacheProvider cacheProvider, string[] keys, Func<Task> action)
         {
             await action();
             await cacheProvider.RemoveWithMatchAsync(keys);
 
         }
+
+        public static void Remove(this ICacheProvider cacheProvider, params string[] keys)
+        {
+            foreach(var key in keys)
+            {
+                cacheProvider.Remove(key);
+            }
+        }
     }
 }
-
