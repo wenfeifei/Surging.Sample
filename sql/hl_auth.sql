@@ -275,14 +275,13 @@ create table auth_role_permission
 (
    Id                   bigint not null auto_increment comment '主键',
    RoleId               bigint not null,
-   PerssionId           char(10) not null,
+   PerssionId           bigint not null,
    CreateBy             bigint comment '创建人',
    CreateTime           datetime comment '创建日期',
    UpdateBy             bigint comment '修改人',
    UpdateTime           datetime comment '修改日期',
    primary key (Id)
 );
-
 alter table auth_role_permission comment '角色权限表';
 
 /*==============================================================*/

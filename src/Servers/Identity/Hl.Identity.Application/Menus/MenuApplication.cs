@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Hl.Core.Commons.Dtos;
 using Hl.Core.ServiceApi;
 using Hl.Core.Validates;
 using Hl.Identity.Domain.Authorization.Menus;
@@ -51,6 +52,12 @@ namespace Hl.Identity.Application.Menus
             };
             await _menuManager.CreateMenu(menu,permission);
             return "新增菜单成功";
+        }
+
+        public async Task<string> DeleteMenu(DeleteByIdInput input)
+        {
+            await _menuManager.DeleteMenu(input.Id);
+            return "删除菜单成功";
         }
 
         public async Task<string> UpdateMenu(UpdateMenuInput input)

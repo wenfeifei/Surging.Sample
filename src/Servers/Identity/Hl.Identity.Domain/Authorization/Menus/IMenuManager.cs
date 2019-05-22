@@ -9,5 +9,6 @@ namespace Hl.Identity.Domain.Authorization.Menus
     {
         Task CreateMenu(Menu menu, Permission permission);
         Task UpdateMenu(Menu menu, Permission permission);
+        Task DeleteMenu(long id);
     }
 }
