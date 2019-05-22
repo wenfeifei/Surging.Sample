@@ -9,6 +9,7 @@ namespace Hl.Identity.IApplication.Menus
     public interface IMenuApplication : IServiceKey
     {
         Task<string> CreateMenu(CreateMenuInput input);
-      
+
+        Task<string> UpdateMenu(UpdateMenuInput input);
     }
 }

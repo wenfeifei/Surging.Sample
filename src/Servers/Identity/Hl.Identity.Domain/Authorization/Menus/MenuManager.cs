@@ -12,27 +12,29 @@ namespace Hl.Identity.Domain.Authorization.Menus
     {
         private readonly IDapperRepository<Menu, long> _menuRepository;
         private readonly IDapperRepository<Permission, long> _permissionRepository;
-        private readonly IDapperRepository<PermissionMenu, long> _permissionMenuRepository;
 
         public MenuManager(IDapperRepository<Menu, long> menuRepository,
-            IDapperRepository<Permission, long> permissionRepository,
-            IDapperRepository<PermissionMenu, long> permissionMenuRepository)
+            IDapperRepository<Permission, long> permissionRepository)
         {
             _menuRepository = menuRepository;
-            _permissionMenuRepository = permissionMenuRepository;
             _permissionRepository = permissionRepository;
         }
 
         public async Task CreateMenu(Menu menu, Permission permission)
         {
-            await UnitOfWorkAsync(async (conn, trans) => {
-                var menuId = await _menuRepository.InsertAndGetIdAsync(menu, conn, trans);
+            await UnitOfWorkAsync(async (conn, trans) => {              
                 var permissionId = await _permissionRepository.InsertAndGetIdAsync(permission, conn, trans);
-                await _permissionMenuRepository.InsertAsync(new PermissionMenu() {
-                    MenuId = menuId,
-                    PermissionId = permissionId
-                },conn,trans);
+                menu.PermissionId = permissionId;
+                await _menuRepository.InsertAsync(menu, conn, trans);
             },Connection);
+        }
+
+        public async Task UpdateMenu(Menu menu, Permission permission)
+        {
+            await UnitOfWorkAsync(async (conn, trans) => {
+                await _permissionRepository.UpdateAsync(permission, conn, trans);
+                await _menuRepository.UpdateAsync(menu, conn, trans);
+            }, Connection);
         }
     }
 }
