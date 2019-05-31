@@ -143,5 +143,18 @@ namespace Hl.Identity.Application.Menus
             await _functionManager.CreateOperation(operation, input.FunctionIds);
             return $"新增{input.Name}操作成功";
         }
+
+        public async Task<string> UpdateOperation(UpdateOperationInput input)
+        {
+            var operation = await _permissionRepository.FirstOrDefaultAsync(p => p.Id == input.Id);
+            if (operation == null)
+            {
+                throw new BusinessException($"系统中不存在Id为{input.Id}的操作");
+            }
+            operation.Name = input.Name;
+            operation.Memo = input.Memo;
+            await _functionManager.UpdateOperation(operation, input.FunctionIds);
+            return $"修改{input.Name}操作成功";
+        }
     }
 }

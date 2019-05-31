@@ -10,5 +10,6 @@ namespace Hl.Identity.Domain.Authorization.Permissions
     {
       //  Task CreateFunction(Function function, Permission permission, long menuId);
         Task CreateOperation(Permission operation, IEnumerable<long> functionIds);
+        Task UpdateOperation(Permission operation, IEnumerable<long> functionIds);
     }
 }

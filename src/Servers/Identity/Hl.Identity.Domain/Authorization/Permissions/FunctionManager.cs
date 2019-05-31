@@ -22,21 +22,6 @@ namespace Hl.Identity.Domain.Authorization.Permissions
             _permissionRepository = permissionRepository;
         }
 
-        //public async Task CreateFunction(Function function, Permission permission, long menuId)
-        //{
-        //    await UnitOfWorkAsync(async (conn, trans) => {
-        //        var funcId = await _functionRepository.InsertAndGetIdAsync(function,conn,trans);
-        //        var permissionId = await _permissionRepository.InsertAndGetIdAsync(permission,conn,trans);
-        //        await _menuFunctionRepository.InsertAsync(new MenuFunction() {
-        //            FunctionId = funcId,
-        //            MenuId = menuId,                   
-        //        },conn,trans);
-        //        await _permissionFunctionRepository.InsertAsync(new PermissionFunction() {
-        //            FunctionId = funcId,
-        //            PermissionId = permissionId
-        //        }, conn, trans);
-        //    }, Connection);
-        //}
 
         public async Task CreateOperation(Permission operation, IEnumerable<long> functionIds)
         {
@@ -47,6 +32,23 @@ namespace Hl.Identity.Domain.Authorization.Permissions
                     var permissionFunc = new PermissionFunction() {
                         FunctionId = funcId,
                         PermissionId = permissionId,
+                    };
+                    await _permissionFunctionRepository.InsertAsync(permissionFunc, conn, trans);
+                }
+            }, Connection);
+        }
+
+        public async Task UpdateOperation(Permission operation, IEnumerable<long> functionIds)
+        {
+            await UnitOfWorkAsync(async (conn, trans) => {
+                await _permissionRepository.UpdateAsync(operation, conn, trans);
+                await _permissionFunctionRepository.DeleteAsync(p => p.PermissionId == operation.Id, conn, trans);
+                foreach (var funcId in functionIds)
+                {
+                    var permissionFunc = new PermissionFunction()
+                    {
+                        FunctionId = funcId,
+                        PermissionId = operation.Id,
                     };
                     await _permissionFunctionRepository.InsertAsync(permissionFunc, conn, trans);
                 }
