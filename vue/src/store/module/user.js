@@ -1,14 +1,12 @@
 import {
   getUserInfo,
+  login
 } from '@/api/user'
 
 import {
   setToken,
   getToken
 } from '@/libs/util'
-import {
-  resolve
-} from 'url';
 
 export default {
   state: {
@@ -37,11 +35,31 @@ export default {
     }
   },
   actions: {
+    handleLogin({
+      commit
+    }, {
+      userName,
+      password
+    }) {
+      return new Promise((resolve, reject) => {
+        userName = userName.trim()
+        login({
+          userName,
+          password
+        }).then(res => {
+          const data = res.data
+          commit('setToken', data.token)
+          resolve()
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
     getUserInfo({
       state,
       commit
     }) {
-      return new Permise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         try {
           getUserInfo(state.token).then(res => {
             const data = res.data
