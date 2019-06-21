@@ -299,3 +299,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 docker-compose/easy-mock/data
+!**/vue/src/api
